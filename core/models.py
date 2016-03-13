@@ -28,6 +28,7 @@ class Issue(models.Model):
     labels = models.ManyToManyField(Label)
 
 class UserProjectRole(models.Model):
+    # TODO: This is where Role object goes instead of this char field
     role = models.CharField(max_length=30)
     user = models.ManyToManyField(User)
     repository = models.ManyToManyField(Repository)
