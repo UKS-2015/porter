@@ -1,0 +1,31 @@
+<table>
+    <th>Content</th>
+    <th>Log Type</th>
+    <th>Issue</th>
+    <th>Subject User</th>
+    <th>Object User</th>
+    {% for issue_log in issue_logs %}
+        <tr>
+            <td>{{issue_log.content}}</td>
+             <td>{{issue_log.log_type}}</td>
+            <td>{{issue_log.log_type}}</td>
+            <td>{{issue_log.subject_user.username}}</td>
+            <td>{{issue_log.object_user.username}}</td>
+            <td><a href="/issue_log/{{issue_log.id}}">Details</a></td>
+            <td><a href="/issue_log/{{issue_log.id}}/edit">Edit</a></td>
+            <td><a href="/issue_log/{{issue_log.id}}/delete">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if issue_logs.has_previous %}
+            <a href="?page={{issue_logs.previous_page_number }}">Previous</a>
+        {% endif %}
+        Page {{ issue_logs.number }} of {{ issue_logs.paginator.num_pages }}
+        {% if issue_logs.has_next %}
+            <a href="?page={{issue_logs.next_page_number }}">Next</a>
+        {% endif %}
+    </span>
+</div>
+<a href="/issue_log/new">New</a>

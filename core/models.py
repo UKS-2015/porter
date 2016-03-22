@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.db import models
 
 class User(models.Model):
@@ -22,14 +23,13 @@ class Label(models.Model):
 class Issue(models.Model):
     title = models.CharField(max_length=50)
     creator = models.ForeignKey(User, related_name='issues')
-    assignee = models.ForeignKey(User)
-    repository  = models.ForeignKey(Repository, on_delete=models.CASCADE)
-    milestone = models.ForeignKey(Milestone)
+    assignee = models.ForeignKey(User, null=True, blank=True)
+    repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
+    milestone = models.ForeignKey(Milestone, null=True, blank=True)
     labels = models.ManyToManyField(Label)
 
 class UserProjectRole(models.Model):
-    # TODO: This is where Role object goes instead of this char field
-    role = models.CharField(max_length=30)
+    role = models.ForeignKey(Group)
     user = models.ManyToManyField(User)
     repository = models.ManyToManyField(Repository)
 

@@ -1,0 +1,25 @@
+<table>
+    <th>Name</th>
+    <th>Permissions</th>
+    {% for group in groups %}
+        <tr>
+            <td>{{group.name}}</td>
+            <td><a href ="/group/{{group.id}}/permissions}}">{{group.permissions}}</a></td>
+            <td><a href="/group/{{group.id}}">Details</a></td>
+            <td><a href="/group/{{group.id}}/edit">Edit</a></td>
+            <td><a href="#">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if groups.has_previous %}
+            <a href="?page={{ groups.previous_page_number}}">Previous</a>
+        {% endif %}
+        Page {{ groups.number }} of {{ groups.paginator.num_pages }}
+        {% if groups.has_next %}
+            <a href="?page={{groups.next_page_number}}">Next</a>
+        {% endif %}
+    </span>
+</div>
+<a href="/group/new">New</a>
