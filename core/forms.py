@@ -1,4 +1,4 @@
-from core.models import IssueLog
+from core.models import IssueLog, UserProjectRole
 from django import forms
 from django.contrib.auth.models import Group
 
@@ -13,3 +13,9 @@ class GroupForm(forms.ModelForm):
     class Meta:
         model = Group
         fields = ['name', 'permissions']
+
+
+class UserProjectRoleForm(forms.ModelForm):
+    class Meta:
+        model = UserProjectRole
+        fields = ['role', 'user', 'repository']

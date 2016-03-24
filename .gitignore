@@ -4,4 +4,4 @@
 /db.sqlite3
 /venv
 /.idea
-/core/migrations/*
+/core/migrations

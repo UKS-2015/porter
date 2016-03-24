@@ -6,6 +6,9 @@ class User(models.Model):
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.username
+
 class Project(models.Model):
     title = models.CharField(max_length=50)
     users = models.ManyToManyField(User)
@@ -30,8 +33,8 @@ class Issue(models.Model):
 
 class UserProjectRole(models.Model):
     role = models.ForeignKey(Group)
-    user = models.ManyToManyField(User)
-    repository = models.ManyToManyField(Repository)
+    user = models.ManyToManyField(User, related_name='user_roles')
+    repository = models.ManyToManyField(Repository, related_name='repository_roles')
 
 class IssueLog(models.Model):
     content = models.TextField()
