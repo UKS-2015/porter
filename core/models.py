@@ -105,3 +105,16 @@ class IssueLog(models.Model):
 
     def __str__(self):
         return self.content
+
+
+class PorterGroup(Group):
+    """
+    Proxy class used to add new permissions to Group class from
+    django.contrib.auth.models module.
+    """
+    class Meta:
+        proxy = True
+        permissions = [
+            ('read_group', 'Can access detailed view for groups.'),
+            ('view_group', 'Can access the group application.')
+        ]

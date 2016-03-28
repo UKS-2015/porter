@@ -1,4 +1,5 @@
 from core.forms import GroupForm
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseBadRequest, Http404
@@ -7,6 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 
+@permission_required('auth.view_group')
 def list_all(request):
     paginator = Paginator(Group.objects.all(), 25)
     # Pagination page number check
@@ -20,6 +22,7 @@ def list_all(request):
     return render(request, 'group/list.html', {'groups': groups})
 
 
+@permission_required(['auth.view_group', 'auth.change_group'])
 def edit(request, group_id):
     if request.method == 'GET':
         group = get_object_or_404(Group, pk=group_id)
@@ -40,6 +43,7 @@ def edit(request, group_id):
         return HttpResponseBadRequest
 
 
+@permission_required(['auth.view_group', 'auth.add_group'])
 def create(request):
     form = GroupForm(request.POST)
     if request.method == 'GET':
@@ -53,11 +57,13 @@ def create(request):
             return redirect(list_all)
 
 
+@permission_required(['auth.view_group', 'auth.read_group'])
 def detail(request, group_id):
     groups = Group.objects.get(pk=group_id)
     return render(request, 'group/detail.html', {'group': groups})
 
 
+@permission_required(['auth.view_group', 'auth.delete_group'])
 def delete(request, group_id):
     try:
         group = Group.objects.get(pk=group_id)

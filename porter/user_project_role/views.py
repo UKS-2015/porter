@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 
-@permission_required('core.view_group')
+@permission_required('core.view_userprojectrole')
 def list_all(request):
     paginator = Paginator(UserProjectRole.objects.all(), 25)
     # Pagination page number check
