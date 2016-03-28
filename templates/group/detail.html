@@ -1,0 +1,15 @@
+<table>
+<tr>
+    <td><b>Name: </b></td><td>{{group.name}}</td>
+</tr>
+<tr>
+    <td><b>Permissions: </b></td>
+    <td>
+        <ul>
+            {% for permission in group.permissions.all %}
+            <li>{{permission}}</li>
+        </ul>
+    {% endfor %}
+    </td>
+</tr>
+</table>

@@ -1,0 +1,22 @@
+<table>
+    <th>Role</th>
+    {% for user_project_role in user_project_roles %}
+        <tr>
+            <td><a href ="/group/{{user_project_role.id}}">{{user_project_role.role.name}}</a></td>
+            <td><a href="/user_project_role/{{user_project_role.id}}/edit">Edit</a></td>
+            <td><a href="/user_project_role/{{user_project_role.id}}/delete">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if user_project_roles.has_previous %}
+            <a href="?page={{ user_project_roles.previous_page_number}}">Previous</a>
+        {% endif %}
+        Page {{ user_project_roles.number }} of {{ user_project_roles.paginator.num_pages }}
+        {% if user_project_roles.has_next %}
+            <a href="?page={{user_project_roles.next_page_number}}">Next</a>
+        {% endif %}
+    </span>
+</div>
+<a href="/user_project_role/new">New</a>
