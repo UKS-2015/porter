@@ -2,3 +2,5 @@
 /porter/__pycache__/*
 /core/__pycache__/*
 /db.sqlite3
+.idea/
+venv/
