@@ -18,9 +18,11 @@ from django.contrib import admin
 from porter.issue_log import urls as issue_log_urls
 from porter.group import urls as group_urls
 from porter.user_project_role import urls as user_project_role_urls
+from django.contrib.auth.views import login
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/login/$', login),
     url(r'^issue_log/', include(issue_log_urls)),
     url(r'^group/', include(group_urls)),
     url(r'^user_project_role/', include(user_project_role_urls))

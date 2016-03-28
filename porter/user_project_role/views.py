@@ -1,5 +1,6 @@
 from core.forms import UserProjectRoleForm
 from core.models import UserProjectRole
+from django.contrib.auth.decorators import permission_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseBadRequest, Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -7,6 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 
+@permission_required('core.view_group')
 def list_all(request):
     paginator = Paginator(UserProjectRole.objects.all(), 25)
     # Pagination page number check
@@ -20,6 +22,7 @@ def list_all(request):
     return render(request, 'user_project_role/list.html', {'user_project_roles': user_project_roles})
 
 
+@permission_required(['core.view_userprojectrole', 'core.change_userprojectrole'])
 def edit(request, user_project_role_id):
     if request.method == 'GET':
         user_project_role = get_object_or_404(UserProjectRole, pk=user_project_role_id)
@@ -40,6 +43,7 @@ def edit(request, user_project_role_id):
         return HttpResponseBadRequest
 
 
+@permission_required(['core.view_userprojectrole', 'core.add_userprojectrole'])
 def create(request):
     form = UserProjectRoleForm(request.POST)
     if request.method == 'GET':
@@ -53,11 +57,13 @@ def create(request):
                 return redirect(list_all)
 
 
+@permission_required(['core.view_userprojectrole', 'core.read_userprojectrole'])
 def detail(request, user_project_role_id):
     groups = UserProjectRole.objects.get(pk=user_project_role_id)
     return render(request, 'user_project_role/detail.html', {'user_project_role': groups})
 
 
+@permission_required(['core.view_userprojectrole', 'core.delete_userprojectrole'])
 def delete(request, user_project_role_id):
     try:
         user_project_role_id = UserProjectRole.objects.get(pk=user_project_role_id)
