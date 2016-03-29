@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404, render, redirect
 from core.models import Milestone
 from core.forms import MilestoneForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponseRedirect
 
 def list(request):
     paginator = Paginator(Milestone.objects.all(), 25)
@@ -32,15 +31,11 @@ def add(request):
         form = MilestoneForm()
 
     return render(request, 'milestone/add.html', {'milestone': form})
-   # milestone = get_object_or_404(Milestone, pk=milestone_id)
-   # return render(request, 'milestones/detail.html', {'milestone': milestone})
 
 def detail(request, milestone_id):
     milestone = Milestone.objects.get(pk=milestone_id)
     form = MilestoneForm(instance = milestone)
     return render(request, 'milestone/detail.html', {'milestone': form.as_p()})
-   # milestone = get_object_or_404(Milestone, pk=milestone_id)
-   # return render(request, 'milestones/detail.html', {'milestone': milestone})
 
 def change(request, milestone_id):
     if request.method == 'GET':
@@ -52,7 +47,9 @@ def change(request, milestone_id):
         form = MilestoneForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            milestone = form.save()
+            milestone = form.instance
+            milestone.id = milestone_id
+            Milestone.save(milestone)
             # redirect to a new URL:
             return redirect(list)
 

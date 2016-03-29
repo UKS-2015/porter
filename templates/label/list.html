@@ -1,0 +1,26 @@
+<h1>Labels</h1>
+<table>
+    <th>ID</th>
+    <th>Title</th>
+    {% for label in label_list %}
+        <tr>
+            <td>{{label.id}}</td>
+            <td>{{label.title}}</td>
+            <td><a href="/label/{{label.id}}">Details</a></td>
+            <td><a href="/label/{{label.id}}/change">Change</a></td>
+            <td><a href="/label/{{label.id}}/delete">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if label_list.has_previous %}
+            <a href="?page={{label_list.previous_page_number }}">Previous</a>
+        {% endif %}
+        Page {{ label_list.number }} of {{ label_list.paginator.num_pages }}
+        {% if label_list.has_next %}
+            <a href="?page={{label_list.next_page_number }}">Next</a>
+        {% endif %}
+    </span>
+</div>
+<a href="/label/add">New</a>

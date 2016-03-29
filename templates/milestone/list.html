@@ -12,4 +12,15 @@
         </tr>
     {% endfor %}
 </table>
+<div class="pagination">
+    <span class="step-links">
+        {% if milestone_list.has_previous %}
+            <a href="?page={{milestone_list.previous_page_number }}">Previous</a>
+        {% endif %}
+        Page {{ milestone_list.number }} of {{ milestone_list.paginator.num_pages }}
+        {% if milestone_list.has_next %}
+            <a href="?page={{milestone_list.next_page_number }}">Next</a>
+        {% endif %}
+    </span>
+</div>
 <a href="/milestone/add">New</a>

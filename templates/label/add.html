@@ -1,0 +1,5 @@
+<form action="/label/add/" method="POST">
+    {% csrf_token %}
+    {{ label }}
+    <input type="submit" value="Submit" />
+</form>
