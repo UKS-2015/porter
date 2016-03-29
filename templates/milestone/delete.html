@@ -1,0 +1,6 @@
+<form action="/milestone/{{milestone.instance.id}}/delete/" method="POST">
+    {% csrf_token %}
+    {{ milestone }}
+    <p>Are you sure you want to delete this object?</p>
+    <input type="submit" value="Delete" />
+</form>

@@ -1,0 +1,5 @@
+<form action="/milestone/add/" method="POST">
+    {% csrf_token %}
+    {{ milestone }}
+    <input type="submit" value="Submit" />
+</form>

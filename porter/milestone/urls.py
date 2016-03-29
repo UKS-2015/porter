@@ -13,17 +13,18 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
-from django.contrib import admin
-from porter.issue_log import urls as issue_log_urls
-from porter.group import urls as group_urls
-from porter.user_project_role import urls as user_project_role_urls
-from porter.milestone import urls as milestone_urls
+from django.conf.urls import url
+from porter.milestone import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^issue_log/', include(issue_log_urls)),
-    url(r'^group/', include(group_urls)),
-    url(r'^user_project_role/', include(user_project_role_urls)),
-    url(r'^milestone/', include(milestone_urls))
+    # ex: /milestone/
+    url(r'^$', views.list, name='list'),
+    # ex: /milestone/5/change
+    url(r'^(?P<milestone_id>\d+)/change/$', views.change, name='change'),
+    # ex: /milestone/5/
+    url(r'^(?P<milestone_id>\d+)/$', views.detail, name='detail'),
+    # ex: /milestone/add/
+    url(r'^add/$', views.add, name='add'),
+    # ex: /milestone/5/delete/
+    url(r'^(?P<milestone_id>\d+)/delete/$', views.delete, name='delete'),
 ]

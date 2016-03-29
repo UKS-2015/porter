@@ -1,0 +1,15 @@
+<h1>Milestones</h1>
+<table>
+    <th>ID</th>
+    <th>Title</th>
+    {% for milestone in milestone_list %}
+        <tr>
+            <td>{{milestone.id}}</td>
+            <td>{{milestone.title}}</td>
+            <td><a href="/milestone/{{milestone.id}}">Details</a></td>
+            <td><a href="/milestone/{{milestone.id}}/change">Change</a></td>
+            <td><a href="/milestone/{{milestone.id}}/delete">Delete</a></td>
+        </tr>
+    {% endfor %}
+</table>
+<a href="/milestone/add">New</a>
