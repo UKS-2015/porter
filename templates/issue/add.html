@@ -1,0 +1,5 @@
+<form action="/issue/add/" method="POST">
+    {% csrf_token %}
+    {{ issue }}
+    <input type="submit" value="Submit" />
+</form>

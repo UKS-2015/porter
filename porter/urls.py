@@ -20,6 +20,7 @@ from porter.group import urls as group_urls
 from porter.user_project_role import urls as user_project_role_urls
 from porter.milestone import urls as milestone_urls
 from porter.label import urls as label_urls
+from porter.issue import urls as issue_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -27,5 +28,6 @@ urlpatterns = [
     url(r'^group/', include(group_urls)),
     url(r'^user_project_role/', include(user_project_role_urls)),
     url(r'^milestone/', include(milestone_urls)),
-    url(r'^label/', include(label_urls))
+    url(r'^label/', include(label_urls)),
+    url(r'^issue/', include(issue_urls))
 ]

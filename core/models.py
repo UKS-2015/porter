@@ -16,6 +16,8 @@ class Project(models.Model):
 class Repository(models.Model):
     title = models.CharField(max_length=50)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.title
 
 class Milestone(models.Model):
     title = models.CharField(max_length=50)
@@ -34,6 +36,7 @@ class Issue(models.Model):
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     milestone = models.ForeignKey(Milestone, null=True, blank=True)
     labels = models.ManyToManyField(Label)
+
     def __str__(self):
         return self.title
 
