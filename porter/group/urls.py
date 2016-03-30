@@ -18,8 +18,8 @@ from porter.group import views
 
 urlpatterns = [
     url(r'^$', views.list_all),
-    url(r'^(?P<group_id>[0-9]+)/edit$', views.edit),
-    url(r'^(?P<group_id>[0-9]+)/$', views.detail),
+    url(r'^(?P<group_id>\d+)/change/$', views.edit),
+    url(r'^(?P<group_id>\d+)/$', views.detail),
     url(r'^new/$', views.create),
-    url(r'^(?P<group_id>[0-9]+)/delete/$', views.delete),
+    url(r'^(?P<group_id>\d+)/delete/$', views.delete),
 ]
