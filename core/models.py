@@ -1,3 +1,5 @@
+import django
+
 from django.contrib.auth.models import Group
 from django.db import models
 
@@ -80,8 +82,8 @@ class Issue(models.Model):
 
 class UserProjectRole(models.Model):
     role = models.ForeignKey(Group)
-    user = models.ManyToManyField(User, related_name='user_roles')
-    repository = models.ManyToManyField(Repository, related_name='repository_roles')
+    user = models.ManyToManyField(django.contrib.auth.models.User, related_name='user_roles')
+    project = models.ManyToManyField(Project, related_name='project_roles')
     class Meta:
         permissions = [
             ('read_userprojectrole', 'Can access detailed view for user project role.'),
@@ -89,7 +91,7 @@ class UserProjectRole(models.Model):
         ]
 
     def __str__(self):
-        return "Role: %s; User: %s; Repo: %s" % self.role, self.user, self.repository
+        return "Role: %s; User: %s; Project: %s" % (self.role, self.user, self.project)
 
 class IssueLog(models.Model):
     content = models.TextField()

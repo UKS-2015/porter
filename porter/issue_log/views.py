@@ -1,3 +1,4 @@
+from core.decorators import check_project_member
 from core.forms import IssueLogForm
 from core.models import IssueLog
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
@@ -83,3 +84,4 @@ def delete(request, issue_log_id):
         return redirect(list_all)
     except:
         raise Http404("Issue log doesn't exist.")
+

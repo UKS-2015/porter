@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from core import views
 from django.conf.urls import url, include
 from django.contrib import admin
 from porter.issue_log import urls as issue_log_urls
@@ -25,5 +26,7 @@ urlpatterns = [
     url(r'^accounts/login/$', login),
     url(r'^issue_log/', include(issue_log_urls)),
     url(r'^group/', include(group_urls)),
-    url(r'^user_project_role/', include(user_project_role_urls))
+    url(r'^user_project_role/', include(user_project_role_urls)),
+    # TODO: New URL structure: /{project_title}/{repo_title}/{issues-members-etc}/{id}
+    url(r'^(?P<project_name>[A-Za-z]+)/$', views.project_test)
 ]

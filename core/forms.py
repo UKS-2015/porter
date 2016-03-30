@@ -18,4 +18,4 @@ class GroupForm(forms.ModelForm):
 class UserProjectRoleForm(forms.ModelForm):
     class Meta:
         model = UserProjectRole
-        fields = ['role', 'user', 'repository']
+        fields = ['role', 'user', 'project']
