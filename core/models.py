@@ -30,9 +30,13 @@ class Project(models.Model):
     def __str__(self):
         return self.title
 
+    def __str__(self):
+        return self.title
+
 class Repository(models.Model):
     title = models.CharField(max_length=50)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
     class Meta:
         permissions = [
             ('read_repository', 'Can access detailed view for repositories.'),
@@ -44,6 +48,7 @@ class Repository(models.Model):
 
 class Milestone(models.Model):
     title = models.CharField(max_length=50)
+
     class Meta:
         permissions = [
             ('read_milestone', 'Can access detailed view milestones.'),
@@ -55,6 +60,7 @@ class Milestone(models.Model):
 
 class Label(models.Model):
     title = models.CharField(max_length=50)
+
     class Meta:
         permissions = [
             ('read_label', 'Can access detailed view for labels.'),

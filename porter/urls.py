@@ -23,6 +23,9 @@ from porter.milestone import urls as milestone_urls
 from porter.label import urls as label_urls
 from porter.issue import urls as issue_urls
 from django.contrib.auth.views import login
+from core.user import urls as user_urls
+from core.project import urls as project_urls
+from core.repository import urls as repository_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -35,5 +38,8 @@ urlpatterns = [
     url(r'^issue/', include(issue_urls)),
     url(r'logout/$', views.logout_view),
     # TODO: New URL structure: /{project_title}/{repo_title}/{issues-members-etc}/{id}
-    url(r'^(?P<project_name>[A-Za-z]+)/$', views.project_test)
+    url(r'^(?P<project_name>[A-Za-z]+)/$', views.project_test),
+    url(r'^user/', include(user_urls)),
+    url(r'^project/', include(project_urls)),
+    url(r'^repository/', include(repository_urls))
 ]

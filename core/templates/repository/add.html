@@ -1,0 +1,5 @@
+<form action="/repository/add/" method="POST">
+    {% csrf_token %}
+    {{ repository }}
+    <input type="submit" value="Submit" />
+</form>

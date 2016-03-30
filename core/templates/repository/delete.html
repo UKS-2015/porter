@@ -1,0 +1,6 @@
+<form action="/repository/{{repository.instance.id}}/delete/" method="POST">
+    {% csrf_token %}
+    {{ repository }}
+    <p>Are you sure you want to delete this repository?</p>
+    <input type="submit" value="Delete" />
+</form>
