@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^issue_log/', include(issue_log_urls)),
     url(r'^group/', include(group_urls)),
     url(r'^user_project_role/', include(user_project_role_urls)),
+    url(r'logout/$', views.logout_view),
     # TODO: New URL structure: /{project_title}/{repo_title}/{issues-members-etc}/{id}
     url(r'^(?P<project_name>[A-Za-z]+)/$', views.project_test)
 ]
