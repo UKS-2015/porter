@@ -18,7 +18,7 @@ class GroupForm(ModelForm):
 class UserProjectRoleForm(ModelForm):
     class Meta:
         model = UserProjectRole
-        fields = ['role', 'user', 'repository']
+        fields = '__all__'
 
 class MilestoneForm(ModelForm):
     class Meta:

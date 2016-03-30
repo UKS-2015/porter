@@ -1,13 +1,27 @@
+from core.decorators import check_project_member
 from core.forms import IssueLogForm
 from core.models import IssueLog
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseBadRequest, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 
 
-# Create your views here.
+def list_all_test(user):
+    return True
 
+
+""" Views require both view permission, which allows them to access this application,
+and their operation specific permissions. I.e. editing requires view and change permissions.
+"""
+
+
+@permission_required('core.view_issuelog')
 def list_all(request):
+    user = request.user
+    for permission in user.get_all_permissions():
+        print(permission)
     paginator = Paginator(IssueLog.objects.all(), 25)
     # Pagination page number check
     page = request.GET.get('page')
@@ -20,6 +34,7 @@ def list_all(request):
     return render(request, 'issue_log/list.html', {'issue_logs': issue_logs})
 
 
+@permission_required(['core.view_issuelog', 'core.change_issuelog'])
 def edit(request, issue_log_id):
     if request.method == 'GET':
         issue_log = get_object_or_404(IssueLog, pk=issue_log_id)
@@ -40,6 +55,7 @@ def edit(request, issue_log_id):
         return HttpResponseBadRequest
 
 
+@permission_required(['core.view_issuelog', 'core.add_issuelog'])
 def create(request):
     form = IssueLogForm(request.POST)
     if request.method == 'GET':
@@ -54,11 +70,13 @@ def create(request):
             return HttpResponseBadRequest
 
 
+@permission_required(['core.view_issuelog', 'core.read_issuelog'])
 def detail(request, issue_log_id):
     issue_log = IssueLog.objects.get(pk=issue_log_id)
     return render(request, 'issue_log/detail.html', {'issue_log': issue_log})
 
 
+@permission_required(['core.view_issuelog', 'core.delete_issuelog'])
 def delete(request, issue_log_id):
     try:
         issue_log = IssueLog.objects.get(pk=issue_log_id)
@@ -66,3 +84,4 @@ def delete(request, issue_log_id):
         return redirect(list_all)
     except:
         raise Http404("Issue log doesn't exist.")
+
