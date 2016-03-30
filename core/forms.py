@@ -1,4 +1,5 @@
-from core.models import IssueLog, UserProjectRole, Milestone, Label, Issue
+from core.models import IssueLog, UserProjectRole, \
+    Milestone, Label, Issue, User, Project, Repository
 from django.forms import ModelForm
 from django.contrib.auth.models import Group
 
@@ -34,3 +35,18 @@ class IssueForm(ModelForm):
     class Meta:
         model = Issue
         fields = '__all__'
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        exclude = ['id']
+
+class ProjectForm(ModelForm):
+    class Meta:
+        model = Project
+        exclude = ['id']
+
+class RepositoryForm(ModelForm):
+    class Meta:
+        model = Repository
+        exclude = ['id']

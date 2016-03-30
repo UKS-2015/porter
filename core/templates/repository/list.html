@@ -1,0 +1,24 @@
+<h1>Repositorys</h1>
+<table>
+    <th>Title</th>
+    {% for repository in repository_list %}
+    <tr>
+        <td>{{repository.title}}</td>
+        <td><a href="/repository/{{repository.id}}">Details</a></td>
+        <td><a href="/repository/{{repository.id}}/change">Change</a></td>
+        <td><a href="/repository/{{repository.id}}/delete">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if repository_list.has_previous %}
+        <a href="?page={{repository_list.previous_page_number}}">Previous</a>
+        {% endif %}
+        Page {{ repository_list.number }} of {{ repository_list.paginator.num_pages }}
+        {% if repository_list.has_next %}
+        <a href="?page={{repository_list.next_page_number}}">Next</a>
+        {% endif %}
+    </span>
+</div>
+<a href="/repository/add">New</a>

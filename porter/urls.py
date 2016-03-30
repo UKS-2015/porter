@@ -21,6 +21,9 @@ from porter.user_project_role import urls as user_project_role_urls
 from porter.milestone import urls as milestone_urls
 from porter.label import urls as label_urls
 from porter.issue import urls as issue_urls
+from core.user import urls as user_urls
+from core.project import urls as project_urls
+from core.repository import urls as repository_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,5 +32,8 @@ urlpatterns = [
     url(r'^user_project_role/', include(user_project_role_urls)),
     url(r'^milestone/', include(milestone_urls)),
     url(r'^label/', include(label_urls)),
-    url(r'^issue/', include(issue_urls))
+    url(r'^issue/', include(issue_urls)),
+    url(r'^user/', include(user_urls)),
+    url(r'^project/', include(project_urls)),
+    url(r'^repository/', include(repository_urls))
 ]

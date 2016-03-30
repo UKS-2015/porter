@@ -13,19 +13,25 @@ class Project(models.Model):
     title = models.CharField(max_length=50)
     users = models.ManyToManyField(User)
 
+    def __str__(self):
+        return self.title
+
 class Repository(models.Model):
     title = models.CharField(max_length=50)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
     def __str__(self):
         return self.title
 
 class Milestone(models.Model):
     title = models.CharField(max_length=50)
+
     def __str__(self):
         return self.title
 
 class Label(models.Model):
     title = models.CharField(max_length=50)
+
     def __str__(self):
         return self.title
 
