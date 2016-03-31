@@ -1,1 +1,7 @@
 <h1>{{project.title}}</h1>
+<a href ="/{{project.title}}/change/">Change</a>
+
+<h3>Repositories</h3>
+{% for repo in repos %}
+<p><a href="/{{project.title}}/{{repo.title}}/">{{repo.title}}</a></p>
+{% endfor %}

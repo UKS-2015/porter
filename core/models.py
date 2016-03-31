@@ -20,7 +20,7 @@ class User(models.Model):
 
 class Project(models.Model):
     title = models.CharField(max_length=50)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(django.contrib.auth.models.User)
     class Meta:
         permissions = [
             ('read_userprojectrole', 'Can access detailed view for user project role.'),

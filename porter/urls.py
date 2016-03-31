@@ -27,6 +27,7 @@ from porter.issue import urls as issue_urls
 from porter.issue_log import urls as issue_log_urls
 from porter.label import urls as label_urls
 from porter.milestone import urls as milestone_urls
+from porter.project import urls as new_project_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -39,8 +40,8 @@ urlpatterns = [
     url(r'^issue/', include(issue_urls)),
     url(r'logout/$', views.logout_view),
     # TODO: New URL structure: /{project_title}/{repo_title}/{issues-members-etc}/{id}
-    url(r'^(?P<project_name>[A-Za-z]+)/$', views.project_test),
     url(r'^user/', include(user_urls)),
     url(r'^project/', include(project_urls)),
-    url(r'^repository/', include(repository_urls))
+    url(r'^repository/', include(repository_urls)),
+    url(r'^(?P<project_title>[A-Za-z]+)/', include(new_project_urls)),
 ]
