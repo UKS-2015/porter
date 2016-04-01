@@ -19,7 +19,6 @@ def list(request):
 def add(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST, auto_id=True)
-        import pdb; pdb.set_trace()
         if form.is_valid():
             Project.save(form.instance)
             return redirect(list)
