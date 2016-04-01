@@ -18,8 +18,8 @@ from porter.user_project_role import views
 
 urlpatterns = [
     url(r'^$', views.list_all),
-    url(r'^(?P<user_project_role_id>[0-9]+)/edit$', views.edit),
-    url(r'^(?P<user_project_role_id>[0-9]+)/$', views.detail),
+    url(r'^(?P<user_project_role_id>\d+)/change/$', views.edit),
+    url(r'^(?P<user_project_role_id>\d+)/$', views.detail),
     url(r'^new/$', views.create),
-    url(r'^(?P<user_project_role_id>[0-9]+)/delete/$', views.delete),
+    url(r'^(?P<user_project_role_id>\d+)/delete/$', views.delete),
 ]

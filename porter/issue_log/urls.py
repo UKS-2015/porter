@@ -18,8 +18,8 @@ from porter.issue_log import views
 
 urlpatterns = [
     url(r'^$', views.list_all),
-    url(r'^(?P<issue_log_id>[0-9]+)/edit$', views.edit),
-    url(r'^(?P<issue_log_id>[0-9]+)/$', views.detail),
+    url(r'^(?P<issue_log_id>\d+)/change/$', views.edit),
+    url(r'^(?P<issue_log_id>\d+)/$', views.detail),
     url(r'^new/$', views.create),
-    url(r'^(?P<issue_log_id>[0-9]+)/delete/$', views.delete),
+    url(r'^(?P<issue_log_id>\d+)/delete/$', views.delete),
 ]

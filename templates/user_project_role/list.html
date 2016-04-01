@@ -1,10 +1,11 @@
+<h1>User Project Roles</h1>
 <table>
     <th>Role</th>
     {% for user_project_role in user_project_roles %}
         <tr>
-            <td><a href ="/group/{{user_project_role.id}}">{{user_project_role.role.name}}</a></td>
-            <td><a href="/user_project_role/{{user_project_role.id}}/edit">Edit</a></td>
-            <td><a href="/user_project_role/{{user_project_role.id}}/delete">Delete</a></td>
+            <td><a href ="/group/{{user_project_role.id}}/">{{user_project_role.role.name}}</a></td>
+            <td><a href="/user_project_role/{{user_project_role.id}}/change/">Change</a></td>
+            <td><a href="/user_project_role/{{user_project_role.id}}/delete/">Delete</a></td>
         </tr>
     {% endfor %}
 </table>
