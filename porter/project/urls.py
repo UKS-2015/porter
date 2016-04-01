@@ -1,5 +1,7 @@
 from django.conf.urls import url, include
 from porter.project import views
+from porter.issue_log import urls as issue_log_urls
+from porter.repository import urls as repository_urls
 
 urlpatterns = [
     url(r'^$', views.overview),
@@ -9,5 +11,5 @@ urlpatterns = [
     # url(r'^issues/$', views.edit),
     # url(r'^milestones/$', views.edit),
     # url(r'^issue_log/', include(issue_log_urls)),
-    # url(r'^(?P<repository_name>[A-Za-z]+)/$', views.project_test)
+    url(r'^repository/', include(repository_urls)),
 ]

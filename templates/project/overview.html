@@ -3,5 +3,7 @@
 
 <h3>Repositories</h3>
 {% for repo in repos %}
-<p><a href="/{{project.title}}/{{repo.title}}/">{{repo.title}}</a></p>
+<p><a href="/{{project.title}}/repository/{{repo.title}}/">{{repo.title}}</a></p>
 {% endfor %}
+
+<p><a href="/{{project.title}}/repository/new/">New Repository</a></p>

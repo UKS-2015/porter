@@ -19,8 +19,7 @@ def check_project_member():
             project = Project.objects.filter(title=project_title)
 
             # Check if the user is involved in the project
-            upr_count = UserProjectRole.objects.filter(project=project, user=request.user).count()
-            if upr_count > 0:
+            if request.user in project.users:
                 return function(*args, **kwargs)
             else:
                 raise PermissionDenied
