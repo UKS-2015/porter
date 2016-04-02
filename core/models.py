@@ -109,6 +109,7 @@ class IssueLog(models.Model):
     object_user = models.ForeignKey(User, related_name='issue_log_object')
     subject_user = models.ForeignKey(User, related_name='issue_log_subject')
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+    date_modified = models.DateTimeField(null=False, auto_now=True)
     class Meta:
         permissions = [
             ('read_issuelog', 'Can access detailed view for issue logs.'),

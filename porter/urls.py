@@ -38,10 +38,15 @@ urlpatterns = [
     url(r'^milestone/', include(milestone_urls)),
     url(r'^label/', include(label_urls)),
     url(r'^issue/', include(issue_urls)),
-    url(r'logout/$', views.logout_view),
+    url(r'logout/$', views.logout_view, name='logout'),
     # TODO: New URL structure: /{project_title}/{repo_title}/{issues-members-etc}/{id}
     url(r'^user/', include(user_urls)),
     url(r'^project/', include(project_urls)),
     url(r'^repository/', include(repository_urls)),
+    # User related
+    url(r'^$', views.user_dashboard, name='user_dashboard'),
+    url(r'^projects/$', views.user_projects, name='user_projects'),
+    # Project related
     url(r'^(?P<project_title>[^/\\]+)/', include(new_project_urls)),
+
 ]

@@ -33,8 +33,8 @@
         {% endif %}
     </span>
 </div>
-<p><a href="/{{project_title}}/repository/new/">New Repository</a></p>
-<p><a href="/{{project_title}}/">Back</a></p>
+<p><a href="{% url 'repo_create' project_title %}">New Repository</a></p>
+<p><a href="{% url 'project_overview' project_title %}">Back</a></p>
 
 <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
 
