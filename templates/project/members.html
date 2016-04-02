@@ -4,7 +4,7 @@
     {% for user in users %}
         <tr>
             <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
-            <td><a href="/{{project_title}}/members/{{user.id}}/remove/">Remove</a></td>
+            <td><a href="/{{project_title}}/members/{{user.id}}/remove/" class="remove">Remove</a></td>
         </tr>
     {% endfor %}
 </table>
@@ -20,3 +20,14 @@
     </span>
 </div>
 <a href="/{{project_title}}/members/add">Add</a>
+
+<script>
+    $( document ).ready(function() {
+         $('.remove').click(function(e){
+         if (!confirm('Remove this user from the project?')){
+             e.preventDefault();
+         }
+        });
+    });
+
+</script>

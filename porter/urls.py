@@ -43,5 +43,5 @@ urlpatterns = [
     url(r'^user/', include(user_urls)),
     url(r'^project/', include(project_urls)),
     url(r'^repository/', include(repository_urls)),
-    url(r'^(?P<project_title>[A-Za-z]+)/', include(new_project_urls)),
+    url(r'^(?P<project_title>[^/\\]+)/', include(new_project_urls)),
 ]

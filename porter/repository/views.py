@@ -1,11 +1,14 @@
 from core.forms import RepositoryForm, RepositoryProjectForm
 from core.models import Repository, Issue, Project
-from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
+from django.http import Http404
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 def overview(request, repository_title, project_title=None):
+    repository = get_object_or_404(Repository, title=repository_title)
     issues = Issue.objects.filter(repository__title=repository_title)
-    return render(request, 'repository/overview.html', {'issues': issues})
+    return render(request, 'repository/overview.html', {'issues': issues, 'project_title': project_title})
 
 
 def create(request, project_title):
@@ -15,7 +18,12 @@ def create(request, project_title):
             repository = form.instance
             repository.project = Project.objects.get(title=project_title)
             Repository.save(repository)
-            return redirect('/{0}/repository/{1}/'.format(project_title, repository.title))
+            # return redirect('/{0}/repository/{1}/'.format(project_title, repository.title))
+            return redirect(reverse('repo_overview',
+                                    kwargs={
+                                        'project_title': project_title,
+                                        'repository_title': repository.title
+                                    }))
     else:
         form = RepositoryProjectForm()
 
@@ -29,8 +37,19 @@ def change(request, repository_title, project_title):
             Repository.save(form.instance)
             return redirect(overview)
     else:
-        repository = Repository.objects.get(title=repository_title)
-        print(repository)
+        repository = get_object_or_404(Repository, title=repository_title)
         form = RepositoryProjectForm(instance=repository)
 
     return render(request, 'repository/change.html', {'repository': form, 'project_title': project_title})
+
+
+def list_all(request, project_title):
+    project = Project.objects.get(title=project_title)
+    repos = Repository.objects.filter(project=project)
+    return render(request, 'repository/list.html', {'repository_list': repos, 'project_title': project_title})
+
+
+def delete(request, repository_title, project_title=None):
+    repository = get_object_or_404(Repository, title=repository_title)
+    Repository.delete(repository)
+    return redirect(reverse('repo_list_all', kwargs={'project_title': project_title}))

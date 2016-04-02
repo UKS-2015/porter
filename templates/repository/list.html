@@ -1,0 +1,50 @@
+<h1>Repositories</h1>
+<table>
+    <th>Title</th>
+    {% for repository in repository_list %}
+    <tr>
+        <td>{{repository.title}}</td>
+        <td><a href="{% url 'repo_overview' project_title repository.title %}">
+                Details
+            </a>
+        </td>
+        <td>
+            <a href="{% url 'repo_change' project_title repository.title %}">
+                Change
+            </a>
+        </td>
+        <td>
+            <a href="{% url 'repo_delete' project_title repository.title %}"
+               class="delete">
+                Delete
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if repository_list.has_previous %}
+        <a href="?page={{repository_list.previous_page_number}}">Previous</a>
+        {% endif %}
+        Page {{ repository_list.number }} of {{ repository_list.paginator.num_pages }}
+        {% if repository_list.has_next %}
+        <a href="?page={{repository_list.next_page_number}}">Next</a>
+        {% endif %}
+    </span>
+</div>
+<p><a href="/{{project_title}}/repository/new/">New Repository</a></p>
+<p><a href="/{{project_title}}/">Back</a></p>
+
+<script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+
+<script>
+    $( document ).ready(function() {
+         $('.delete').click(function(e){
+         if (!confirm('Delete this repository?')){
+             e.preventDefault();
+         }
+        });
+    });
+
+</script>

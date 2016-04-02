@@ -3,7 +3,7 @@
     <th>Username</th>
     {% for user in users %}
         <tr>
-            <form action="/{{project_title}}/members/add/" method="post">
+            <form action="{% url 'project_add_member' project_title %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" value="{{user.id}}" name="user_id">
                 <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>

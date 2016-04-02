@@ -1,9 +1,9 @@
 <h1>{{project.title}}</h1>
-<a href ="/{{project.title}}/change/">Change</a>
 
-<h3>Repositories</h3>
-{% for repo in repos %}
-<p><a href="/{{project.title}}/repository/{{repo.title}}/">{{repo.title}}</a></p>
-{% endfor %}
+<p>{{project.description}}</p>
 
-<p><a href="/{{project.title}}/repository/new/">New Repository</a></p>
+<p><a href ="/{{project.title}}/change/">Change</a></p>
+
+<a href="{% url 'project_members' project.title %}">Members</a>
+<a href="{% url 'repo_list_all' project.title %}">Repositories</a>
+<a href="{% url 'project_issues' project.title %}">Issues</a>
