@@ -19,7 +19,8 @@ class User(models.Model):
 
 
 class Project(models.Model):
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50, unique=True, null=False, blank=False)
+    description = models.CharField(max_length=255, null=False, blank=False)
     users = models.ManyToManyField(django.contrib.auth.models.User)
     class Meta:
         permissions = [
