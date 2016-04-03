@@ -1,12 +1,18 @@
-<h2>Welcome {{user.username}} </h2>
+{% include "common/header.html" %}
+<body>
+<html>
 
-<a href="{% url 'logout' %}">Logout</a>
+{% include "common/navbar.html" with active="dashboard" %}
 
-<p><a href="{% url 'user_projects' %}">Projects</a></p>
+<div class="container-fluid">
+    <h3>Recent Events</h3>
+    {% for recent_log in recent_logs %}
+        <p><b>{{recent_log.issue.title }}</b></p>
+        <p> {{ recent_log.content }}</p>
+        <p>{{ recent_log.date_modified|timesince }} ago</p>
+    {% endfor %}
+</div>
 
-<h3>Recent Events</h3>
-{% for recent_log in recent_logs %}
-    <p><b>{{recent_log.issue.title }}</b></p>
-    <p> {{ recent_log.content }}</p>
-    <p>{{ recent_log.date_modified|timesince }} ago</p>
-{% endfor %}
+
+</html>
+</body>

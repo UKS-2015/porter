@@ -21,7 +21,7 @@ def logout_view(request):
     logout(request)
     return redirect('/')
 
-
+@login_required()
 def user_dashboard(request):
     user = request.user
     # Get 5 most recent logs from all user's projects
