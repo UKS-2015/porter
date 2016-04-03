@@ -1,21 +1,21 @@
 import django
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.db import models
 
 
-class User(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50)
-    class Meta:
-        permissions = [
-            ('read_user', 'Can access detailed view for users.'),
-            ('view_user', 'Can access the user application.')
-        ]
-
-    def __str__(self):
-        return self.username
+# class User(models.Model):
+#     first_name = models.CharField(max_length=50)
+#     last_name = models.CharField(max_length=50)
+#     username = models.CharField(max_length=50)
+#     class Meta:
+#         permissions = [
+#             ('read_user', 'Can access detailed view for users.'),
+#             ('view_user', 'Can access the user application.')
+#         ]
+#
+#     def __str__(self):
+#         return self.username
 
 
 class Project(models.Model):
@@ -92,7 +92,7 @@ class Issue(models.Model):
 
 class UserProjectRole(models.Model):
     role = models.ForeignKey(Group)
-    user = models.ManyToManyField(django.contrib.auth.models.User, related_name='user_roles')
+    user = models.ManyToManyField(User, related_name='user_roles')
     project = models.ManyToManyField(Project, related_name='project_roles')
     class Meta:
         permissions = [
