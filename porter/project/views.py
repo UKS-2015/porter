@@ -3,26 +3,19 @@ from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseBadRequest
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 def overview(request, project_title):
-    print(project_title)
-    project = Project.objects.get(title=project_title)
+    project = get_object_or_404(Project, title=project_title)
     repos = Repository.objects.filter(project=project)
     return render(request, 'project/overview.html', {'project': project})
 
 
 def members(request, project_title):
-    project = Project.objects.get(title=project_title)
-
-    # If request method is POST, save then show all members
-    if request.method == 'POST':
-        user_id = request.POST.get('user_id')
-        user = User.objects.get(pk=user_id)
-        project.users.add(user)
-
-    # Show all project members
+    print("MEMBERS")
+    project = get_object_or_404(Project, title=project_title)
+    print(project.users.all())
     paginator = Paginator(project.users.all(), 25)
     page = request.GET.get('page')
 
@@ -45,7 +38,6 @@ def remove_member(request, project_title, user_id):
 
 
 def add_member(request, project_title):
-
     paginator = Paginator(User.objects.all(), 25)
     page = request.GET.get('page')
 
@@ -58,11 +50,10 @@ def add_member(request, project_title):
 
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
-        project = Project.objects.get(title=project_title)
-        user = User.objects.get(pk=user_id)
+        project = get_object_or_404(Project, title=project_title)
+        user = get_object_or_404(User, pk=user_id)
         project.users.add(user)
-
-        return render(request, 'project/members.html', {'project_title': project_title, 'users': users})
+        return redirect(reverse('project_members', kwargs={'project_title': project_title}))
     elif request.method == 'GET':
         return render(request, 'project/members_add.html', {'project_title': project_title, 'users': users})
     else:
