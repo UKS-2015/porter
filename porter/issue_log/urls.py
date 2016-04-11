@@ -14,12 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from porter.issue_log import views
+from porter.issue_log.views import IssueLogList, IssueLogCreate, IssueLogDetail, IssueLogUpdate, IssueLogDelete
+
+app_name = 'issue_log'
 
 urlpatterns = [
-    url(r'^$', views.list_all),
-    url(r'^(?P<issue_log_id>\d+)/change/$', views.edit),
-    url(r'^(?P<issue_log_id>\d+)/$', views.detail),
-    url(r'^new/$', views.create),
-    url(r'^(?P<issue_log_id>\d+)/delete/$', views.delete),
+    url(r'^$', IssueLogList.as_view(), name='list'),
+    url(r'add/$', IssueLogCreate.as_view(), name='add'),
+    url(r'(?P<pk>[0-9]+)/$', IssueLogDetail.as_view(), name='detail'),
+    url(r'(?P<pk>[0-9]+)/update/$', IssueLogUpdate.as_view(), name='update'),
+    url(r'(?P<pk>[0-9]+)/delete/$', IssueLogDelete.as_view(), name='delete'),
 ]
