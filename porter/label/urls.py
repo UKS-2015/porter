@@ -14,17 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from porter.label import views
+from porter.label.views import LabelList, LabelCreate, LabelDetail, LabelUpdate, LabelDelete
+
+app_name = 'label'
 
 urlpatterns = [
-    # ex: /label/
-    url(r'^$', views.list, name='list'),
-    # ex: /label/5/change
-    url(r'^(?P<label_id>\d+)/change/$', views.change, name='change'),
-    # ex: /label/5/
-    url(r'^(?P<label_id>\d+)/$', views.detail, name='detail'),
-    # ex: /label/add/
-    url(r'^add/$', views.add, name='add'),
-    # ex: /label/5/delete/
-    url(r'^(?P<label_id>\d+)/delete/$', views.delete, name='delete'),
+    url(r'^$', LabelList.as_view(), name='list'),
+    url(r'add/$', LabelCreate.as_view(), name='add'),
+    url(r'(?P<pk>[0-9]+)/$', LabelDetail.as_view(), name='detail'),
+    url(r'(?P<pk>[0-9]+)/update/$', LabelUpdate.as_view(), name='update'),
+    url(r'(?P<pk>[0-9]+)/delete/$', LabelDelete.as_view(), name='delete'),
 ]

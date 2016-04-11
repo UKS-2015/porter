@@ -1,65 +1,52 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import redirect
 from core.models import Label
 from core.forms import LabelForm
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.core.urlresolvers import reverse_lazy
 
-def list(request):
-    paginator = Paginator(Label.objects.all(), 25)
-    # Pagination page number check
-    page = request.GET.get('page')
-    try:
-        label_list = paginator.page(page)
-    except PageNotAnInteger:
-        label_list = paginator.page(1)
-    except EmptyPage:
-        label_list = paginator.page(paginator.num_pages)
+class LabelCreate(CreateView):
+    model = Label
+    fields = LabelForm.Meta.fields
+    template_name = 'label/form.html'
 
-    context = {'label_list': label_list}
-    return render(request, 'label/list.html', context)
-
-def add(request):
-    if request.method == 'POST':
+    def post(self, request):
         # create a form instance and populate it with data from the request:
-        form = LabelForm(request.POST, auto_id=True)
+        form = LabelForm(request.POST, auto_id=True )
         # check whether it's valid:
         if form.is_valid():
-            Label.save(form.instance)
-            return redirect(list)
+            form.save()
+            return redirect('label:list')
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = LabelForm()
+class LabelUpdate(UpdateView):
+    model = Label
+    fields = LabelForm.Meta.fields
+    template_name = 'label/form.html'
+    success_url = reverse_lazy('label:list')
 
-    return render(request, 'label/add.html', {'label': form})
+class LabelDelete(DeleteView):
+    model = Label
+    template_name = 'label/confirm-delete.html'
+    success_url = reverse_lazy('label:list')
 
-def detail(request, label_id):
-    label = Label.objects.get(pk=label_id)
-    form = LabelForm(instance = label)
-    return render(request, 'label/detail.html', {'label': form})
+class LabelDetail(DetailView):
+    model = Label
+    success_url = reverse_lazy('list')
+    template_name = 'label/detail.html'
 
-def change(request, label_id):
-    if request.method == 'GET':
-        label = get_object_or_404(Label, pk=label_id)
-        form = LabelForm(instance=label)
-        return render(request, 'label/change.html', {'label': form})
-    if request.method == 'POST':
-        form = LabelForm(request.POST)
-        if form.is_valid():
-            label = form.instance
-            label.id = label_id
-            Label.save(label)
-            return redirect(list)
+    def get_context_data(self, **kwargs):
+        context = super(LabelDetail, self).get_context_data(**kwargs)
+        label = Label.objects.get(pk=self.kwargs['pk'])
+        context['object'] = label.to_dict()
+        return context
 
-    return render(request, 'milestone/change.html', {'form': form})
+class LabelList(ListView):
+    model = Label
+    template_name = 'label/list.html'
+    paginate_by = 10
 
-def delete(request, label_id):
-    if request.method == 'GET':
-        label = get_object_or_404(Label, pk=label_id)
-        form = LabelForm(instance=label)
-        return render(request, 'label/delete.html', {'label': form})
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        label = Label.objects.get(pk=label_id)
-        Label.delete(label)
-        return redirect(list)
-    return redirect(list)
+    def get_context_data(self, **kwargs):
+        context = super(LabelList, self).get_context_data(**kwargs)
+        context['page_obj'] = [object.to_dict() for object in Label.objects.all()]
+        return context
