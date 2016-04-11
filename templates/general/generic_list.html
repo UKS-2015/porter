@@ -1,0 +1,55 @@
+{% extends 'general/generic_paginator.html' %}
+
+{% load bootstrap3 %}
+{% load bootstrap_pagination %}
+{% load filters %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+<a class="btn btn-primary pull-right" href="/{{ namespace }}/add"><span class="glyphicon glyphicon-plus"></span> New</a>
+<br><br>
+<table class="table">
+    <thead>
+        {% for object in page_obj %}
+            {% if forloop.first %}
+                <tr>
+                {% for key,value in object.items %}
+                    {% if key != 'id' %}
+                        <th>{{ key|title }}</th>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </thead>
+    <tbody>
+    {% for object in page_obj %}
+
+        <tr>
+            {% for key,value in object.items %}
+                {% if key != 'id' %}
+                    {% if value|is_list %}
+                        <td>
+                        {% for item in value %}
+                             {{ item }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                        </td>
+                    {% else %}
+                        <td>{{ value }}</td>
+                    {% endif %}
+                {% endif %}
+
+            {% endfor %}
+
+            <td><a href="/{{namespace}}/{{object.id}}">Detail</a></td>
+            <td><a href="/{{namespace}}/{{object.id}}/update">Update</a></td>
+            <td><a href="/{{namespace}}/{{object.id}}/delete">Delete</a></td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
