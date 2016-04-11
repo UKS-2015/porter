@@ -1,7 +1,3 @@
-<table>
-<tr>
-    <td><b>Role: </b></td><td>{{user_project_role.role}}</td>
-    <td><b>User: </b></td><td>{{user_project_role.user}}</td>
-    <td><b>Repository: </b></td><td>{{user_project_role.repository}}</td>
-</tr>
-</table>
+{% with title="User role on project" namespace='user_project_role' %}
+{% include "general/generic_detail.html" %}
+{% endwith %}

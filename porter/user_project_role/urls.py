@@ -14,12 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from porter.user_project_role import views
+from porter.user_project_role.views import UserProjectRoleList, UserProjectRoleCreate, UserProjectRoleDetail, UserProjectRoleUpdate, UserProjectRoleDelete
+
+app_name = 'user_project_role'
 
 urlpatterns = [
-    url(r'^$', views.list_all),
-    url(r'^(?P<user_project_role_id>\d+)/change/$', views.edit),
-    url(r'^(?P<user_project_role_id>\d+)/$', views.detail),
-    url(r'^new/$', views.create),
-    url(r'^(?P<user_project_role_id>\d+)/delete/$', views.delete),
+    url(r'^$', UserProjectRoleList.as_view(), name='list'),
+    url(r'add/$', UserProjectRoleCreate.as_view(), name='add'),
+    url(r'(?P<pk>[0-9]+)/$', UserProjectRoleDetail.as_view(), name='detail'),
+    url(r'(?P<pk>[0-9]+)/update/$', UserProjectRoleUpdate.as_view(), name='update'),
+    url(r'(?P<pk>[0-9]+)/delete/$', UserProjectRoleDelete.as_view(), name='delete'),
 ]
