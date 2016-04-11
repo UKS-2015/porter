@@ -1,73 +1,54 @@
+from django.shortcuts import redirect
+from core.models import Group
 from core.forms import GroupForm
-from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.models import Group
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponseBadRequest, Http404
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic.edit import FormMixin
 
+class GroupCreate(CreateView):
+    model = Group
+    fields = GroupForm.Meta.fields
+    template_name = 'group/form.html'
 
-# Create your views here.
-
-@permission_required('auth.view_group')
-def list_all(request):
-    paginator = Paginator(Group.objects.all(), 25)
-    # Pagination page number check
-    page = request.GET.get('page')
-    try:
-        groups = paginator.page(page)
-    except PageNotAnInteger:
-        groups = paginator.page(1)
-    except EmptyPage:
-        groups = paginator.page(paginator.num_pages)
-    return render(request, 'group/list.html', {'groups': groups})
-
-
-@permission_required(['auth.view_group', 'auth.change_group'])
-def edit(request, group_id):
-    if request.method == 'GET':
-        group = get_object_or_404(Group, pk=group_id)
-        form = GroupForm(instance=group)
-        return render(request, 'group/edit.html', {'group': form})
-    elif request.method == 'POST':
-        form = GroupForm(request.POST)
-        group = form.instance
-        # Doesn't have an id apparently
-        group.id = group_id
+    def post(self, request):
+        # create a form instance and populate it with data from the request:
+        form = GroupForm(request.POST, auto_id=True )
+        # check whether it's valid:
         if form.is_valid():
-            Group.save(group)
-            return redirect(list_all)
-        else:
-            # TODO: Front end validation
-            return render(request, 'group/edit.html', {'group': form})
-    else:
-        return HttpResponseBadRequest
+            form.save()
+            return redirect('group:list')
 
+class GroupUpdate(UpdateView):
+    model = Group
+    fields = GroupForm.Meta.fields
+    template_name = 'group/form.html'
+    success_url = reverse_lazy('group:list')
 
-@permission_required(['auth.view_group', 'auth.add_group'])
-def create(request):
-    form = GroupForm(request.POST)
-    if request.method == 'GET':
-        return render(request, 'group/create.html', {'group': form})
-    else:
-        if request.method == 'POST':
-            form = GroupForm(request.POST)
-        if form.is_valid():
-            groups = form.instance
-            Group.save(groups)
-            return redirect(list_all)
+class GroupDelete(DeleteView):
+    model = Group
+    template_name = 'group/confirm-delete.html'
+    success_url = reverse_lazy('group:list')
 
+class GroupDetail(DetailView):
+    model = Group
+    success_url = reverse_lazy('list')
+    template_name = 'group/detail.html'
 
-@permission_required(['auth.view_group', 'auth.read_group'])
-def detail(request, group_id):
-    groups = Group.objects.get(pk=group_id)
-    return render(request, 'group/detail.html', {'group': groups})
+    def get_context_data(self, **kwargs):
+        context = super(GroupDetail, self).get_context_data(**kwargs)
+        group = Group.objects.get(pk=self.kwargs['pk'])
+        context['object'] = group.to_dict()
+        return context
 
+class GroupList(ListView, FormMixin):
+    model = Group
+    template_name = 'issue/list.html'
+    paginate_by = 10
+    form_class = GroupForm
 
-@permission_required(['auth.view_group', 'auth.delete_group'])
-def delete(request, group_id):
-    try:
-        group = Group.objects.get(pk=group_id)
-        Group.delete(group)
-        return redirect(list_all)
-    except:
-        raise Http404("Issue log doesn't exist.")
+    def get_context_data(self, **kwargs):
+        context = super(GroupList, self).get_context_data(**kwargs)
+        context['page_obj'] = [{'id':object.id} for object in Group.objects.all()]
+        return context

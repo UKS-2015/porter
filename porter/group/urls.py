@@ -14,12 +14,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from porter.group import views
+from porter.group.views import GroupList, GroupCreate, GroupDetail, GroupUpdate, GroupDelete
+
+app_name = 'issue'
 
 urlpatterns = [
-    url(r'^$', views.list_all),
-    url(r'^(?P<group_id>\d+)/change/$', views.edit),
-    url(r'^(?P<group_id>\d+)/$', views.detail),
-    url(r'^new/$', views.create),
-    url(r'^(?P<group_id>\d+)/delete/$', views.delete),
+    # ex: /group/
+    url(r'^$', GroupList.as_view(), name='list'),
+     # ex: /group/5/add/
+    url(r'add/$', GroupCreate.as_view(), name='add'),
+     # ex: /group/5/
+    url(r'(?P<pk>[0-9]+)/$', GroupDetail.as_view(), name='detail'),
+     # ex: /group/5/update/
+    url(r'(?P<pk>[0-9]+)/update/$', GroupUpdate.as_view(), name='update'),
+     # ex: /group/5/delete/
+    url(r'(?P<pk>[0-9]+)/delete/$', GroupDelete.as_view(), name='delete'),
 ]
