@@ -20,6 +20,7 @@ class User(models.Model):
     def to_dict(instance):
         opts = instance._meta
         data = {}
+        data['id'] = instance.id
         data['first_name'] = instance.first_name
         data['last_name'] = instance.last_name
         data['username'] = instance.username
@@ -41,6 +42,7 @@ class Project(models.Model):
     def to_dict(instance):
         opts = instance._meta
         data = {}
+        data['id'] = instance.id
         data['title'] = instance.title
         data['users'] = [user for user in instance.users.all()]
         for f in opts.concrete_fields:
@@ -63,6 +65,7 @@ class Repository(models.Model):
     def to_dict(instance):
         opts = instance._meta
         data = {}
+        data['id'] = instance.id
         data['title'] = instance.title
         data['project'] = Project.objects.get(pk = instance.project.id)
         return data
@@ -85,6 +88,7 @@ class Milestone(models.Model):
     def to_dict(instance):
         opts = instance._meta
         data = {}
+        data['id'] = instance.id
         data['title'] = instance.title
         return data
 
@@ -103,6 +107,7 @@ class Label(models.Model):
     def to_dict(instance):
         opts = instance._meta
         data = {}
+        data['id'] = instance.id
         data['title'] = instance.title
         return data
 
@@ -124,6 +129,7 @@ class Issue(models.Model):
 
     def to_dict(instance):
         data = {}
+        data['id'] = instance.id
         data['title'] = instance.title
         data['creator'] = User.objects.get(pk = instance.creator.id)
         data['assignee'] = User.objects.get(pk = instance.assignee.id)
@@ -147,9 +153,10 @@ class UserProjectRole(models.Model):
 
     def to_dict(instance):
         data = {}
-        data['title'] = instance.title
+        data['id'] = instance.id
+        data['role'] = instance.role
         data['user'] = [user for user in instance.user.all()]
-        data['project'] = [label for label in instance.project.all()]
+        data['project'] = [project for project in instance.project.all()]
         return data
 
 class IssueLog(models.Model):
@@ -169,6 +176,7 @@ class IssueLog(models.Model):
 
     def to_dict(instance):
         data = {}
+        data['id'] = instance.id
         data['content'] = instance.content
         data['log_type'] = instance.log_type
         data['object_user'] = User.objects.get(pk = instance.object_user.id)
@@ -187,3 +195,9 @@ class PorterGroup(Group):
             ('read_group', 'Can access detailed view for groups.'),
             ('view_group', 'Can access the group application.')
         ]
+
+    def to_dict(instance):
+        data = {}
+        data['id'] = instance.id
+        data['name'] = instance.name
+        return data

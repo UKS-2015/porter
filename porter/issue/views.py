@@ -6,8 +6,6 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic.edit import FormMixin
-from django.forms.models import model_to_dict
 
 class IssueCreate(CreateView):
     model = Issue
@@ -44,12 +42,10 @@ class IssueDetail(DetailView):
         context['object'] = issue.to_dict()
         return context
 
-class IssueList(ListView, FormMixin):
+class IssueList(ListView):
     model = Issue
     template_name = 'issue/list.html'
-    context_object_name = "object_list"
     paginate_by = 10
-    form_class = IssueForm
 
     def get_context_data(self, **kwargs):
         context = super(IssueList, self).get_context_data(**kwargs)
