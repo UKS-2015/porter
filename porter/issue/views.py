@@ -1,68 +1,57 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import redirect, get_object_or_404
 from core.models import Issue
 from core.forms import IssueForm
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core import serializers
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic.edit import FormMixin
+from django.forms.models import model_to_dict
 
-def list(request):
-    paginator = Paginator(Issue.objects.all(), 25)
-    # Pagination page number check
-    page = request.GET.get('page')
-    try:
-        issue_list = paginator.page(page)
-    except PageNotAnInteger:
-        issue_list = paginator.page(1)
-    except EmptyPage:
-        issue_list = paginator.page(paginator.num_pages)
+class IssueCreate(CreateView):
+    model = Issue
+    fields = IssueForm.Meta.fields
+    template_name = 'issue/form.html'
 
-    context = {'issue_list': issue_list}
-    return render(request, 'issue/list.html', context)
-
-def add(request):
-    if request.method == 'POST':
+    def post(self, request):
         # create a form instance and populate it with data from the request:
-        form = IssueForm(request.POST, auto_id=True)
+        form = IssueForm(request.POST, auto_id=True )
         # check whether it's valid:
         if form.is_valid():
-            Issue.save(form.instance)
-            return redirect(list)
+            form.save()
+            return redirect('issue:list')
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = IssueForm()
+class IssueUpdate(UpdateView):
+    model = Issue
+    fields = IssueForm.Meta.fields
+    template_name = 'issue/form.html'
+    success_url = reverse_lazy('issue:list')
 
-    return render(request, 'issue/add.html', {'issue': form})
+class IssueDelete(DeleteView):
+    model = Issue
+    template_name = 'issue/confirm-delete.html'
+    success_url = reverse_lazy('issue:list')
 
-def detail(request, issue_id):
-    issue = Issue.objects.get(pk=issue_id)
-    form = IssueForm(instance = issue)
-    return render(request, 'issue/detail.html', {'issue': form.as_p()})
+class IssueDetail(DetailView):
+    model = Issue
+    success_url = reverse_lazy('list')
+    template_name = 'issue/detail.html'
 
-def change(request, issue_id):
-    if request.method == 'GET':
-        issue = get_object_or_404(Issue, pk=issue_id)
-        form = IssueForm(instance=issue)
-        return render(request, 'issue/change.html', {'issue': form})
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = IssueForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            issue = form.instance
-            issue.id = issue_id
-            Issue.save(issue)
-            # redirect to a new URL:
-            return redirect(list)
+    def get_context_data(self, **kwargs):
+        context = super(IssueDetail, self).get_context_data(**kwargs)
+        issue = Issue.objects.get(pk=self.kwargs['pk'])
+        context['object'] = issue.to_dict()
+        return context
 
-    return render(request, 'issue/change.html', {'form': form})
+class IssueList(ListView, FormMixin):
+    model = Issue
+    template_name = 'issue/list.html'
+    context_object_name = "object_list"
+    paginate_by = 10
+    form_class = IssueForm
 
-def delete(request, issue_id):
-    if request.method == 'GET':
-        issue = get_object_or_404(Issue, pk=issue_id)
-        form = IssueForm(instance=issue)
-        return render(request, 'issue/delete.html', {'issue': form})
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        issue = Issue.objects.get(pk=issue_id)
-        Issue.delete(issue)
-        return redirect(list)
-    return redirect(list)
+    def get_context_data(self, **kwargs):
+        context = super(IssueList, self).get_context_data(**kwargs)
+        context['page_obj'] = [object.to_dict() for object in Issue.objects.all()]
+        return context
