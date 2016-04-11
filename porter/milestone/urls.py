@@ -14,17 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from porter.milestone import views
+from porter.milestone.views import MilestoneList, MilestoneCreate, MilestoneDetail, MilestoneUpdate, MilestoneDelete
+
+app_name = 'milestone'
 
 urlpatterns = [
-    # ex: /milestone/
-    url(r'^$', views.list, name='list'),
-    # ex: /milestone/5/change
-    url(r'^(?P<milestone_id>\d+)/change/$', views.change, name='change'),
-    # ex: /milestone/5/
-    url(r'^(?P<milestone_id>\d+)/$', views.detail, name='detail'),
-    # ex: /milestone/add/
-    url(r'^add/$', views.add, name='add'),
-    # ex: /milestone/5/delete/
-    url(r'^(?P<milestone_id>\d+)/delete/$', views.delete, name='delete'),
+    url(r'^$', MilestoneList.as_view(), name='list'),
+    url(r'add/$', MilestoneCreate.as_view(), name='add'),
+    url(r'(?P<pk>[0-9]+)/$', MilestoneDetail.as_view(), name='detail'),
+    url(r'(?P<pk>[0-9]+)/update/$', MilestoneUpdate.as_view(), name='update'),
+    url(r'(?P<pk>[0-9]+)/delete/$', MilestoneDelete.as_view(), name='delete'),
 ]

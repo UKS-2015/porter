@@ -1,68 +1,52 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import redirect
 from core.models import Milestone
 from core.forms import MilestoneForm
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
+from django.core.urlresolvers import reverse_lazy
 
-def list(request):
-    paginator = Paginator(Milestone.objects.all(), 25)
-    # Pagination page number check
-    page = request.GET.get('page')
-    try:
-        milestone_list = paginator.page(page)
-    except PageNotAnInteger:
-        milestone_list = paginator.page(1)
-    except EmptyPage:
-        milestone_list = paginator.page(paginator.num_pages)
+class MilestoneCreate(CreateView):
+    model = Milestone
+    fields = MilestoneForm.Meta.fields
+    template_name = 'milestone/form.html'
 
-    context = {'milestone_list': milestone_list}
-    return render(request, 'milestone/list.html', context)
-
-def add(request):
-    if request.method == 'POST':
+    def post(self, request):
         # create a form instance and populate it with data from the request:
-        form = MilestoneForm(request.POST, auto_id=True)
+        form = MilestoneForm(request.POST, auto_id=True )
         # check whether it's valid:
         if form.is_valid():
-            Milestone.save(form.instance)
-            return redirect(list)
+            form.save()
+            return redirect('milestone:list')
 
-    # if a GET (or any other method) we'll create a blank form
-    else:
-        form = MilestoneForm()
+class MilestoneUpdate(UpdateView):
+    model = Milestone
+    fields = MilestoneForm.Meta.fields
+    template_name = 'milestone/form.html'
+    success_url = reverse_lazy('milestone:list')
 
-    return render(request, 'milestone/add.html', {'milestone': form})
+class MilestoneDelete(DeleteView):
+    model = Milestone
+    template_name = 'milestone/confirm-delete.html'
+    success_url = reverse_lazy('milestone:list')
 
-def detail(request, milestone_id):
-    milestone = Milestone.objects.get(pk=milestone_id)
-    form = MilestoneForm(instance = milestone)
-    return render(request, 'milestone/detail.html', {'milestone': form.as_p()})
+class MilestoneDetail(DetailView):
+    model = Milestone
+    success_url = reverse_lazy('list')
+    template_name = 'milestone/detail.html'
 
-def change(request, milestone_id):
-    if request.method == 'GET':
-        milestone = get_object_or_404(Milestone, pk=milestone_id)
-        form = MilestoneForm(instance=milestone)
-        return render(request, 'milestone/change.html', {'milestone': form})
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = MilestoneForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            milestone = form.instance
-            milestone.id = milestone_id
-            Milestone.save(milestone)
-            # redirect to a new URL:
-            return redirect(list)
+    def get_context_data(self, **kwargs):
+        context = super(MilestoneDetail, self).get_context_data(**kwargs)
+        issue = Milestone.objects.get(pk=self.kwargs['pk'])
+        context['object'] = issue.to_dict()
+        return context
 
-    return render(request, 'milestone/change.html', {'form': form})
+class MilestoneList(ListView):
+    model = Milestone
+    template_name = 'milestone/list.html'
+    paginate_by = 10
 
-def delete(request, milestone_id):
-    if request.method == 'GET':
-        milestone = get_object_or_404(Milestone, pk=milestone_id)
-        form = MilestoneForm(instance=milestone)
-        return render(request, 'milestone/delete.html', {'milestone': form})
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        milestone = Milestone.objects.get(pk=milestone_id)
-        Milestone.delete(milestone)
-        return redirect(list)
-    return redirect(list)
+    def get_context_data(self, **kwargs):
+        context = super(MilestoneList, self).get_context_data(**kwargs)
+        context['page_obj'] = [object.to_dict() for object in Milestone.objects.all()]
+        return context
