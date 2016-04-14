@@ -1,0 +1,25 @@
+<h1>Members</h1>
+<table>
+    <th>Username</th>
+    {% for user in users %}
+        <tr>
+            <form action="{% url 'project_add_member' project_title %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{user.id}}" name="user_id">
+                <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
+                <td><input type="submit" value="Add"></td>
+            </form>
+        </tr>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if users.has_previous %}
+            <a href="?page={{ users.previous_page_number}}">Previous</a>
+        {% endif %}
+        Page {{ users.number }} of {{ users.paginator.num_pages }}
+        {% if users.has_next %}
+            <a href="?page={{users.next_page_number}}">Next</a>
+        {% endif %}
+    </span>
+</div>

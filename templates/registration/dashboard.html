@@ -1,0 +1,18 @@
+{% include "common/header.html" %}
+<body>
+<html>
+
+{% include "common/navbar.html" with active="dashboard" %}
+
+<div class="container-fluid">
+    <h3>Recent Events</h3>
+    {% for recent_log in recent_logs %}
+        <p><b>{{recent_log.issue.title }}</b></p>
+        <p> {{ recent_log.content }}</p>
+        <p>{{ recent_log.date_modified|timesince }} ago</p>
+    {% endfor %}
+</div>
+
+
+</html>
+</body>

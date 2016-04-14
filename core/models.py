@@ -1,21 +1,21 @@
 import django
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.db import models
 from django.core.urlresolvers import reverse
 
-class User(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50)
-    class Meta:
-        permissions = [
-            ('read_user', 'Can access detailed view for users.'),
-            ('view_user', 'Can access the user application.')
-        ]
-
-    def __str__(self):
-        return self.username
+# class User(models.Model):
+#     first_name = models.CharField(max_length=50)
+#     last_name = models.CharField(max_length=50)
+#     username = models.CharField(max_length=50)
+#     class Meta:
+#         permissions = [
+#             ('read_user', 'Can access detailed view for users.'),
+#             ('view_user', 'Can access the user application.')
+#         ]
+#
+#     def __str__(self):
+#         return self.username
 
     def to_dict(instance):
         opts = instance._meta
@@ -28,8 +28,9 @@ class User(models.Model):
 
 
 class Project(models.Model):
-    title = models.CharField(max_length=50)
-    users = models.ManyToManyField(User)
+    title = models.CharField(max_length=50, unique=True, null=False, blank=False)
+    description = models.CharField(max_length=255, null=False, blank=False)
+    users = models.ManyToManyField(django.contrib.auth.models.User)
     class Meta:
         permissions = [
             ('read_userprojectrole', 'Can access detailed view for user project role.'),
@@ -140,7 +141,7 @@ class Issue(models.Model):
 
 class UserProjectRole(models.Model):
     role = models.ForeignKey(Group)
-    user = models.ManyToManyField(django.contrib.auth.models.User, related_name='user_roles')
+    user = models.ManyToManyField(User, related_name='user_roles')
     project = models.ManyToManyField(Project, related_name='project_roles')
     class Meta:
         permissions = [
@@ -165,6 +166,7 @@ class IssueLog(models.Model):
     object_user = models.ForeignKey(User, related_name='issue_log_object')
     subject_user = models.ForeignKey(User, related_name='issue_log_subject')
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+    date_modified = models.DateTimeField(null=False, auto_now=True)
     class Meta:
         permissions = [
             ('read_issuelog', 'Can access detailed view for issue logs.'),

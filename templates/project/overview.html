@@ -1,0 +1,20 @@
+{% include "common/header.html" %}
+<body>
+<html>
+{% include "common/navbar.html" with
+    active="projects"
+    members="{% url 'project_members' project.title %}"
+    repositories="{% url 'repo_list_all' project.title %}"
+    issues="{% url 'project_issues' project.title %}"
+%}
+
+<div class="container-fluid">
+<h1>{{project.title}}</h1>
+
+<p>{{project.description}}</p>
+
+<p><a href ="/{{project.title}}/change/">Change</a></p>
+
+</div>
+</html>
+</body>

@@ -1,0 +1,17 @@
+<h1>Projects</h1>
+<table>
+    {% for project in projects %}
+        <p><a href="{% url 'project_overview' project.title %}">{{project.title}}</a></p>
+    {% endfor %}
+</table>
+<div class="pagination">
+    <span class="step-links">
+        {% if projects.has_previous %}
+            <a href="?page={{ projects.previous_page_number}}">Previous</a>
+        {% endif %}
+        Page {{ projects.number }} of {{ projects.paginator.num_pages }}
+        {% if projects.has_next %}
+            <a href="?page={{projects.next_page_number}}">Next</a>
+        {% endif %}
+    </span>
+</div>
