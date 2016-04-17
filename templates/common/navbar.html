@@ -1,23 +1,24 @@
+<script>
+    $( document ).ready(function() {
+        $("#{{ active }}").addClass("active");
+    });
+</script>
 <nav class="navbar navbar-default">
 <div class="container-fluid">
   <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="#">Porter</a>
+    <a class="navbar-brand" href="/">Porter</a>
   </div>
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
-      <li {% if active == None or active == "dashboard" %} class="active" {% endif %}><a href="#">Dashboard</a></li>
-      <li {% if active == "project" %} class="active" {% endif %}><a href="{% url 'user_projects' %}">Projects</a></li>
-      <li><a href="#">Contact</a></li>
+      <li id="dashboard"><a href="/">Dashboard</a></li>
+      <li id="projects"><a href="{% url 'user_projects' %}">Projects</a></li>
+      <li><a href="#" id="issues">Issues</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome, {{ user.username }} <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-user"></span>
+                Welcome, {{ user.username }} <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#">Edit profile</a></li>
               <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -28,7 +29,3 @@
   </div><!--/.nav-collapse -->
 </div><!--/.container-fluid -->
 </nav>
-
-        {% for kw in kwargs %}
-            {{kw}}
-        {% endfor %}

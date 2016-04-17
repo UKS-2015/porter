@@ -1,5 +1,6 @@
 from core.forms import RepositoryForm, RepositoryProjectForm
 from core.models import Repository, Issue, Project
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
@@ -45,7 +46,15 @@ def change(request, repository_title, project_title):
 
 def list_all(request, project_title):
     project = Project.objects.get(title=project_title)
-    repos = Repository.objects.filter(project=project)
+    paginator = Paginator(Repository.objects.filter(project=project), 25)
+    page = request.GET.get('page')
+
+    try:
+        repos = paginator.page(page)
+    except PageNotAnInteger:
+        repos = paginator.page(1)
+    except EmptyPage:
+        repos = paginator.page(paginator.num_pages)
     return render(request, 'repository/list.html', {'repository_list': repos, 'project_title': project_title})
 
 

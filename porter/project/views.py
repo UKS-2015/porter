@@ -13,9 +13,7 @@ def overview(request, project_title):
 
 
 def members(request, project_title):
-    print("MEMBERS")
     project = get_object_or_404(Project, title=project_title)
-    print(project.users.all())
     paginator = Paginator(project.users.all(), 25)
     page = request.GET.get('page')
 
