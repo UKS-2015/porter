@@ -1,18 +1,18 @@
 <ul class="nav nav-tabs">
     <li role="presentation" id="overview">
-        <a href="{% url 'project_overview'  project_title=project_title %}">Overview</a>
+        <a href="{% url 'project:overview'  project_title=project_title %}">Overview</a>
     </li>
     <li role="presentation" id="repositories">
-        <a href="{% url 'repo_list_all'  project_title=project_title %}">Repositories</a>
+        <a href="{% url 'project:repo_list_all'  project_title=project_title %}">Repositories</a>
     </li>
     <li role="presentation" id="issues">
-        <a href="{% url 'project_issues'  project_title=project_title %}">Issues</a>
+        <a href="{% url 'project:issues'  project_title=project_title %}">Issues</a>
     </li>
-        <li role="presentation" id="milestones">
-        <a href="{% url 'project_members'  project_title=project_title %}">Milestones</a>
+    <li role="presentation" id="milestones">
+        <a href="/{{project_title}}/milestones">Milestones</a>
     </li>
     <li role="presentation" id="members">
-        <a href="{% url 'project_members'  project_title=project_title %}">Members</a>
+        <a href="{% url 'project:members'  project_title=project_title %}">Members</a>
     </li>
 </ul>
 
