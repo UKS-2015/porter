@@ -2,14 +2,24 @@
 <body>
 <html>
 
-{% include "common/navbar.html" with active="dashboard" %}
-
-<div class="container-fluid">
+<div class="container">
+    {% include "common/navbar.html" with active="dashboard" %}
     <h3>Recent Events</h3>
     {% for recent_log in recent_logs %}
-        <p><b>{{recent_log.issue.title }}</b></p>
-        <p> {{ recent_log.content }}</p>
-        <p>{{ recent_log.date_modified|timesince }} ago</p>
+    <div class="row">
+        <div class="well col-md-4">
+            <p>
+                <b>{{recent_log.issue.title }} -
+                <a
+                href="{% url 'repo_overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title %}">
+                    {{recent_log.issue.repository.project.title}}/{{recent_log.issue.repository.title}}
+                </a>
+                </b>
+            </p>
+            <p> {{ recent_log.content }}</p>
+            <p class="text-muted"><span class="glyphicon glyphicon-time"></span> {{ recent_log.date_modified|timesince }} ago</p>
+        </div>
+    </div>
     {% endfor %}
 </div>
 

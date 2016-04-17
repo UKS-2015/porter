@@ -1,13 +1,25 @@
-<h1>Members</h1>
-<table>
-    <th>Username</th>
+{% include "common/header.html" %}
+{% include "common/navbar.html" with active="members" %}
+<div class="container-fluid">
+{% include "project/navtabs.html" with active="projects" project_title=project_title %}
+<h3>Members</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+        </tr>
+    </thead>
     {% for user in users %}
         <tr>
             <form action="{% url 'project_add_member' project_title %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" value="{{user.id}}" name="user_id">
                 <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
-                <td><input type="submit" value="Add"></td>
+                <td>
+                    <button class="btn btn-success" type="submit">
+                        Add
+                    </button>
+                </td>
             </form>
         </tr>
     {% endfor %}

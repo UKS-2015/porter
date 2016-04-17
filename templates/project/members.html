@@ -1,25 +1,40 @@
-<h1>Members</h1>
-<table>
-    <th>Username</th>
-    {% for user in users %}
+{% include "common/header.html" %}
+
+<div class="container">
+{% include "common/navbar.html" with active="members" %}
+{% include "project/navtabs.html" with active="projects" project_title=project_title %}
+
+    <h3>Members</h3>
+    <table class="table">
+        <thead>
         <tr>
-            <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
-            <td><a href="/{{project_title}}/members/{{user.id}}/remove/" class="remove">Remove</a></td>
+            <th>Username</th>
         </tr>
-    {% endfor %}
-</table>
-<div class="pagination">
-    <span class="step-links">
-        {% if users.has_previous %}
-            <a href="?page={{ users.previous_page_number}}">Previous</a>
-        {% endif %}
-        Page {{ users.number }} of {{ users.paginator.num_pages }}
-        {% if users.has_next %}
-            <a href="?page={{users.next_page_number}}">Next</a>
-        {% endif %}
-    </span>
+        </thead>
+        {% for user in users %}
+            <tr>
+                <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
+                <td><a class="btn btn-danger" href="/{{project_title}}/members/{{user.id}}/remove/" class="remove">
+                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    Remove
+                </a></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if users.has_previous %}
+                <a href="?page={{ users.previous_page_number}}">Previous</a>
+            {% endif %}
+            Page {{ users.number }} of {{ users.paginator.num_pages }}
+            {% if users.has_next %}
+                <a href="?page={{users.next_page_number}}">Next</a>
+            {% endif %}
+        </span>
+    </div>
+    <a href="/{{project_title}}/members/add">Add</a>
 </div>
-<a href="/{{project_title}}/members/add">Add</a>
+
 
 <script>
     $( document ).ready(function() {

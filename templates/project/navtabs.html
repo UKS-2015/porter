@@ -1,31 +1,22 @@
-<nav class="navbar navbar-default">
-<div class="container-fluid">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-    </button>
-    <a class="navbar-brand" href="#">Porter</a>
-  </div>
-  <div id="navbar" class="navbar-collapse collapse">
-    <ul class="nav navbar-nav">
-      <li><a href="/">Dashboard</a></li>
-      <li><a href="{% url 'user_projects' %}">Projects</a></li>
-      <li><a href="#">Contact</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Welcome, {{ user.username }} <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Edit profile</a></li>
-              <li><a href="{% url 'logout' %}">Logout</a></li>
-            </ul>
-        </li>
-
-    </ul>
-  </div><!--/.nav-collapse -->
-</div><!--/.container-fluid -->
-</nav>
-
-$( document ).ready(function() {
-    $('.{{active}}').addClass('active');
-});
-
+<script>
+    $( document ).ready(function() {
+        $("#{{ active }}").addClass("active");
+    });
+</script>
+<ul class="nav nav-tabs">
+    <li role="presentation" id="overview">
+        <a href="{% url 'project_overview'  project_title=project_title %}">Overview</a>
+    </li>
+    <li role="presentation" id="repositories">
+        <a href="{% url 'repo_list_all'  project_title=project_title %}">Repositories</a>
+    </li>
+    <li role="presentation" id="issues">
+        <a href="{% url 'project_issues'  project_title=project_title %}">Issues</a>
+    </li>
+        <li role="presentation" id="milestones">
+        <a href="{% url 'project_members'  project_title=project_title %}">Milestones</a>
+    </li>
+    <li role="presentation" id="members">
+        <a href="{% url 'project_members'  project_title=project_title %}">Members</a>
+    </li>
+</ul>

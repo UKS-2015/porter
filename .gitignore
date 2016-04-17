@@ -5,3 +5,6 @@
 /venv
 /.idea
 /core/migrations
+/static/css/
+/static/fonts/
+static/js/
