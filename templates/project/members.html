@@ -1,9 +1,7 @@
-{% include "common/header.html" %}
+{% extends "project/base.html" %}
 
-<div class="container">
-{% include "common/navbar.html" with active="members" %}
-{% include "project/navtabs.html" with active="projects" project_title=project_title %}
-
+{% block content %}
+    {% include "project/navtabs.html" with active="members" project_title=project_title %}
     <h3>Members</h3>
     <table class="table">
         <thead>
@@ -33,7 +31,6 @@
         </span>
     </div>
     <a href="/{{project_title}}/members/add">Add</a>
-</div>
 
 
 <script>
@@ -46,3 +43,5 @@
     });
 
 </script>
+
+{% endblock %}

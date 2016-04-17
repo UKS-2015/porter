@@ -1,15 +1,9 @@
+{% extends "project/base.html" %}
 
-<body>
-<html>
-
-<div class="container">
-    {% include "common/header.html" %}
-    {% include "common/navbar.html" with active="overview" %}
-    {% include "project/navtabs.html" with active="projects" project_title=project.title %}
+{% block content %}
+    {% include "project/navtabs.html" with active="overview" project_title=project.title %}
     <h3>{{project.title}}
     </h3>
-
-    </a>
 
     <p>{{project.description}}</p>
     <p>
@@ -18,6 +12,5 @@
             Change
         </a>
     </p>
-</div>
-</html>
-</body>
+{% endblock %}
+

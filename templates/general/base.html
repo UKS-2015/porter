@@ -6,7 +6,10 @@
     Porter
 {% endblock %}
 {% block bootstrap3_content %}
-    <div class="row">
+    <div class="container">
+        {% block navbar %}
+            {% include "common/navbar.html" with active="dashboard" %}
+        {% endblock %}
         {% block bootstrap3_sidebar %}
             <div class="container col-lg-2 col-md-2 col-sm-2 col-xs-2 sidebar">
                 <ul class="nav nav-sidebar">

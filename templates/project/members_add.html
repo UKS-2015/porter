@@ -1,37 +1,40 @@
-{% include "common/header.html" %}
-{% include "common/navbar.html" with active="members" %}
-<div class="container-fluid">
-{% include "project/navtabs.html" with active="projects" project_title=project_title %}
-<h3>Members</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-        </tr>
-    </thead>
-    {% for user in users %}
-        <tr>
-            <form action="{% url 'project_add_member' project_title %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" value="{{user.id}}" name="user_id">
-                <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
-                <td>
-                    <button class="btn btn-success" type="submit">
-                        Add
-                    </button>
-                </td>
-            </form>
-        </tr>
-    {% endfor %}
-</table>
-<div class="pagination">
-    <span class="step-links">
-        {% if users.has_previous %}
-            <a href="?page={{ users.previous_page_number}}">Previous</a>
-        {% endif %}
-        Page {{ users.number }} of {{ users.paginator.num_pages }}
-        {% if users.has_next %}
-            <a href="?page={{users.next_page_number}}">Next</a>
-        {% endif %}
-    </span>
-</div>
+{% extends "project/base.html" %}
+
+{% block content %}
+    {% include "project/navtabs.html" with active="members" project_title=project_title %}
+    <h3>Members</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <form action="{% url 'project_add_member' project_title %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{user.id}}" name="user_id">
+                    <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
+                    <td>
+                        <button class="btn btn-success" type="submit">
+                            Add
+                        </button>
+                    </td>
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+        <span class="step-links">
+            {% if users.has_previous %}
+                <a href="?page={{ users.previous_page_number}}">Previous</a>
+            {% endif %}
+            Page {{ users.number }} of {{ users.paginator.num_pages }}
+            {% if users.has_next %}
+                <a href="?page={{users.next_page_number}}">Next</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
