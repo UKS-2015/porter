@@ -1,9 +1,6 @@
-{% include "common/header.html" %}
-<body>
-<html>
+{% extends "project/base.html" %}
 
-<div class="container">
-    {% include "common/navbar.html" with active="dashboard" %}
+{% block content %}
     <h3>Recent Events</h3>
     {% for recent_log in recent_logs %}
     <div class="row">
@@ -11,7 +8,7 @@
             <p>
                 <b>{{recent_log.issue.title }} -
                 <a
-                href="{% url 'repo_overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title %}">
+                href="{% url 'project:repository:overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title %}">
                     {{recent_log.issue.repository.project.title}}/{{recent_log.issue.repository.title}}
                 </a>
                 </b>
@@ -21,8 +18,5 @@
         </div>
     </div>
     {% endfor %}
-</div>
 
-
-</html>
-</body>
+{% endblock %}
