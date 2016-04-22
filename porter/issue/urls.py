@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from porter.issue.views import IssueList, IssueCreate, IssueDetail, IssueUpdate, IssueDelete
 
-app_name = 'issue'
+app_name = 'issues'
 
 urlpatterns = [
     # ex: /issue/

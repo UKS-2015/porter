@@ -53,7 +53,7 @@ class IssueForm(ModelForm):
 
     class Meta:
         model = Issue
-        fields = '__all__'
+        fields = ['title', 'assignee', 'repository', 'milestone', 'labels']
 
 
 class UserForm(ModelForm):

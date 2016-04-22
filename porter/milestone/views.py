@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from core.models import Milestone
+from core.models import Milestone, Repository
 from core.forms import MilestoneForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -12,11 +12,14 @@ class MilestoneCreate(CreateView):
     fields = MilestoneForm.Meta.fields
     template_name = 'milestone/form.html'
 
-    def post(self, request):
+    def post(self, request, **kwargs):
         # create a form instance and populate it with data from the request:
         form = MilestoneForm(request.POST, auto_id=True)
         # check whether it's valid:
         if form.is_valid():
+            repository_title = kwargs['repository_title']
+            repository = Repository.objects.find(repository_title=repository_title)
+            form.instance.repository = repository
             form.save()
             return redirect('milestone:list')
 

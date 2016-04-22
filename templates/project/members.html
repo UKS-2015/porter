@@ -4,15 +4,10 @@
     {% include "project/navtabs.html" with active="members" project_title=project_title %}
     <h3>Members</h3>
     <table class="table">
-        <thead>
-        <tr>
-            <th>Username</th>
-        </tr>
-        </thead>
         {% for user in users %}
             <tr>
                 <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
-                <td><a class="btn btn-danger" href="/{{project_title}}/members/{{user.id}}/remove/" class="remove">
+                <td><a class="btn btn-danger btn-xs" href="{% url 'project:remove_member' project_title user.id %}"/>
                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                     Remove
                 </a></td>
@@ -30,7 +25,7 @@
             {% endif %}
         </span>
     </div>
-    <a href="/{{project_title}}/members/add">Add</a>
+    <a href="{% url 'project:add_member' project_title %}">Add</a>
 
 
 <script>
