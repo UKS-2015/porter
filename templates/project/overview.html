@@ -1,7 +1,12 @@
 {% extends "project/base.html" %}
 
 {% block content %}
-    {% include "project/navtabs.html" with active="overview" project_title=project.title %}
+
+    {% block project_sidebar %}
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            {% include "project/navtabs.html" with active="overview" project_title=project.title %}
+        </div>
+    {% endblock %}
     <h3>{{project.title}}
     </h3>
 

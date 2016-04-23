@@ -1,20 +1,33 @@
-<ul class="nav nav-tabs">
-    <li role="presentation" id="overview">
-        <a href="{% url 'project:overview'  project_title=project_title %}">Overview</a>
-    </li>
-    <li role="presentation" id="repositories">
-        <a href="{% url 'project:repository:list_all'  project_title=project_title %}">Repositories</a>
-    </li>
-    <li role="presentation" id="issues">
-        <a href="{% url 'project:issues'  project_title=project_title %}">Issues</a>
-    </li>
-    <li role="presentation" id="milestones">
-        <a href="{% url 'project:milestone:list'  project_title=project_title %}">Milestones</a>
-    </li>
-    <li role="presentation" id="members">
-        <a href="{% url 'project:members'  project_title=project_title %}">Members</a>
-    </li>
-</ul>
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'porter/css/project.css' %}" />
+<div class="panel panel-default">
+
+        <div class="navbar" role="navigation" id="sidebar-wrapper">
+            <ul class="nav nav-stacked" id = "project_navbar">
+                <li role="presentation" id="overview">
+                    <a href="{% url 'project:overview'  project_title=project_title %}">Overview</a>
+                </li>
+                 <li class="nav-divider"></li>
+                <li role="presentation" id="repositories">
+                    <a href="{% url 'project:repository:list_all'  project_title=project_title %}">Repositories</a>
+                </li>
+                 <li class="nav-divider"></li>
+                <li role="presentation" id="issues">
+                    <a href="{% url 'project:issues'  project_title=project_title %}">Issues</a>
+                </li>
+                 <li class="nav-divider"></li>
+                <li role="presentation" id="milestones">
+                    <a href="{% url 'project:milestone:list'  project_title=project_title %}">Milestones</a>
+                </li>
+                 <li class="nav-divider"></li>
+                <li role="presentation" id="members">
+                    <a href="{% url 'project:members'  project_title=project_title %}">Members</a>
+                </li>
+            </ul>
+
+    </div>
+</div>
 
 <script>
     document.getElementById("{{ active }}").className += "active";
