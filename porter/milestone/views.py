@@ -1,3 +1,4 @@
+from core.mixins import PorterAccessMixin
 from django.shortcuts import redirect
 from core.models import Milestone, Repository
 from core.forms import MilestoneForm
@@ -7,10 +8,11 @@ from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy
 
 
-class MilestoneCreate(CreateView):
+class MilestoneCreate(PorterAccessMixin, CreateView):
     model = Milestone
     fields = MilestoneForm.Meta.fields
     template_name = 'milestone/form.html'
+    required_permissions = "add_milestone"
 
     def post(self, request, **kwargs):
         # create a form instance and populate it with data from the request:
@@ -24,23 +26,26 @@ class MilestoneCreate(CreateView):
             return redirect('milestone:list')
 
 
-class MilestoneUpdate(UpdateView):
+class MilestoneUpdate(PorterAccessMixin, UpdateView):
     model = Milestone
     fields = MilestoneForm.Meta.fields
     template_name = 'milestone/form.html'
     success_url = reverse_lazy('milestone:list')
+    required_permissions = "change_milestone"
 
 
-class MilestoneDelete(DeleteView):
+class MilestoneDelete(PorterAccessMixin, DeleteView):
     model = Milestone
     template_name = 'milestone/confirm-delete.html'
     success_url = reverse_lazy('milestone:list')
+    required_permissions = "delete_milestone"
 
 
-class MilestoneDetail(DetailView):
+class MilestoneDetail(PorterAccessMixin, DetailView):
     model = Milestone
     success_url = reverse_lazy('list')
     template_name = 'milestone/detail.html'
+    required_permissions = "view_milestone"
 
     def get_context_data(self, **kwargs):
         context = super(MilestoneDetail, self).get_context_data(**kwargs)
@@ -49,10 +54,11 @@ class MilestoneDetail(DetailView):
         return context
 
 
-class MilestoneList(ListView):
+class MilestoneList(PorterAccessMixin, ListView):
     model = Milestone
     template_name = 'milestone/list.html'
     paginate_by = 10
+    required_permissions = "view_milestone"
 
     def get_context_data(self, **kwargs):
         context = super(MilestoneList, self).get_context_data(**kwargs)

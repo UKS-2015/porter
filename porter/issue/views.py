@@ -1,15 +1,13 @@
-from enum import Enum
-
-from django.http import HttpResponseBadRequest
-from django.shortcuts import redirect, get_object_or_404
-from core.models import Issue, IssueLog
 from core.forms import IssueForm
-from django.core import serializers
+from core.mixins import PorterAccessMixin
+from core.models import Issue, IssueLog
+from django.core.urlresolvers import reverse_lazy
+from django.http import HttpResponseBadRequest
+from django.shortcuts import redirect
 from django.utils.datetime_safe import datetime
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.core.urlresolvers import reverse_lazy
 
 
 class IssueLogType:
@@ -46,10 +44,11 @@ def create_issue_log(log_type, user, issue):
     IssueLog.save(issue)
 
 
-class IssueCreate(CreateView):
+class IssueCreate(PorterAccessMixin, CreateView):
     model = Issue
     fields = IssueForm.Meta.fields
     template_name = 'issue/form.html'
+    required_permissions = "add_issue"
 
     def post(self, request):
         # create a form instance and populate it with data from the request:
@@ -63,23 +62,26 @@ class IssueCreate(CreateView):
             return HttpResponseBadRequest
 
 
-class IssueUpdate(UpdateView):
+class IssueUpdate(PorterAccessMixin, UpdateView):
     model = Issue
     fields = IssueForm.Meta.fields
     template_name = 'issue/form.html'
     success_url = reverse_lazy('issue:list')
+    required_permissions = "change_issue"
 
 
-class IssueDelete(DeleteView):
+class IssueDelete(PorterAccessMixin, DeleteView):
     model = Issue
     template_name = 'issue/confirm-delete.html'
     success_url = reverse_lazy('issue:list')
+    required_permissions = "delete_issue"
 
 
-class IssueDetail(DetailView):
+class IssueDetail(PorterAccessMixin, DetailView):
     model = Issue
     success_url = reverse_lazy('list')
     template_name = 'issue/detail.html'
+    required_permissions = "view_issue"
 
     def get_context_data(self, **kwargs):
         context = super(IssueDetail, self).get_context_data(**kwargs)
@@ -88,10 +90,11 @@ class IssueDetail(DetailView):
         return context
 
 
-class IssueList(ListView):
+class IssueList(PorterAccessMixin, ListView):
     model = Issue
     template_name = 'issue/list.html'
     paginate_by = 10
+    required_permissions = "view_issue"
 
     def get_context_data(self, **kwargs):
         context = super(IssueList, self).get_context_data(**kwargs)

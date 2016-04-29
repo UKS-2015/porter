@@ -1,3 +1,4 @@
+from core.mixins import PorterAccessMixin
 from django.contrib.auth.models import User
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.core.paginator import Paginator
@@ -12,7 +13,7 @@ from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy, reverse
 
 
-class ProjectCreate(CreateView):
+class ProjectCreate(PorterAccessMixin, CreateView):
     model = Project
     template_name = 'project/form.html'
 
@@ -25,7 +26,7 @@ class ProjectCreate(CreateView):
             return redirect('project:overview')
 
 
-class ProjectUpdate(UpdateView):
+class ProjectUpdate(PorterAccessMixin, UpdateView):
     model = Project
     template_name = 'project/form.html'
     success_url = reverse_lazy('project:overview')
