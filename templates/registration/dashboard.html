@@ -1,22 +1,8 @@
 {% extends "project/base.html" %}
+{% load show_recent_logs %}
 
 {% block content %}
     <h3>Recent Events</h3>
-    {% for recent_log in recent_logs %}
-    <div class="row">
-        <div class="well col-md-6">
-            <p>
-                <b>{{recent_log.issue.title }} -
-                <a
-                href="{% url 'project:repository:overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title %}">
-                    {{recent_log.issue.repository.project.title}}/{{recent_log.issue.repository.title}}
-                </a>
-                </b>
-            </p>
-            <p> {{ recent_log.content }}</p>
-            <p class="text-muted"><span class="glyphicon glyphicon-time"></span> {{ recent_log.date_modified|timesince }} ago</p>
-        </div>
-    </div>
-    {% endfor %}
+    {% show_recent_logs user=user %}
 
 {% endblock %}
