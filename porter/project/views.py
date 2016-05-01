@@ -64,7 +64,7 @@ class ProjectMembers(PorterAccessMixin, DetailView):
     model = Project
     success_url = reverse_lazy('project:overview')
     template_name = 'project/members.html'
-    required_permissions = 'add_member'
+    required_permissions = 'view_member'
 
     def get_object(self):
         # Get project title from url params
@@ -75,7 +75,6 @@ class ProjectMembers(PorterAccessMixin, DetailView):
         project_title = self.kwargs['project_title']
         context = super(ProjectMembers, self).get_context_data(**kwargs)
         users = []
-
         uprs = UserProjectRole.objects.filter(project__title=project_title).all()
 
         # Make it easier to get user roles
@@ -85,9 +84,14 @@ class ProjectMembers(PorterAccessMixin, DetailView):
             user.role = upr.role
             users.append(user)
 
+        current_user = self.request.user
+
         context['users'] = users
         context['project_title'] = project_title
         context['roles'] = Group.objects.all()
+        context['assign_role'] = check_permissions(current_user, 'assign_role', **self.kwargs)
+        context['remove_member'] = check_permissions(current_user, 'remove_member', **self.kwargs)
+        context['add_member'] = check_permissions(current_user, 'add_member', **self.kwargs)
         return context
 
 

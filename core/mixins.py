@@ -34,6 +34,7 @@ def check_permissions(user, required_permissions, **kwargs):
         role = UserProjectRole.objects.get(user=user, project=project).role
     except UserProjectRole.DoesNotExist:
         role = Group.objects.get(name='Guest')
+
     for permission in role.permissions.all():
         print(permission.codename)
 
