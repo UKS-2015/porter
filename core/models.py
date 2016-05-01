@@ -14,6 +14,7 @@ class User(models.Model):
         permissions = [
             ('read_user', 'Can access detailed view for users.'),
             ('view_user', 'Can access the user application.'),
+            ('view_member', 'Can access the list of project members'),
             ('add_member', 'Can add members to a project'),
             ('remove_member', 'Can remove members from a project'),
             ('assign_role', 'Can assign roles to members')
