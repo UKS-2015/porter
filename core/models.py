@@ -143,12 +143,12 @@ class Issue(models.Model):
         data = {}
         data['id'] = instance.id
         data['title'] = instance.title
-        data['creator'] = User.objects.get(pk=instance.creator.id)
+        data['creator'] = instance.creator
         if instance.assignee:
-            data['assignee'] = User.objects.get(pk=instance.assignee.id)
-        data['repository'] = Repository.objects.get(pk=instance.repository.id)
+            data['assignee'] = instance.assignee
+        data['repository'] = instance.repository
         if instance.milestone:
-            data['milestone'] = Milestone.objects.get(pk=instance.milestone.id)
+            data['milestone'] = instance.milestone.id
         data['labels'] = [label for label in instance.labels.all()]
         return data
 

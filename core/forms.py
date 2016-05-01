@@ -65,13 +65,13 @@ class UserForm(ModelForm):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        exclude = ['id']
+        fields = ['title', 'description']
 
 
 class RepositoryForm(ModelForm):
     class Meta:
         model = Repository
-        exclude = ['id']
+        fields = ['title']
 
 
 class RepositoryProjectForm(ModelForm):

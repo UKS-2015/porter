@@ -1,0 +1,29 @@
+{% extends 'general/base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+<div class="panel panel-default">
+  <div class="panel-heading">Basic settings</div>
+  <div class="panel-body">
+    {% with title="Project" namespace="porter/"|add:project.title %}
+    {% include "general/generic_form.html" %}
+    {% endwith %}
+  </div>
+</div>
+{% if delete_repository %}
+<div class="panel panel-danger">
+  <div class="panel-heading">Danger zone</div>
+  <div class="panel-body">
+        Delete this project and all its repositories. WARNING: This cannot be undone.<br/>
+        <a class="btn btn-danger"  href="{% url 'project:delete' project_title=project.title %}">Delete</a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+
+
