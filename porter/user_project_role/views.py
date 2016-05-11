@@ -33,7 +33,7 @@ class UserProjectRoleDelete(DeleteView):
 class UserProjectRoleDetail(DetailView):
     model = UserProjectRole
     success_url = reverse_lazy('list')
-    template_name = 'user_project_role/detail.html'
+    template_name = 'user_project_role/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super(UserProjectRoleDetail, self).get_context_data(**kwargs)

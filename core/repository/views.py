@@ -30,7 +30,7 @@ def add(request):
 def detail(request, repository_id):
     repository = Repository.objects.get(pk=repository_id)
     form = RepositoryForm(instance = repository)
-    return render(request, 'repository/detail.html', {'repository': form.as_p()})
+    return render(request, 'repository/profile.html', {'repository': form.as_p()})
 
 def change(request, repository_id):
     if request.method == 'GET':

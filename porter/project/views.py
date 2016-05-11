@@ -1,18 +1,19 @@
+from core.forms import ProjectForm
 from core.mixins import PorterAccessMixin, check_permissions
+from core.models import Project, UserProjectRole
 from django.contrib.auth.models import User, Group
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect, request
-from django.shortcuts import redirect, get_object_or_404, render
-from core.models import Project, UserProjectRole
-from core.forms import ProjectForm
-from django.views.generic import View
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.shortcuts import redirect, get_object_or_404, render
+from django.views.generic import View
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 GUEST_ROLE = 'Guest'
+OWNER_ROLE = 'Project owner'
+LEAD_ROLE = 'Project lead'
+
 
 def _get_object(self):
     # Get project title from url params

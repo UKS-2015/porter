@@ -7,7 +7,7 @@
     <table class="table">
         {% for user in users %}
             <tr>
-                <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
+                <td><a href="{% url 'user_profile' pk=user.id %}">{{user.username}}</a></td>
                 <td>
                     <form action="{% url 'project:assign_role' project.title %}" method="post" class="form-inline">
                     {% csrf_token %}

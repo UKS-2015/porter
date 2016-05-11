@@ -33,7 +33,7 @@ class LabelDelete(DeleteView):
 class LabelDetail(DetailView):
     model = Label
     success_url = reverse_lazy('list')
-    template_name = 'label/detail.html'
+    template_name = 'label/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super(LabelDetail, self).get_context_data(**kwargs)

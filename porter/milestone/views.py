@@ -44,7 +44,7 @@ class MilestoneDelete(PorterAccessMixin, DeleteView):
 class MilestoneDetail(PorterAccessMixin, DetailView):
     model = Milestone
     success_url = reverse_lazy('list')
-    template_name = 'milestone/detail.html'
+    template_name = 'milestone/profile.html'
     required_permissions = "view_milestone"
 
     def get_context_data(self, **kwargs):

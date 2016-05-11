@@ -33,7 +33,7 @@ class IssueLogDelete(DeleteView):
 class IssueLogDetail(DetailView):
     model = IssueLog
     success_url = reverse_lazy('list')
-    template_name = 'issue_log/detail.html'
+    template_name = 'issue_log/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super(IssueLogDetail, self).get_context_data(**kwargs)

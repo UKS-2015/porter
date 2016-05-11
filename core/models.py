@@ -1,14 +1,15 @@
 import django
 
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group, User, AbstractUser
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.db.models import OneToOneField
+from porter import settings
 
 
-class User(models.Model):
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=50)
+class PorterUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
+    picture = models.ImageField(upload_to="users", null=True, blank=True)
 
     class Meta:
         permissions = [
@@ -21,22 +22,24 @@ class User(models.Model):
         ]
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
     def to_dict(instance):
         opts = instance._meta
         data = {}
-        data['id'] = instance.id
-        data['first_name'] = instance.first_name
-        data['last_name'] = instance.last_name
-        data['username'] = instance.username
+        data['picture'] = instance.picture
+        data['first_name'] = instance.user.last_name
+        data['last_name'] = instance.user.last_name
+        data['username'] = instance.user.username
+        data['last_login'] = instance.user.last_login
+        data['date_joined'] = instance.user.date_joined
         return data
 
 
 class Project(models.Model):
     title = models.CharField(max_length=50, unique=True, null=False, blank=False)
     description = models.CharField(max_length=255, null=False, blank=False)
-    users = models.ManyToManyField(django.contrib.auth.models.User)
+    users = models.ManyToManyField(User)
 
     class Meta:
         permissions = [
@@ -122,8 +125,8 @@ class Label(models.Model):
 
 class Issue(models.Model):
     title = models.CharField(max_length=50)
-    creator = models.ForeignKey(django.contrib.auth.models.User, related_name='issues')
-    assignee = models.ForeignKey(django.contrib.auth.models.User, null=True, blank=True)
+    creator = models.ForeignKey(User, related_name='issues')
+    assignee = models.ForeignKey(User, null=True, blank=True)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     milestone = models.ForeignKey(Milestone, null=True, blank=True, related_name="issues")
     labels = models.ManyToManyField(Label)
@@ -156,7 +159,7 @@ class Issue(models.Model):
 
 class UserProjectRole(models.Model):
     role = models.ForeignKey(Group)
-    user = models.ForeignKey(django.contrib.auth.models.User)
+    user = models.ForeignKey(User)
     project = models.ForeignKey(Project)
 
     class Meta:
@@ -180,8 +183,8 @@ class UserProjectRole(models.Model):
 class IssueLog(models.Model):
     content = models.TextField()
     log_type = models.IntegerField()
-    object_user = models.ForeignKey(django.contrib.auth.models.User, related_name='issue_log_object')
-    subject_user = models.ForeignKey(django.contrib.auth.models.User, related_name='issue_log_subject')
+    object_user = models.ForeignKey(User, related_name='issue_log_object')
+    subject_user = models.ForeignKey(User, related_name='issue_log_subject')
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
     date_modified = models.DateTimeField(null=False, auto_now=True)
 
@@ -199,8 +202,8 @@ class IssueLog(models.Model):
         data['id'] = instance.id
         data['content'] = instance.content
         data['log_type'] = instance.log_type
-        data['object_user'] = django.contrib.auth.models.User.objects.get(pk=instance.object_user.id)
-        data['subject_user'] = django.contrib.auth.models.User.objects.get(pk=instance.subject_user.id)
+        data['object_user'] = User.objects.get(pk=instance.object_user.id)
+        data['subject_user'] = User.objects.get(pk=instance.subject_user.id)
         data['issue'] = Issue.objects.get(pk=instance.issue.id)
         return data
 

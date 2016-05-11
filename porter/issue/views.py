@@ -80,7 +80,7 @@ class IssueDelete(PorterAccessMixin, DeleteView):
 class IssueDetail(PorterAccessMixin, DetailView):
     model = Issue
     success_url = reverse_lazy('list')
-    template_name = 'issue/detail.html'
+    template_name = 'issue/profile.html'
     required_permissions = "view_issue"
 
     def get_context_data(self, **kwargs):

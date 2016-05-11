@@ -30,7 +30,7 @@ def add(request):
 def detail(request, project_id):
     project = Project.objects.get(pk=project_id)
     form = ProjectForm(instance = project)
-    return render(request, 'project/detail.html', {'project': form.as_p()})
+    return render(request, 'project/profile.html', {'project': form.as_p()})
 
 def change(request, project_id):
     if request.method == 'GET':

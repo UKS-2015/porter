@@ -13,42 +13,29 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from porter.group import urls as group_urls
-from porter.user_project_role import urls as user_project_role_urls
-
 from core import views
-from core.project import urls as project_urls
-from core.repository import urls as repository_urls
-from core.user import urls as user_urls
+from core.forms import UserPasswordForm
 from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import login
-from porter.issue import urls as issue_urls
-from porter.issue_log import urls as issue_log_urls
-from porter.label import urls as label_urls
-from porter.milestone import urls as milestone_urls
+from django.contrib.auth.views import login, logout_then_login, password_change
+from porter import settings
 from porter.project import urls as new_project_urls
+from porter.user.views import UserProfile, UserChange, UserPassword, UserDetail
 
+app_name = 'porter'
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/login/$', login),
-    url(r'^issue_log/', include(issue_log_urls)),
-    url(r'^group/', include(group_urls)),
-    url(r'^user_project_role/', include(user_project_role_urls)),
-    url(r'^milestone/', include(milestone_urls)),
-    url(r'^label/', include(label_urls)),
-    url(r'^issue/', include(issue_urls)),
-    url(r'logout/$', views.logout_view, name='logout'),
-    # TODO: New URL structure: /{project_title}/{repo_title}/{issues-members-etc}/{id}
-    url(r'^user/', include(user_urls)),
-    url(r'^project/', include(project_urls)),
-    url(r'^repository/', include(repository_urls)),
-    # User related
+    url(r'^porter/login/$', login),
+    url(r'^porter/logout/$', logout_then_login, name='logout'),
+    url(r'^porter/profile/$', UserProfile.as_view(), name='profile'),
+    url(r'^porter/profile/change/$', UserChange.as_view(), name='profile_change'),
+    url(r'^porter/user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name='user_profile'),
+    url(r'^porter/profile/password/$', UserPassword.as_view(), name='password_change'),
     url(r'^porter/$', views.user_dashboard, name='user_dashboard'),
     url(r'^porter/projects/$', views.user_projects, name='user_projects'),
-    # Project related
     url(r'^porter/(?P<project_title>[^/\\]+)/', include(new_project_urls)),
-    url(r'^login/$', login)
-
-]
+    # Allow media (such as pictures)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
