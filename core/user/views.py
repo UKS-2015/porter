@@ -30,7 +30,7 @@ def add(request):
 def detail(request, user_id):
     user = User.objects.get(pk=user_id)
     form = UserForm(instance = user)
-    return render(request, 'user/detail.html', {'user': form.as_p()})
+    return render(request, 'user/profile.html', {'user': form.as_p()})
 
 def change(request, user_id):
     if request.method == 'GET':

@@ -14,9 +14,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from porter.issue.views import IssueList, IssueCreate, IssueDetail, IssueUpdate, IssueDelete
+from porter.issue.views import IssueList, IssueCreate, IssueUpdate, IssueDelete
 
-app_name = 'issues'
+app_name = 'user'
 
 urlpatterns = [
     # ex: /issue/
@@ -24,7 +24,6 @@ urlpatterns = [
      # ex: /issue/5/add/
     url(r'add/$', IssueCreate.as_view(), name='add'),
      # ex: /issue/5/
-    url(r'(?P<pk>[0-9]+)/$', IssueDetail.as_view(), name='detail'),
      # ex: /issue/5/update/
     url(r'(?P<pk>[0-9]+)/update/$', IssueUpdate.as_view(), name='update'),
      # ex: /issue/5/delete/

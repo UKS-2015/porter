@@ -1,7 +1,11 @@
+from bootstrap3 import forms
 from core.models import IssueLog, UserProjectRole, \
-    Milestone, Label, Issue, User, Project, Repository
+    Milestone, Label, Issue, User, Project, Repository, PorterUser
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
-from django.forms import ModelForm
+from django.forms import ModelForm, inlineformset_factory, PasswordInput
+
+PorterUserFormSet = inlineformset_factory(User, PorterUser, fields=('picture',))
 
 
 class IssueLogForm(ModelForm):
@@ -53,31 +57,44 @@ class IssueForm(ModelForm):
 
     class Meta:
         model = Issue
-        fields = '__all__'
+        fields = ['title', 'assignee', 'repository', 'milestone', 'labels']
 
 
 class UserForm(ModelForm):
     class Meta:
         model = User
-        exclude = ['id']
+        fields = ['username', 'first_name', 'last_name']
+
+
+class PorterUserForm(ModelForm):
+    class Meta:
+        model = PorterUser
+        fields = ['picture']
+
+
+class UserPasswordForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("instance")
+        super(PasswordChangeForm, self).__init__(*args, **kwargs)
 
 
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        exclude = ['id']
+        fields = ['title', 'description']
 
 
 class RepositoryForm(ModelForm):
     class Meta:
         model = Repository
-        exclude = ['id']
+        fields = ['title']
 
 
 class RepositoryProjectForm(ModelForm):
     """
     Excludes project field so it can be added in a view. Will replace RepositoryForm.
     """
+
     class Meta:
         model = Repository
         exclude = ['id', 'project']

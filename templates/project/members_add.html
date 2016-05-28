@@ -4,11 +4,6 @@
     {% include "project/navtabs.html" with active="members" project_title=project_title %}
     <h3>Members</h3>
     <table class="table">
-        <thead>
-            <tr>
-                <th>Username</th>
-            </tr>
-        </thead>
         <tbody>
         {% for user in users %}
             <tr>
@@ -17,8 +12,8 @@
                     <input type="hidden" value="{{user.id}}" name="user_id">
                     <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
                     <td>
-                        <button class="btn btn-success" type="submit">
-                            Add
+                        <button class="btn btn-success btn-sm" type="submit">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                         </button>
                     </td>
                 </form>

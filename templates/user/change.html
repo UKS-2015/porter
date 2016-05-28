@@ -1,0 +1,24 @@
+{% extends 'general/base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+{% endblock %}
+
+
+{% block content %}
+
+<form role="form" class="form-horizontal" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="col-lg-6">
+    {% bootstrap_form form layout='horizontal' %}
+    {% buttons submit='Save' reset='Reset' layout='horizontal' %}
+    <a href="{% url 'profile' %}" class="btn btn-primary">Cancel</a>
+    {% endbuttons %}
+    </div>
+    <div class="col-lg-6">
+    {% bootstrap_form porter_user_form layout='horizontal' %}
+    </div>
+
+</form>
+
+{% endblock %}

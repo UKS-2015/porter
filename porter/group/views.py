@@ -34,7 +34,7 @@ class GroupDelete(DeleteView):
 class GroupDetail(DetailView):
     model = Group
     success_url = reverse_lazy('list')
-    template_name = 'group/detail.html'
+    template_name = 'group/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super(GroupDetail, self).get_context_data(**kwargs)

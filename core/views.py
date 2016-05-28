@@ -19,7 +19,7 @@ def project_test(request, project_name):
 
 def logout_view(request):
     logout(request)
-    return redirect('/')
+    return redirect('/login')
 
 @login_required()
 def user_dashboard(request):

@@ -1,0 +1,10 @@
+{% extends 'project/base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+    {% with title="Repository" namespace="project:repository" %}
+    {% include "general/generic_form.html" %}
+    {% endwith %}
+{% endblock %}

@@ -1,0 +1,29 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" id="overview">
+        <a href="{% url 'project:overview'  project_title=project_title %}">Overview</a>
+    </li>
+    {% if view_repository %}
+    <li role="presentation" id="repositories">
+        <a href="{% url 'project:repository:list_all'  project_title=project_title %}">Repositories</a>
+    </li>
+    {% endif %}
+    {% if view_issue %}
+    <li role="presentation" id="issues">
+        <a href="{% url 'project:issues:list'  project_title=project_title %}">Issues</a>
+    </li>
+    {% endif %}
+    {% if view_milestone %}
+    <li role="presentation" id="milestones">
+        <a href="{% url 'project:milestone:list'  project_title=project_title %}">Milestones</a>
+    </li>
+    {% endif %}
+    {% if view_member %}
+    <li role="presentation" id="members">
+        <a href="{% url 'project:members'  project_title=project_title %}">Members</a>
+    </li>
+    {% endif %}
+</ul>
+
+<script>
+    document.getElementById("{{ active }}").className += "active";
+</script>

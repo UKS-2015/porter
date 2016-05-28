@@ -5,7 +5,7 @@
   </div>
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
-      <li id="dashboard"><a href="/">Dashboard</a></li>
+      <li id="dashboard"><a href="/porter/">Dashboard</a></li>
       <li id="projects"><a href="{% url 'user_projects' %}">Projects</a></li>
       <li><a href="#" id="issues">Issues</a></li>
     </ul>
@@ -15,7 +15,7 @@
                 <span class="glyphicon glyphicon-user"></span>
                 Welcome, {{ user.username }} <span class="caret"></span></a>
             <ul class="dropdown-menu">
-              <li><a href="#">Edit profile</a></li>
+              <li><a href="{% url 'profile' %}">Edit profile</a></li>
               <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
         </li>

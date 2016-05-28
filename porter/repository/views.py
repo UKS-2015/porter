@@ -1,64 +1,112 @@
-from core.forms import RepositoryForm, RepositoryProjectForm
-from core.models import Repository, Issue, Project
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core.urlresolvers import reverse
-from django.http import Http404
-from django.shortcuts import render, redirect, get_object_or_404
+from core.forms import RepositoryForm
+from core.mixins import PorterAccessMixin, check_permissions
+from core.models import Repository, Project
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.http import HttpResponseBadRequest
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import DetailView, ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
-def overview(request, repository_title, project_title=None):
-    repository = get_object_or_404(Repository, title=repository_title)
-    issues = Issue.objects.filter(repository__title=repository_title)
-    return render(request, 'repository/overview.html', {'issues': issues, 'project_title': project_title})
+def _get_object(self):
+    repository_title = self.kwargs['repository_title']
+    project_title = self.kwargs['project_title']
+    repository = Repository.objects.get(title=repository_title, project__title=project_title)
+    return repository
 
 
-def create(request, project_title):
-    if request.method == 'POST':
-        form = RepositoryProjectForm(request.POST, auto_id=True)
-        if form.is_valid():
-            repository = form.instance
-            repository.project = Project.objects.get(title=project_title)
-            Repository.save(repository)
-            # return redirect('/{0}/repository/{1}/'.format(project_title, repository.title))
-            return redirect(reverse('repo_overview',
-                                    kwargs={
-                                        'project_title': project_title,
-                                        'repository_title': repository.title
-                                    }))
-    else:
-        form = RepositoryProjectForm()
+class RepositoryOverview(PorterAccessMixin, DetailView):
+    model = Repository
+    success_url = reverse_lazy('list')
+    template_name = 'repository/overview.html'
+    required_permissions = "view_repository"
 
-    return render(request, 'repository/create.html', {'repository': form, 'project_title': project_title})
+    def get_object(self):
+        return _get_object(self)
 
-
-def change(request, repository_title, project_title):
-    if request.method == 'POST':
-        form = RepositoryForm(request.POST, auto_id=True)
-        if form.is_valid():
-            Repository.save(form.instance)
-            return redirect(overview)
-    else:
+    def get_context_data(self, **kwargs):
+        context = super(RepositoryOverview, self).get_context_data(**kwargs)
+        repository_title = self.kwargs['repository_title']
         repository = get_object_or_404(Repository, title=repository_title)
-        form = RepositoryProjectForm(instance=repository)
-
-    return render(request, 'repository/change.html', {'repository': form, 'project_title': project_title})
-
-
-def list_all(request, project_title):
-    project = Project.objects.get(title=project_title)
-    paginator = Paginator(Repository.objects.filter(project=project), 25)
-    page = request.GET.get('page')
-
-    try:
-        repos = paginator.page(page)
-    except PageNotAnInteger:
-        repos = paginator.page(1)
-    except EmptyPage:
-        repos = paginator.page(paginator.num_pages)
-    return render(request, 'repository/list.html', {'repository_list': repos, 'project_title': project_title})
+        context['repository'] = repository.to_dict()
+        return context
 
 
-def delete(request, repository_title, project_title=None):
-    repository = get_object_or_404(Repository, title=repository_title)
-    Repository.delete(repository)
-    return redirect(reverse('repo_list_all', kwargs={'project_title': project_title}))
+class RepositoryCreate(PorterAccessMixin, CreateView):
+    model = Repository
+    fields = RepositoryForm.Meta.fields
+    template_name = 'repository/form.html'
+    required_permissions = "add_repository"
+
+    def post(self, request, project_title=None):
+        # create a form instance and populate it with data from the request:
+        form = RepositoryForm(request.POST, auto_id=True)
+        # check whether it's valid:
+        if form.is_valid():
+            form.instance.project = Project.objects.get(title=project_title)
+            form.save()
+            self.kwargs['project_title'] = project_title
+            return redirect(reverse('project:repository:list_all', kwargs={'project_title': project_title}))
+        else:
+            return HttpResponseBadRequest
+
+
+class RepositoryUpdate(PorterAccessMixin, UpdateView):
+    model = Repository
+    fields = RepositoryForm.Meta.fields
+    template_name = 'repository/form.html'
+    required_permissions = "change_repository"
+
+    def get_object(self):
+        return _get_object(self)
+
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('project:repository:list_all',
+                                   kwargs={'project_title': kwargs['project_title']})
+        return super(RepositoryUpdate, self).post(request, *args, **kwargs)
+
+
+class RepositoryDelete(PorterAccessMixin, DeleteView):
+    model = Repository
+    template_name = 'repository/confirm-delete.html'
+    required_permissions = "delete_repository"
+
+    def get_object(self):
+        return _get_object(self)
+
+    def get_context_data(self, **kwargs):
+        context = super(RepositoryDelete, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('project:repository:list_all',
+                                   kwargs={'project_title': kwargs['project_title']})
+        return super(RepositoryDelete, self).post(request, *args, **kwargs)
+
+
+class RepositoryList(PorterAccessMixin, ListView):
+    model = Repository
+    template_name = 'repository/list.html'
+    paginate_by = 10
+    required_permissions = "view_repository"
+
+    def get_context_data(self, **kwargs):
+        context = super(RepositoryList, self).get_context_data(**kwargs)
+
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
+        context['repository_list'] = [
+            object.to_dict() for object in Repository.objects.filter(project__title=project_title)
+            ]
+        context['project_title'] = project_title
+
+        user = self.request.user
+
+        context['project_title'] = self.kwargs['project_title']
+        context['add_repository'] = check_permissions(user, 'add_repository', **self.kwargs)
+        context['change_repository'] = check_permissions(user, 'change_repository', **self.kwargs)
+        context['delete_repository'] = check_permissions(user, 'delete_repository', **self.kwargs)
+        context['user'] = user
+
+        return context

@@ -1,21 +1,33 @@
 {% extends "project/base.html" %}
+{% load show_navtabs %}
+
+{% load show_recent_logs %}
 
 {% block content %}
 
-    {% block project_sidebar %}
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            {% include "project/navtabs.html" with active="overview" project_title=project.title %}
-        </div>
-    {% endblock %}
-    <h3>{{project.title}}
-    </h3>
 
-    <p>{{project.description}}</p>
-    <p>
-        <a href ="/{{project.title}}/change/">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-            Change
-        </a>
-    </p>
+{% show_navtabs active="overview" project_title=project.title user=user %}
+
+
+<div class="panel panel-default">
+    <div class="panel-heading"><h3>{{project.title}}</h3></div>
+
+    <div class="panel-body">
+        <p>{{project.description}}</p>
+        <p>
+            {% if change_project %}
+            <a class="btn btn-primary" href="{% url 'project:settings' project_title=project.title %}">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                Settings
+            </a>
+            {% endif %}
+        </p>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading"><h4>Recent events</h4></div>
+    <div class="panel-body">
+    {% show_recent_logs user=user %}
+    </div>
+</div>
 {% endblock %}
-
