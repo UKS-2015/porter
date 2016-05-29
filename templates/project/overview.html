@@ -3,31 +3,35 @@
 
 {% load show_recent_logs %}
 
+{% block bootstrap3_sidebar %}
+{% endblock %}
+
 {% block content %}
 
-
+<div class="col-lg-2 col-md-2 col-sm-2">
 {% show_navtabs active="overview" project_title=project.title user=user %}
-
-
-<div class="panel panel-default">
-    <div class="panel-heading"><h3>{{project.title}}</h3></div>
-
-    <div class="panel-body">
-        <p>{{project.description}}</p>
-        <p>
-            {% if change_project %}
-            <a class="btn btn-primary" href="{% url 'project:settings' project_title=project.title %}">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                Settings
-            </a>
-            {% endif %}
-        </p>
-    </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-heading"><h4>Recent events</h4></div>
-    <div class="panel-body">
-    {% show_recent_logs user=user %}
+<div class="col-lg-8 col-md-8 col-sm-8">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3>{{project.title}}</h3></div>
+
+        <div class="panel-body">
+            <p>{{project.description}}</p>
+            <p>
+                {% if change_project %}
+                <a class="btn btn-primary" href="{% url 'project:settings' project_title=project.title %}">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    Settings
+                </a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>Recent events</h4></div>
+        <div class="panel-body">
+        {% show_recent_logs user=user %}
+        </div>
     </div>
 </div>
 {% endblock %}
