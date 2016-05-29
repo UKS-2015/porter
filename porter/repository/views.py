@@ -26,9 +26,13 @@ class RepositoryOverview(PorterAccessMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RepositoryOverview, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
         repository_title = self.kwargs['repository_title']
         repository = get_object_or_404(Repository, title=repository_title)
         context['repository'] = repository.to_dict()
+
+        user = self.request.user
+        context['view_repository'] = check_permissions(user, 'view_repository', **self.kwargs)
         return context
 
 
@@ -37,6 +41,11 @@ class RepositoryCreate(PorterAccessMixin, CreateView):
     fields = RepositoryForm.Meta.fields
     template_name = 'repository/form.html'
     required_permissions = "add_repository"
+
+    def get_context_data(self, **kwargs):
+        context = super(RepositoryCreate, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
+        return context
 
     def post(self, request, project_title=None):
         # create a form instance and populate it with data from the request:
@@ -56,9 +65,15 @@ class RepositoryUpdate(PorterAccessMixin, UpdateView):
     fields = RepositoryForm.Meta.fields
     template_name = 'repository/form.html'
     required_permissions = "change_repository"
+    project_title = 'project_title'
 
-    def get_object(self):
+    def get_object(self, queryset=None):
         return _get_object(self)
+
+    def get_context_data(self, **kwargs):
+        context = super(RepositoryUpdate, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
+        return context
 
     def post(self, request, *args, **kwargs):
         self.success_url = reverse('project:repository:list_all',

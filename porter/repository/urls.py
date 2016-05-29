@@ -1,5 +1,5 @@
-from django.conf.urls import url
-from porter.repository import views
+from django.conf.urls import url, include
+from porter.issue import urls as issue_urls
 from porter.repository.views import RepositoryOverview, RepositoryCreate, RepositoryDelete, RepositoryUpdate, \
     RepositoryList
 
@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'(?P<repository_title>[^/\\]+)/change/$', RepositoryUpdate.as_view(), name='change'),
     url(r'(?P<repository_title>[^/\\]+)/delete/$', RepositoryDelete.as_view(), name='delete'),
     url(r'(?P<repository_title>[^/\\]+)/$', RepositoryOverview.as_view(), name='overview'),
+    url(r'(?P<repository_title>[^/\\]+)/issues/$', include(issue_urls), name='issues'),
 ]
