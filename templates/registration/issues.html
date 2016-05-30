@@ -1,0 +1,36 @@
+{% extends "project/base.html" %}
+
+{% block content %}
+
+    <div class="container">
+        <h3>Issues</h3>
+        <table class="table">
+        <thead>
+            <tr>
+                <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
+                <td class="col-lg-1 col-md-1 col-sm-1">Assignee</td>
+                <td class="col-lg-1 col-md-1 col-sm-1">Owner</td>
+                <td class="col-lg-2 col-md-2 col-sm-2"></td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for issue in issue_list %}
+           {% with project_title=project_title issue=issue %}
+           {% include "issue/single_issue.html" %}
+           {% endwith %}
+        </tbody>
+        {% endfor %}
+    </table>
+        <div class="pagination">
+            <span class="step-links">
+                {% if issue_list.has_previous %}
+                    <a href="?page={{ issue_list.previous_page_number}}">Previous</a>
+                {% endif %}
+                Page {{ issue_list.number }} of {{ issue_list.paginator.num_pages }}
+                {% if issue_list.has_next %}
+                    <a href="?page={{issue_list.next_page_number}}">Next</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from core.decorators import check_project_member
-from core.models import Project, IssueLog
+from core.models import Project, IssueLog, Issue
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -42,3 +42,16 @@ def user_projects(request):
     except EmptyPage:
         projects = paginator.page(paginator.num_pages)
     return render(request, 'registration/projects.html', {'projects': projects})
+
+def user_issues(request):
+    user = request.user
+    paginator = Paginator(Issue.objects.filter(creator=user).all(), 25)
+    page = request.GET.get('page')
+
+    try:
+        issues = paginator.page(page)
+    except PageNotAnInteger:
+        issues = paginator.page(1)
+    except EmptyPage:
+        issues = paginator.page(paginator.num_pages)
+    return render(request, 'registration/issues.html', {'issues': issues})
