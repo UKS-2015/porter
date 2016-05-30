@@ -20,9 +20,27 @@
         <div class="panel-heading"><h3>Repository issues</h3></div>
 
         <div class="panel-body">
-            {% for issue in repository.issues.all %}
-                {{issue}}
-            {% endfor %}
+        {% if issues %}
+             <table class="table">
+                 <thead>
+                    <tr>
+                        <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
+                        <td class="col-lg-2 col-md-2 col-sm-2"> </td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Assignee</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Owner</td>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    {% for issue in issues %}
+                        {% with project_title=project_title issue=issue view_repository=view_repository change_repository=change_repository delete_repository=delete_repository%}
+                        {% include "issue/single_issue.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                </tbody>
+             </table>
+        {% else %}
+            No issues at the moment. Would you like to add a new one?
+        {% endif %}
         </div>
     </div>
 

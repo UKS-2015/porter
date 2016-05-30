@@ -1,6 +1,6 @@
 from core.forms import RepositoryForm
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Repository, Project
+from core.models import Repository, Project, Issue
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, redirect
@@ -30,9 +30,13 @@ class RepositoryOverview(PorterAccessMixin, DetailView):
         repository_title = self.kwargs['repository_title']
         repository = get_object_or_404(Repository, title=repository_title)
         context['repository'] = repository.to_dict()
-
+        context['issues'] = [
+            object.to_dict() for object in Issue.objects.filter(repository__title=repository_title)
+            ]
         user = self.request.user
         context['view_repository'] = check_permissions(user, 'view_repository', **self.kwargs)
+        context['change_repository'] = check_permissions(user, 'change_repository', **self.kwargs)
+        context['delete_repository'] = check_permissions(user, 'delete_repository', **self.kwargs)
         return context
 
 
