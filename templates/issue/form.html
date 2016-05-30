@@ -1,11 +1,24 @@
-{% extends 'general/base.html' %}
+{% extends "project/base.html" %}
+{% load show_navtabs %}
 
 {% block title %}
 {% endblock %}
+{% block bootstrap3_sidebar %}
+{% endblock %}
 
 {% block content %}
-{% with title="Issue" namespace='issue' %}
-{% include "general/generic_form.html" %}
-{% endwith %}
+<div class="col-lg-2 col-md-2 col-sm-2">
+    {% show_navtabs active="issues" project_title=project_title user=user %}
+</div>
+<div class="col-lg-8 col-md-8 col-sm-8">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3>Issues</h3></div>
 
+        <div class="panel-body">
+            {% with title="Issue" namespace='project:issue' %}
+            {% include "general/generic_form.html" %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
 {% endblock %}

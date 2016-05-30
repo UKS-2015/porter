@@ -14,19 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-from porter.issue.views import IssueList, IssueCreate, IssueDetail, IssueUpdate, IssueDelete
+from porter.issue.views import IssueList, IssueCreate, IssueOverview, IssueUpdate, IssueDelete
 
 app_name = 'issues'
 
 urlpatterns = [
     # ex: /issue/
     url(r'^$', IssueList.as_view(), name='list'),
-     # ex: /issue/5/add/
-    url(r'add/$', IssueCreate.as_view(), name='add'),
-     # ex: /issue/5/
-    url(r'(?P<pk>[0-9]+)/$', IssueDetail.as_view(), name='detail'),
-     # ex: /issue/5/update/
-    url(r'(?P<pk>[0-9]+)/update/$', IssueUpdate.as_view(), name='update'),
-     # ex: /issue/5/delete/
-    url(r'(?P<pk>[0-9]+)/delete/$', IssueDelete.as_view(), name='delete'),
+    # ex: /issue/5/add/
+    url(r'new/$', IssueCreate.as_view(), name='new'),
+    # ex: /issue/5/update/
+    url(r'(?P<pk>[^/\\]+)/change/$', IssueUpdate.as_view(), name='change'),
+    # ex: /issue/5/delete/
+    url(r'(?P<pk>[^/\\]+)/delete/$',IssueDelete.as_view(), name='delete'),
+    # ex: /issue/5/
+    url(r'(?P<pk>[^/\\]+)/$',IssueOverview.as_view(), name='overview'),
+
 ]
