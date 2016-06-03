@@ -20,8 +20,9 @@ app_name = 'milestone'
 
 urlpatterns = [
     url(r'^$', MilestoneList.as_view(), name='list'),
-    url(r'add/$', MilestoneCreate.as_view(), name='add'),
-    url(r'(?P<pk>[0-9]+)/$', MilestoneDetail.as_view(), name='detail'),
-    url(r'(?P<pk>[0-9]+)/update/$', MilestoneUpdate.as_view(), name='update'),
-    url(r'(?P<pk>[0-9]+)/delete/$', MilestoneDelete.as_view(), name='delete'),
+    url(r'new/$', MilestoneCreate.as_view(), name='new'),
+    url(r'(?P<pk>[^/\\]+)/change/$', MilestoneUpdate.as_view(), name='change'),
+    url(r'(?P<pk>[^/\\]+)/delete/$',MilestoneDelete.as_view(), name='delete'),
+    url(r'(?P<pk>[^/\\]+)/$',MilestoneDetail.as_view(), name='overview'),
+
 ]
