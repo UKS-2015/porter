@@ -15,7 +15,7 @@
         <div class="panel-heading"><h3>Repositories</h3></div>
 
         <div class="panel-body">
-            {% with title="Repository" namespace="project:repository" %}
+            {% with title="Repository" namespace="/porter/{{project_title}}/{{repository.instance.title}}/change/" %}
             {% include "general/generic_form.html" %}
             {% endwith %}
         </div>

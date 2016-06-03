@@ -25,9 +25,10 @@
                  <thead>
                     <tr>
                         <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
-                        <td class="col-lg-2 col-md-2 col-sm-2"> </td>
                         <td class="col-lg-1 col-md-1 col-sm-1">Assignee</td>
-                        <td class="col-lg-1 col-md-1 col-sm-1">Owner</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Creator</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Milestone</td>
+                        <td class="col-lg-2 col-md-2 col-sm-2"> </td>
                     </tr>
                  </thead>
                  <tbody>
@@ -45,7 +46,7 @@
     </div>
 
 
-    <a class="btn btn-default" href="{% url 'project:overview' project_title %}">Back</a>
+    <a class="btn btn-default" href="{% url 'project:repository:list_all' project_title %}">Back</a>
 </div>
 
 {% endif %}
