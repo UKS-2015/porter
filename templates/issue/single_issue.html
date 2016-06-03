@@ -18,8 +18,13 @@
         {{ issue.assignee }}
     </td>
     <td class="col-lg-1 col-md-1 col-sm-1">
-        {{ issue.owner }}
+        {{ issue.creator }}
     </td>
+
+    <td class="col-lg-1 col-md-1 col-sm-1">
+        {{ issue.milestone.title }}
+    </td>
+
     <td class="col-lg-2 col-md-2 col-sm-2">
         {% if change_issue %}
         <a class="btn btn-primary btn-sm" href="{% url 'project:issues:change' project_title issue.id %}">

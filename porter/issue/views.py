@@ -107,7 +107,7 @@ class IssueOverview(PorterAccessMixin, DetailView):
         context = super(IssueOverview, self).get_context_data(**kwargs)
         issue = Issue.objects.get(pk=self.kwargs['pk'])
         context['project_title'] = self.kwargs['project_title']
-        context['object'] = issue.to_dict()
+        context['object'] = issue
         return context
 
 

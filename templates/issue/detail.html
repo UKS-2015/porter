@@ -11,12 +11,38 @@
 </div>
 <div class="col-lg-8 col-md-8 col-sm-8">
     <div class="panel panel-default">
-        <div class="panel-heading"><h3>Issue details</h3></div>
+        <div class="panel-heading">
+            <h3>
+                <a href="/porter/{{ project_title }}">{{ project_title }}</a>
+                /
+                <a href="/porter/{{ project_title }}/repository/{{ object.repository.title }}">{{ object.repository.title }}</a>
+                {{ object.title }}
+            </h3>
+
+            {% for label in object.labels.all %}
+                <span class="label label-primary">{{ label }}</span>
+            {% endfor %}
+        </div>
 
         <div class="panel-body">
-            {% with title="Issue" %}
-            {% include "general/generic_detail.html" %}
-            {% endwith %}
+            <div class="input-group">
+              <span class="input-group-addon"><b>Creator:</b> </span>
+              <input type="text" class="form-control" placeholder="Creator" value="{{ object.creator }}" disabled>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="input-group">
+              <span class="input-group-addon"><b>Assignee:</b> </span>
+              <input type="text" class="form-control" placeholder="Assignee" value="{{ object.assignee }}" disabled>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>Milestone</h4></div>
+        <div class="panel-body">
+            {{ object.milestone }}
         </div>
     </div>
 </div>
