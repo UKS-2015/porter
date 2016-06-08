@@ -3,13 +3,13 @@
     <div class="well col-md-6">
         <p>
             <b>
-            <a href="{% url 'project:issues:detail' project_title=recent_log.issue.repository.project.title  pk=recent_log.issue.id%}">
-                {{recent_log.issue.title }}
-            </a> -
-            <a
-            href="{% url 'project:repository:overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title %}">
-                {{recent_log.issue.repository.project.title}}/{{recent_log.issue.repository.title}}
-            </a>
+                <a href="{% url 'project:issues:overview' project_title=recent_log.issue.repository.project.title pk=recent_log.issue.id%}">
+                    {{recent_log.issue.title}}
+                </a> -
+                <a
+                    href="{% url 'project:repository:overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title %}">
+                    {{recent_log.issue.repository.title}}/{{recent_log.issue.repository.project.title}}
+                </a>
             </b>
         </p>
         <p> {{ recent_log.content }}</p>

@@ -26,9 +26,7 @@ def user_dashboard(request):
     user = request.user
     # Get 5 most recent logs from all user's projects
     recent_logs = IssueLog.objects.filter(issue__repository__project__users=user).order_by('-date_modified')[:5]
-    projects = Project.objects.filter(users=user).all()
     return render(request, 'registration/dashboard.html', {'recent_logs': recent_logs})
-
 
 def user_projects(request):
     user = request.user

@@ -1,8 +1,12 @@
 {% extends "project/base.html" %}
 {% load show_recent_logs %}
 
-{% block content %}
-    <h3>Recent Events</h3>
-    {% show_recent_logs user=user %}
+{% block navbar %}
+{% include "common/navbar.html" with active="dashboard" %}
+{% endblock %}
 
+
+{% block content %}
+<h3>Recent Events</h3>
+{% show_recent_logs user=user %}
 {% endblock %}
