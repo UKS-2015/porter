@@ -1,5 +1,5 @@
 from core.decorators import check_project_member
-from core.models import Project, IssueLog, Issue
+from core.models import Project, IssueLog, Issue, PorterUser
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -24,9 +24,11 @@ def logout_view(request):
 @login_required()
 def user_dashboard(request):
     user = request.user
+    porteruser = PorterUser.objects.get(user=user)
     # Get 5 most recent logs from all user's projects
     recent_logs = IssueLog.objects.filter(issue__repository__project__users=user).order_by('-date_modified')[:5]
-    return render(request, 'registration/dashboard.html', {'recent_logs': recent_logs})
+    return render(request, 'registration/dashboard.html',
+                  {'recent_logs': recent_logs, 'porteruser' : porteruser})
 
 def user_projects(request):
     user = request.user

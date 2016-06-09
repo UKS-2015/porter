@@ -88,14 +88,11 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
                                    kwargs={'project_title': kwargs['project_title']})
         return super(IssueUpdate, self).post(request, *args, **kwargs)
 
-
-
 class IssueDelete(PorterAccessMixin, DeleteView):
     model = Issue
     template_name = 'issue/confirm-delete.html'
     success_url = reverse_lazy('issue:list')
     required_permissions = "delete_issue"
-
 
 class IssueOverview(PorterAccessMixin, DetailView):
     model = Issue
@@ -109,8 +106,6 @@ class IssueOverview(PorterAccessMixin, DetailView):
         context['project_title'] = self.kwargs['project_title']
         context['object'] = issue
         return context
-
-
 
 class IssueList(PorterAccessMixin, ListView):
     model = Issue
