@@ -16,11 +16,11 @@
 
             <table class="table">
                 <tbody>
-                {% for repository in repository_list %}
+                    {% for repository in repository_list %}
                     <tr>
                         <td>
                             <a href="{% url 'project:repository:overview' project_title repository.title %}">
-                            {{repository.title}}
+                                {{repository.title}}
                             </a>
                         </td>
                         <td>
@@ -30,9 +30,12 @@
                             </a>
                             {% endif %}
                             {% if delete_repository %}
-                            <a class="btn btn-danger btn-sm delete" href="{% url 'project:repository:delete' project_title repository.title %}">
+
+                            <a class="btn btn-danger btn-sm" data-toggle="modal" href="#deleteModal">
                                 <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             </a>
+                            {% url 'project:repository:delete' project_title repository.title as delete_url %}
+                            {% include "common/delete_modal.html" with action=delete_url entity=repository.title %}
                             {% endif %}
                         </td>
                     </tr>
@@ -53,8 +56,8 @@
             <p>
                 {% if add_repository %}
                 <a class="btn btn-success" href="{% url 'project:repository:create' project_title %}">
-                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                New Repository
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    New Repository
                 </a>
                 {% endif %}
                 <a class="btn btn-default" href="{% url 'project:overview' project_title %}">Back</a>
@@ -63,14 +66,4 @@
     </div>
 </div>
 
-    <script>
-        $( document ).ready(function() {
-             $('.delete').click(function(e){
-             if (!confirm('Delete this repository?')){
-                 e.preventDefault();
-             }
-            });
-        });
-
-    </script>
 {% endblock %}

@@ -1,19 +1,20 @@
 {% load bootstrap3 %}
 
-<!-- TODO: Finish this modal -->
-
-<div class="modal hide" id="deleteModal">
-    <form class="well" method="post" action="{ url }">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>Delete</h3>
-        </div>
-        <div class="modal-body">
-            {% csrf_token %}
-            <span><p>Delete </p></span>
-        </div>
-        <div class="modal-footer">
-            <input class="btn btn-primary" type="submit" value="Delete" />
-        </div>
-    </form>
+<div class="modal fade" id="deleteModal" role="dialog">
+    <div class="modal-dialog">
+        <form class="well" method="post" action="{{action}}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">×</button>
+                <h3>Delete</h3>
+            </div>
+            <div class="modal-body">
+                {% csrf_token %}
+                <span><p>Are you sure you want to delete {{entity}}?</p></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input class="btn btn-danger" type="submit" value="Delete" />
+            </div>
+        </form>
+    </div>
 </div>
