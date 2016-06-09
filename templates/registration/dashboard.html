@@ -21,11 +21,15 @@
                     <b>{{porteruser.user.first_name}} {{porteruser.user.last_name}}</b>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8 porter-info">
-                    <i>Joined:&nbsp;</i>{{porteruser.user.date_joined|date:"M d, Y"}}
+                    <span class="span6"> <i>Joined:&nbsp;</i> </span>
+                    <span class="span6">{{porteruser.user.date_joined|date:"M d, Y"}}</span>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8 porter-info">
                     {% if porteruser.user.email %}
-                    <i>Email:&nbsp;</i><a href="mailto:{{porteruser.user.email}}">{{porteruser.user.email}}</a>
+                    <span  class="span6"> <i>Email:&nbsp;</i> </span>
+                    <span class="span6">
+                        <a href="mailto:{{porteruser.user.email}}">{{porteruser.user.email}}</a>
+                    </span>
                     {% endif %}
                 </div>
             </div>
