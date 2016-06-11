@@ -1,5 +1,4 @@
 """porter URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.9/topics/http/urls/
 Examples:
@@ -34,10 +33,10 @@ urlpatterns = [
     url(r'^porter/profile/change/$', UserChange.as_view(), name='profile_change'),
     url(r'^porter/user/(?P<pk>[0-9]+)/$', UserDetail.as_view(), name='user_profile'),
     url(r'^porter/profile/password/$', UserPassword.as_view(), name='password_change'),
-
     url(r'^porter/projects/$', views.user_projects, name='user_projects'),
     url(r'^porter/issues/$', views.user_issues, name='user_issues'),
     url(r'^porter/(?P<project_title>[^/\\]+)/', include(new_project_urls)),
     url(r'^porter/$', views.user_dashboard, name='user_dashboard'),
+
     # Allow media (such as pictures)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

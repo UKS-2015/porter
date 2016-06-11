@@ -29,5 +29,4 @@ urlpatterns = [
     url(r'(?P<pk>[^/\\]+)/delete/$',IssueDelete.as_view(), name='delete'),
     # ex: /issue/5/
     url(r'(?P<pk>[^/\\]+)/$',IssueOverview.as_view(), name='overview'),
-
 ]

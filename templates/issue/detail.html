@@ -20,20 +20,20 @@
             </h3>
 
             {% for label in object.labels.all %}
-                <span class="label label-primary">{{ label }}</span>
+            <span class="label label-primary">{{ label }}</span>
             {% endfor %}
         </div>
 
         <div class="panel-body">
             <div class="input-group">
-              <span class="input-group-addon"><b>Creator:</b> </span>
-              <input type="text" class="form-control" placeholder="Creator" value="{{ object.creator }}" disabled>
+                <span class="input-group-addon"><b>Creator:</b> </span>
+                <input type="text" class="form-control" placeholder="Creator" value="{{ object.creator }}" disabled>
             </div>
         </div>
         <div class="panel-body">
             <div class="input-group">
-              <span class="input-group-addon"><b>Assignee:</b> </span>
-              <input type="text" class="form-control" placeholder="Assignee" value="{{ object.assignee }}" disabled>
+                <span class="input-group-addon"><b>Assignee:</b> </span>
+                <input type="text" class="form-control" placeholder="Assignee" value="{{ object.assignee }}" disabled>
             </div>
         </div>
     </div>

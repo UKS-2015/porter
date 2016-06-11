@@ -150,10 +150,14 @@ class Issue(models.Model):
         data['creator'] = instance.creator
         if instance.assignee:
             data['assignee'] = instance.assignee
+
         data['repository'] = instance.repository
+
         if instance.milestone:
             data['milestone'] = instance.milestone.id
+
         data['labels'] = [label for label in instance.labels.all()]
+
         return data
 
 
@@ -198,15 +202,12 @@ class IssueLog(models.Model):
         return self.content
 
     def to_dict(instance):
-        data = {}
-        data['id'] = instance.id
-        data['content'] = instance.content
-        data['log_type'] = instance.log_type
-        data['object_user'] = User.objects.get(pk=instance.object_user.id)
-        data['subject_user'] = User.objects.get(pk=instance.subject_user.id)
-        data['issue'] = Issue.objects.get(pk=instance.issue.id)
-        return data
-
+        return {'id' : instance.id,
+                'content' : instance.content,
+                'log_type' : instance.log_type,
+                'object_user' : User.objects.get(pk=instance.object_user.id),
+                'subject_user' : User.objects.get(pk=instance.subject_user.id),
+                'issue' : Issue.objects.get(pk=instance.issue.id)}
 
 class PorterGroup(Group):
     """

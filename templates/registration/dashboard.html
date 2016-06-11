@@ -1,8 +1,39 @@
 {% extends "project/base.html" %}
+
 {% load show_recent_logs %}
 
+{% block navbar %}
+{% include "common/navbar.html" with active="dashboard" %}
+{% endblock %}
+
 {% block content %}
+<div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4><a href="{% url 'profile' %}">{{porteruser.user.username}}</a></h4>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                    <img src="{{porteruser.picture.url}}" class="img-responsive center-block">
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8">
+                    <b>{{porteruser.user.first_name}} {{porteruser.user.last_name}}</b>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8 porter-info">
+                    <i>Joined:&nbsp;</i>{{porteruser.user.date_joined|date:"M d, Y"}}
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-8 porter-info">
+                    {% if porteruser.user.email %}
+                    <i>Email:&nbsp;</i><a href="mailto:{{porteruser.user.email}}">{{porteruser.user.email}}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-8 col-md-8 col-sm-8">
     <h3>Recent Events</h3>
     {% show_recent_logs user=user %}
-
+</div>
 {% endblock %}

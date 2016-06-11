@@ -1,30 +1,30 @@
 <nav class="navbar navbar-default">
-<div class="container-fluid">
-  <div class="navbar-header">
-    <a class="navbar-brand" href="/">Porter</a>
-  </div>
-  <div id="navbar" class="navbar-collapse collapse">
-    <ul class="nav navbar-nav">
-      <li id="dashboard"><a href="/porter/">Dashboard</a></li>
-      <li id="projects"><a href="{% url 'user_projects' %}">Projects</a></li>
-      <li><a href="{% url 'user_issues' %}" id="issues">Issues</a></li>
-    </ul>
-    <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                <span class="glyphicon glyphicon-user"></span>
-                Welcome, {{ user.username }} <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="{% url 'profile' %}">Edit profile</a></li>
-              <li><a href="{% url 'logout' %}">Logout</a></li>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Porter</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li id="dashboard"><a href="/porter/">Dashboard</a></li>
+                <li id="projects"><a href="{% url 'user_projects' %}">Projects</a></li>
+                <li id="issues"><a href="{% url 'user_issues' %}" id="issues">Issues</a></li>
             </ul>
-        </li>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user"></span>
+                        Welcome, {{ user.username }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'profile' %}">Edit profile</a></li>
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </li>
 
-    </ul>
-  </div><!--/.nav-collapse -->
-</div><!--/.container-fluid -->
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
 </nav>
 
 <script>
-    document.getElementById("{{ active }}").className += "active";
+ document.getElementById("{{ active }}").className += "active";
 </script>
