@@ -91,8 +91,11 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
 class IssueDelete(PorterAccessMixin, DeleteView):
     model = Issue
     template_name = 'issue/confirm-delete.html'
-    success_url = reverse_lazy('issue:list')
     required_permissions = "delete_issue"
+
+    def get_success_url(self):
+        return reverse_lazy('project:issues:list',
+                            args=[self.object.repository.project.title])
 
 class IssueOverview(PorterAccessMixin, DetailView):
     model = Issue
@@ -124,11 +127,11 @@ class IssueList(PorterAccessMixin, ListView):
             repo_title = self.kwargs['repository_title']
             context['page_obj'] = [
                 object.to_dict() for object in Issue.objects.filter(repository__title=repo_title)
-                ]
+            ]
         else:
             context['page_obj'] = [
                 object.to_dict() for object in Issue.objects.filter(repository__project__title=project_title)
-                ]
+            ]
 
         user = self.request.user
         context['view_issue'] = check_permissions(user, 'view_issue', **self.kwargs)

@@ -25,10 +25,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                {% for issue in issue_list %}
-                   {% with project_title=project_title issue=issue %}
-                   {% include "issue/single_issue.html" %}
-                   {% endwith %}
+                    {% for issue in issue_list %}
+                    {% with project_title=project_title issue=issue %}
+                    {% include "issue/single_issue.html" %}
+                    {% endwith %}
                 </tbody>
                 {% endfor %}
             </table>
@@ -44,26 +44,15 @@
                 </span>
             </div>
             <p>
-            {% if add_issue %}
-            <a class="btn btn-success" href="{% url 'project:issues:new' project_title %}">
-             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-            New
-            </a>
-            {% endif %}
-            <a class="btn btn-default" href="{% url 'project:overview' project_title %}">Back</a>
+                {% if add_issue %}
+                <a class="btn btn-success" href="{% url 'project:issues:new' project_title %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    New Issue
+                </a>
+                {% endif %}
+                <a class="btn btn-default" href="{% url 'project:overview' project_title %}">Back</a>
             </p>
         </div>
     </div>
 </div>
-
-    <script>
-        $( document ).ready(function() {
-             $('.delete').click(function(e){
-             if (!confirm('Delete this repository?')){
-                 e.preventDefault();
-             }
-            });
-        });
-
-    </script>
 {% endblock %}

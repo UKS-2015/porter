@@ -3,7 +3,6 @@ from django import template
 
 register = template.Library()
 
-
 @register.inclusion_tag('show_navtabs.html')
 def show_navtabs(user, project_title, active):
     template_params = {
