@@ -1,6 +1,6 @@
-from core.forms import ProjectForm
+from core.forms import ProjectForm, MilestoneForm
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Project, UserProjectRole
+from core.models import Project, UserProjectRole, Milestone
 from django.contrib.auth.models import User, Group
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.core.paginator import Paginator
@@ -9,6 +9,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.views.generic import View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.http import HttpResponseBadRequest
 
 GUEST_ROLE = 'Guest'
 OWNER_ROLE = 'Project owner'
@@ -144,10 +145,29 @@ class ProjectDetail(PorterAccessMixin, DetailView):
 class ProjectMemberAdd(PorterAccessMixin, View):
     required_permissions = 'add_member'
 
-    def get_paginator(self, request):
-        paginator = Paginator(User.objects.all(), 25)
-        page = request.GET.get('page')
+    # def get_paginator(self, request):
+    #     project = get_object_or_404(Project, title=kwargs['project_title'])
+    #     all_users =[user for user in User.objects.all() if user not in Project.objects.ge
+    #
+    #     paginator = Paginator(User.objects.all(), 25)
+    #
+    #     page = request.GET.get('page')
+    #
+    #     try:
+    #         users = paginator.page(page)
+    #     except PageNotAnInteger:
+    #         users = paginator.page(1)
+    #     except EmptyPage:
+    #         users = paginator.page(paginator.num_pages)
+    #
+    #     return users
 
+    def get(self, request, *args, **kwargs):
+        project_title = kwargs['project_title']
+        project = get_object_or_404(Project, title=project_title)
+        all_users =[user for user in User.objects.all() if user not in project.users.all()]
+        paginator = Paginator(all_users, 25)
+        page = request.GET.get('page')
         try:
             users = paginator.page(page)
         except PageNotAnInteger:
@@ -155,11 +175,6 @@ class ProjectMemberAdd(PorterAccessMixin, View):
         except EmptyPage:
             users = paginator.page(paginator.num_pages)
 
-        return users
-
-    def get(self, request, *args, **kwargs):
-        project_title = kwargs['project_title']
-        users = self.get_paginator(request)
         return render(request, 'project/members_add.html', {'project_title': project_title, 'users': users})
 
     def post(self, request, *args, **kwargs):
@@ -177,3 +192,52 @@ class ProjectMemberAdd(PorterAccessMixin, View):
         UserProjectRole.save(upr)
 
         return redirect(reverse('project:members', kwargs={'project_title': project_title}))
+
+class ProjectMilestones(PorterAccessMixin, DetailView):
+    model = Project
+    success_url = reverse_lazy('project:overview')
+    template_name = 'milestone/list.html'
+    required_permissions = 'view_milestone'
+
+    def get_object(self):
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
+        return Project.objects.get(title=project_title)
+
+    def get_context_data(self, **kwargs):
+        project_title = self.kwargs['project_title']
+        context = super(ProjectMilestones, self).get_context_data(**kwargs)
+        context['milestone_list'] = Milestone.objects.filter(repository__project__title=project_title).all()
+        print(context['milestone_list'])
+        print()
+        print()
+        current_user = self.request.user
+        context['project_title'] = project_title
+        context['remove_milestone'] = check_permissions(current_user, 'remove_milestone', **self.kwargs)
+        context['add_milestone'] = check_permissions(current_user, 'add_milestone', **self.kwargs)
+        context['change_milestone'] = check_permissions(current_user, 'change_milestone', **self.kwargs)
+        context['delete_milestone'] = check_permissions(current_user, 'change_milestone', **self.kwargs)
+
+        return context
+
+class ProjectMilestoneAdd(PorterAccessMixin, CreateView):
+    model = Milestone
+    fields = MilestoneForm.Meta.fields
+    template_name = 'milestone/form.html'
+    required_permissions = "add_milestone"
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectMilestoneAdd, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
+        return context
+
+    def post(self, request, **kwargs):
+        # create a form instance and populate it with data from the request:
+        form = MilestoneForm(request.POST, auto_id=True)
+        # check whether it's valid:
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('project:milestones', kwargs={'project_title': kwargs['project_title']}))
+        else:
+            return HttpResponseBadRequest
+
