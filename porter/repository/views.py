@@ -33,10 +33,6 @@ class RepositoryOverview(PorterAccessMixin, DetailView):
         context['issues'] = [
             object for object in Issue.objects.filter(repository__title=repository_title)
             ]
-        for item in context['issues']:
-            print(item)
-        print()
-        print()
         user = self.request.user
         context['view_repository'] = check_permissions(user, 'view_repository', **self.kwargs)
         context['change_repository'] = check_permissions(user, 'change_repository', **self.kwargs)
