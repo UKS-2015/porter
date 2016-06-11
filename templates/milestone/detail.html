@@ -11,12 +11,15 @@
 </div>
 <div class="col-lg-8 col-md-8 col-sm-8">
     <div class="panel panel-default">
-        <div class="panel-heading"><h3>Milestone details</h3></div>
+        <div class="panel-heading">
+            <h3>
+                <a href="/porter/{{ project_title }}">{{ project_title }}</a>
+                /
+                <a href="/porter/{{ project_title }}/repository/{{ object.repository.title }}">{{ object.repository.title }}</a>
+                {{ object.title }}
+            </h3></div>
 
         <div class="panel-body">
-            {% with title="Milestone" %}
-            {% include "general/generic_detail.html" %}
-            {% endwith %}
         </div>
     </div>
 </div>

@@ -41,8 +41,8 @@
                 </span>
             </div>
             <p>
-            {% if add_issue %}
-            <a class="btn btn-success" href="{% url 'project:milestone:new' project_title %}">
+            {% if add_milestone %}
+            <a class="btn btn-success" href="{% url 'project:add_milestone' project_title %}">
              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             New
             </a>

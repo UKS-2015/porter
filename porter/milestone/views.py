@@ -71,7 +71,7 @@ class MilestoneDetail(PorterAccessMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(MilestoneDetail, self).get_context_data(**kwargs)
         milestone = Milestone.objects.get(pk=self.kwargs['pk'])
-        context['object'] = milestone.to_dict()
+        context['object'] = milestone
         context['project_title'] = self.kwargs['project_title']
         return context
 
@@ -98,6 +98,9 @@ class MilestoneList(PorterAccessMixin, ListView):
             context['page_obj'] = [
                 object.to_dict() for object in Milestone.objects.filter(repository__project__title=self.kwargs['project_title'])
                 ]
+            print(context['page_obj'])
+            print()
+            print()
         user = self.request.user
         context['view_milestone'] = check_permissions(user, 'view_milestone', **self.kwargs)
         context['change_milestone'] = check_permissions(user, 'change_milestone', **self.kwargs)

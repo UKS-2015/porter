@@ -14,7 +14,7 @@
     {% endif %}
     {% if view_milestone %}
     <li role="presentation" id="milestones">
-        <a href="{% url 'project:milestone:list'  project_title=project_title %}">Milestones</a>
+        <a href="{% url 'project:all_milestones'  project_title=project_title %}">Milestones</a>
     </li>
     {% endif %}
     {% if view_member %}
