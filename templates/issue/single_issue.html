@@ -1,15 +1,10 @@
 <tr>
     <td class="col-lg-3 col-md-3 col-sm-3">
         <b>
-            <a href="{% url 'project:overview' project_title %}">
-            {{project_title}}/</a>
-            <a href="{% url 'project:repository:overview' project_title issue.repository.title %}">
-            {{issue.repository.title }}
-            </a>
+            <a href="{% url 'project:overview' project_title %}">{{project_title}}</a>/<a href="{% url 'project:repository:overview' project_title issue.repository.title %}">
+            {{issue.repository.title }}</a>
         </b>
-        <a href="{% url 'project:issues:overview' project_title issue.id %}">
-        {{issue.title}}
-        </a>
+        <a href="{% url 'project:issues:overview' project_title issue.id %}">{{issue.title}}</a>
         {% for label in issue.labels.all %}
             <span class="label label-primary">{{ label }}</span>
         {% endfor %}
