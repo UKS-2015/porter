@@ -1,6 +1,0 @@
-<form action="/project/{{project.instance.id}}/delete/" method="POST">
-    {% csrf_token %}
-    {{ project }}
-    <p>Are you sure you want to delete this project?</p>
-    <input type="submit" value="Delete" />
-</form>

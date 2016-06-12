@@ -10,7 +10,7 @@
         {% csrf_token %}
         {% bootstrap_form form layout='horizontal' %}
         {% buttons submit='Save' reset='Reset' layout='horizontal' %}
-        <a class="btn btn-primary" href="/{{ namespace }}"> Cancel </a>
+        <a class="btn btn-primary" href="{{namespace}}"> Cancel </a>
         {% endbuttons %}
     </form>
 

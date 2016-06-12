@@ -47,7 +47,7 @@ class RepositoryCreate(PorterAccessMixin, CreateView):
     required_permissions = "add_repository"
 
     def get_context_data(self, **kwargs):
-        context = super(RepositoryCreate, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
         return context
 

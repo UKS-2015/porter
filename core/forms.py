@@ -47,14 +47,7 @@ class LabelForm(ModelForm):
         model = Label
         fields = '__all__'
 
-
 class IssueForm(ModelForm):
-    def __init__(self, repository_title=None, **kwargs):
-        super(ModelForm, self).__init__(**kwargs)
-        # Repository is through view
-        if repository_title:
-            self.fields.pop('repository', None)
-
     class Meta:
         model = Issue
         fields = ['title', 'assignee', 'repository', 'milestone', 'labels']

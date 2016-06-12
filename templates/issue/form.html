@@ -15,7 +15,8 @@
         <div class="panel-heading"><h3>Issues</h3></div>
 
         <div class="panel-body">
-            {% with title="Issue" namespace='project:issue' %}
+            {% url 'project:issues:list' project_title as cancel_url %}
+            {% with title="Issue" namespace=cancel_url %}
             {% include "general/generic_form.html" %}
             {% endwith %}
         </div>
