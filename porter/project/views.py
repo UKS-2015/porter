@@ -145,23 +145,6 @@ class ProjectDetail(PorterAccessMixin, DetailView):
 class ProjectMemberAdd(PorterAccessMixin, View):
     required_permissions = 'add_member'
 
-    # def get_paginator(self, request):
-    #     project = get_object_or_404(Project, title=kwargs['project_title'])
-    #     all_users =[user for user in User.objects.all() if user not in Project.objects.ge
-    #
-    #     paginator = Paginator(User.objects.all(), 25)
-    #
-    #     page = request.GET.get('page')
-    #
-    #     try:
-    #         users = paginator.page(page)
-    #     except PageNotAnInteger:
-    #         users = paginator.page(1)
-    #     except EmptyPage:
-    #         users = paginator.page(paginator.num_pages)
-    #
-    #     return users
-
     def get(self, request, *args, **kwargs):
         project_title = kwargs['project_title']
         project = get_object_or_404(Project, title=project_title)
@@ -237,7 +220,7 @@ class ProjectMilestoneAdd(PorterAccessMixin, CreateView):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            return redirect(reverse('project:milestones', kwargs={'project_title': kwargs['project_title']}))
+            return redirect(reverse('project:all_milestones', kwargs={'project_title': kwargs['project_title']}))
         else:
             return HttpResponseBadRequest
 

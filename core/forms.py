@@ -39,8 +39,12 @@ class UserProjectRoleForm(ModelForm):
 class MilestoneForm(ModelForm):
     class Meta:
         model = Milestone
-        fields = ['title']
+        fields = ['title', 'repository']
 
+class MilestoneWithRepoForm(ModelForm):
+    class Meta:
+        model = Milestone
+        fields = ['title']
 
 class LabelForm(ModelForm):
     class Meta:

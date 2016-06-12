@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^repository/', include(repository_urls), name='repositories'),
     # TODO: Modify issue application
     url(r'^issues/', include(issue_urls), name='issues'),
-    url(r'^milestones/', ProjectMilestones.as_view(), name='all_milestones'),
     url(r'^milestones/add/$', ProjectMilestoneAdd.as_view(), name='add_milestone'),
+    url(r'^milestones/', ProjectMilestones.as_view(), name='all_milestones'),
+
 ]
