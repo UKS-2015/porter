@@ -1,4 +1,4 @@
-<ul class="nav nav-pills nav-stacked">
+<ul id="navtab" class="nav nav-pills nav-stacked">
     <li role="presentation" id="overview">
         <a href="{% url 'project:overview'  project_title=project_title %}">Overview</a>
     </li>
@@ -24,6 +24,8 @@
     {% endif %}
 </ul>
 
+{% load staticfiles %}
+<script src="{% static 'porter/js/jquery-3.0.0.min.js' %}"></script>
 <script>
-    document.getElementById("{{ active }}").className += "active";
+ $("#navtab").find("#{{ active_tab }}").addClass("active");
 </script>
