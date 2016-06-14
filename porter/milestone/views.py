@@ -1,6 +1,6 @@
 from core.mixins import PorterAccessMixin, check_permissions
 from django.shortcuts import redirect
-from core.models import Milestone, Repository
+from core.models import Milestone, Repository, Issue
 from core.forms import MilestoneWithRepoForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
@@ -73,9 +73,17 @@ class MilestoneDetail(PorterAccessMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(MilestoneDetail, self).get_context_data(**kwargs)
         milestone = Milestone.objects.get(pk=self.kwargs['pk'])
+        issues = Issue.objects.filter(milestone = milestone.id)
         context['object'] = milestone
+        context['issues'] = issues
         context['project_title'] = self.kwargs['project_title']
         context['repository_title'] = self.kwargs['repository_title']
+
+        user = self.request.user
+
+        context['view_milestone'] = check_permissions(user, 'view_milestone', **self.kwargs)
+        context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
+        context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
 
 
