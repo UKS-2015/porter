@@ -13,7 +13,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from core import views
-from core.forms import UserPasswordForm
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -26,6 +25,7 @@ from porter.project.views import ProjectCreate
 app_name = 'porter'
 
 urlpatterns = [
+    url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/login/$', login),
     url(r'^porter/login/$', login),

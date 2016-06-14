@@ -5,18 +5,23 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
 from core.mixins import check_permissions
+from django.core.urlresolvers import reverse
 
 # Create your views here.
 
 # TODO: Testing only
 from django.shortcuts import redirect, render
 
+def index(request):
+    if request.user:
+        return redirect(reverse('user_dashboard'))
+    else:
+        return redirect(reverse('login'))
 
 @login_required()
 @check_project_member()
 def project_test(request, project_name):
     return HttpResponse("Hello from %s!" % project_name)
-
 
 def logout_view(request):
     logout(request)
@@ -31,6 +36,7 @@ def user_dashboard(request):
     return render(request, 'registration/dashboard.html',
                   {'recent_logs': recent_logs, 'porteruser' : porteruser})
 
+@login_required()
 def user_projects(request, *args, **kwargs):
     user = request.user
     paginator = Paginator(Project.objects.filter(users=user).all(), 25)
@@ -45,6 +51,7 @@ def user_projects(request, *args, **kwargs):
     add_project =  check_permissions(user, 'view_project', **kwargs)
     return render(request, 'registration/projects.html', {'projects': projects, 'add_project':add_project})
 
+@login_required()
 def user_issues(request):
     user = request.user
     issues = []
