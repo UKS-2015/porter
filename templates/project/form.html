@@ -8,7 +8,8 @@
 <div class="panel panel-default">
     <div class="panel-heading">Basic settings</div>
     <div class="panel-body">
-        {% with title="Project" namespace="porter/"|add:project.title %}
+        {% url 'user_projects' as cancel_url %}
+        {% with title="Project" namespace=cancel_url %}
         {% include "general/generic_form.html" %}
         {% endwith %}
     </div>

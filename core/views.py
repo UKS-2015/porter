@@ -4,6 +4,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponse
+from core.mixins import check_permissions
 
 # Create your views here.
 
@@ -30,7 +31,7 @@ def user_dashboard(request):
     return render(request, 'registration/dashboard.html',
                   {'recent_logs': recent_logs, 'porteruser' : porteruser})
 
-def user_projects(request):
+def user_projects(request, *args, **kwargs):
     user = request.user
     paginator = Paginator(Project.objects.filter(users=user).all(), 25)
     page = request.GET.get('page')
@@ -41,11 +42,18 @@ def user_projects(request):
         projects = paginator.page(1)
     except EmptyPage:
         projects = paginator.page(paginator.num_pages)
-    return render(request, 'registration/projects.html', {'projects': projects})
+    add_project =  check_permissions(user, 'view_project', **kwargs)
+    return render(request, 'registration/projects.html', {'projects': projects, 'add_project':add_project})
 
 def user_issues(request):
     user = request.user
-    paginator = Paginator(Issue.objects.filter(creator=user).all(), 25)
+    issues = []
+    for project in Project.objects.filter(users=user):
+        project_issues = Issue.objects.filter(repository__project=project).all()
+        if len(project_issues)>0:
+            issues.extend(project_issues)
+
+    paginator = Paginator(issues, 25)
     page = request.GET.get('page')
 
     try:

@@ -1,24 +1,38 @@
 {% extends "project/base.html" %}
 
 {% block content %}
+    <div class="col-lg-2 col-md-2 col-sm-2">
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3>Projects</h3></div>
 
-    <div class="container">
-        <h3>Projects</h3>
-        <table>
-            {% for project in projects %}
-                <p><a href="{% url 'project:overview' project.title %}">{{project.title}}</a></p>
-            {% endfor %}
-        </table>
-        <div class="pagination">
-            <span class="step-links">
-                {% if projects.has_previous %}
-                    <a href="?page={{ projects.previous_page_number}}">Previous</a>
-                {% endif %}
-                Page {{ projects.number }} of {{ projects.paginator.num_pages }}
-                {% if projects.has_next %}
-                    <a href="?page={{projects.next_page_number}}">Next</a>
-                {% endif %}
-            </span>
+            <div class="panel-body">
+                <table>
+                    {% for project in projects %}
+                        <p><a href="{% url 'project:overview' project.title %}">{{project.title}}</a></p>
+                    {% endfor %}
+                </table>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if projects.has_previous %}
+                            <a href="?page={{ projects.previous_page_number}}">Previous</a>
+                        {% endif %}
+                        Page {{ projects.number }} of {{ projects.paginator.num_pages }}
+                        {% if projects.has_next %}
+                            <a href="?page={{projects.next_page_number}}">Next</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% if add_project %}
+                <p>
+                    <a class="btn btn-success" href="{% url 'new_project' %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        New
+                    </a>
+                </p>
+            {% endif %}
+            </div>
         </div>
     </div>
 {% endblock %}
