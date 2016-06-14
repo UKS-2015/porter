@@ -1,6 +1,7 @@
 from django.conf.urls import url, include
-from porter.project.views import ProjectDetail, ProjectMembers, ProjectMemberRemove, ProjectMemberAdd, ProjectSettings, \
-    ProjectDelete, ProjectAssignRole, ProjectMilestones, ProjectMilestoneAdd
+from porter.project.views import ProjectDetail, ProjectMembers, ProjectMemberRemove,\
+    ProjectMemberAdd, ProjectSettings, ProjectDelete, ProjectAssignRole,\
+    ProjectMilestones, ProjectMilestoneAdd
 from porter.repository import urls as repository_urls
 from porter.issue import urls as issue_urls
 

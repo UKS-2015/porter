@@ -1,6 +1,6 @@
 from core.forms import IssueForm, IssueWithRepoForm, IssueFormWithMilestone
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Issue, IssueLog, Repository
+from core.models import Issue, IssueLog, Repository, Project
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect
@@ -8,7 +8,6 @@ from django.utils.datetime_safe import datetime
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-
 
 class IssueLogType:
     CREATED = 'Created'
@@ -57,13 +56,17 @@ class IssueCreate(PorterAccessMixin, CreateView):
     def post(self, request, *args, **kwargs):
 
         # create a form instance and populate it with data from the request:
-        form = IssueForm(request.POST, auto_id=True)
+        form = IssueWithRepoForm(request.POST, auto_id=True)
         # check whether it's valid:
         if form.is_valid():
             form.instance.creator = request.user
 
-            if not form.instance.repository:
-                form.instance.repository = Repository.objects.get(title=kwargs['repository_title'])
+            try:
+                form.instance.repository
+            except AttributeError:
+                form.instance.repository = Repository.objects.get(
+                    project=Project.objects.get(title=kwargs['project_title']))
+
             form.save()
             return redirect(reverse('project:issues:list', kwargs={'project_title': kwargs['project_title']}))
         else:
