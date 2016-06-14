@@ -37,6 +37,9 @@ class RepositoryOverview(PorterAccessMixin, DetailView):
         context['view_repository'] = check_permissions(user, 'view_repository', **self.kwargs)
         context['change_repository'] = check_permissions(user, 'change_repository', **self.kwargs)
         context['delete_repository'] = check_permissions(user, 'delete_repository', **self.kwargs)
+        context['add_issue'] = check_permissions(user, 'add_issue', **self.kwargs)
+        context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
+        context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
 
 
