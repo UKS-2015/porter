@@ -24,8 +24,14 @@ def _get_object(self):
 
 class ProjectCreate(PorterAccessMixin, CreateView):
     model = Project
+    fields = ProjectForm.Meta.fields
     template_name = 'project/form.html'
     required_permissions = 'create_project'
+    success_url = reverse_lazy('user_projects')
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectCreate, self).get_context_data(**kwargs)
+        return context
 
     def post(self, request):
         # create a form instance and populate it with data from the request:
@@ -33,7 +39,10 @@ class ProjectCreate(PorterAccessMixin, CreateView):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            return redirect('project:overview')
+            form.instance.users = [request.user]
+            return redirect(reverse('user_projects'))
+        else:
+            return HttpResponseBadRequest
 
 
 class ProjectSettings(PorterAccessMixin, UpdateView):
