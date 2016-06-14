@@ -35,8 +35,8 @@ def check_permissions(user, required_permissions, **kwargs):
     except UserProjectRole.DoesNotExist:
         role = Group.objects.get(name='Guest')
 
-    for permission in role.permissions.all():
-        print(permission.codename)
+    # for permission in role.permissions.all():
+    #     print(permission.codename)
 
     # Convert to collection
     if not hasattr(required_permissions, '__iter__') \

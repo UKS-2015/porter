@@ -40,6 +40,9 @@ class ProjectCreate(PorterAccessMixin, CreateView):
         if form.is_valid():
             form.save()
             form.instance.users = [request.user]
+            group = Group.objects.get(name='owner')
+            user_project_role = UserProjectRole(role=group, user=request.user, project=form.instance)
+            user_project_role.save()
             return redirect(reverse('user_projects'))
         else:
             return HttpResponseBadRequest
