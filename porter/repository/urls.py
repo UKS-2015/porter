@@ -12,7 +12,7 @@ urlpatterns = [
     # TODO: Changing repository name will break links - only allow deleting
     url(r'(?P<repository_title>[^/\\]+)/change/$', RepositoryUpdate.as_view(), name='change'),
     url(r'(?P<repository_title>[^/\\]+)/delete/$', RepositoryDelete.as_view(), name='delete'),
-    url(r'(?P<repository_title>[^/\\]+)/issues/$', include(issue_urls), name='issues'),
+    url(r'(?P<repository_title>[^/\\]+)/issues/', include(issue_urls), name='issues'),
     url(r'(?P<repository_title>[^/\\]+)/milestones/', include(milestone_urls), name='milestone'),
     url(r'(?P<repository_title>[^/\\]+)/$', RepositoryOverview.as_view(), name='overview'),
 ]
