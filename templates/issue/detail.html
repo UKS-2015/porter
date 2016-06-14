@@ -25,6 +25,7 @@
         </div>
 
         <div class="panel-body">
+            <p>{{ object.description }}</p>
             <div class="input-group">
                 <span class="input-group-addon"><b>Creator:</b> </span>
                 <input type="text" class="form-control" placeholder="Creator" value="{{ object.creator }}" disabled>
@@ -39,11 +40,13 @@
     </div>
 </div>
 <div class="col-lg-2 col-md-2 col-sm-2">
-    <div class="panel panel-default">
-        <div class="panel-heading"><h4>Milestone</h4></div>
-        <div class="panel-body">
-            {{ object.milestone }}
+    {% if object.milestone %}
+        <div class="panel panel-default">
+            <div class="panel-heading"><h4>Milestone</h4></div>
+            <div class="panel-body">
+                {{ object.milestone }}
+            </div>
         </div>
-    </div>
+    {% endif %}
 </div>
 {% endblock %}
