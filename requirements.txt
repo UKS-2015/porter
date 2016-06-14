@@ -1,4 +1,4 @@
-django=1.9.7
+django==1.9.7
 django-bootstrap3>=7.0.1
 django-bootstrap-pagination>=1.6.1
-Pillow=3.2.0
+Pillow==3.2.0
