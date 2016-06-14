@@ -1,39 +1,49 @@
-{% extends "project/base.html" %}
+{% extends "general/base.html" %}
+
+{% block title %}
+{% endblock %}
 
 {% block navbar %}
-{% include "common/navbar.html" with active="issues" %}
+{% include "common/navbar.html" with active="user_issues" %}
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h3>Issues</h3>
-    <table class="table">
-        <thead>
-            <tr>
-                <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
-                <td class="col-lg-1 col-md-1 col-sm-1">Assignee</td>
-                <td class="col-lg-1 col-md-1 col-sm-1">Owner</td>
-                <td class="col-lg-2 col-md-2 col-sm-2"></td>
-            </tr>
-        </thead>
-        <tbody>
-            {% for issue in issues %}
-            {% with project_title=issue.repository.project.title issue=issue %}
-            {% include "issue/single_issue.html" %}
-            {% endwith %}
-            {% endfor %}
-        </tbody>
-    </table>
-    <div class="pagination">
-        <span class="step-links">
-            {% if issues.has_previous %}
-            <a href="?page={{ issues.previous_page_number}}">Previous</a>
-            {% endif %}
-            Page {{ issues.number }} of {{ issues.paginator.num_pages }}
-            {% if issues.has_next %}
-            <a href="?page={{issues.next_page_number}}">Next</a>
-            {% endif %}
-        </span>
+    <div class="col-lg-2 col-md-2 col-sm-2">
     </div>
-</div>
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3>Issues</h3></div>
+
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
+                            <td class="col-lg-1 col-md-1 col-sm-1">Assignee</td>
+                            <td class="col-lg-1 col-md-1 col-sm-1">Owner</td>
+                            <td class="col-lg-2 col-md-2 col-sm-2">Milestone</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for issue in issues %}
+                        {% with issue=issue %}
+                        {% include "issue/single_issue.html" %}
+                        {% endwith %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if issues.has_previous %}
+                        <a href="?page={{ issues.previous_page_number}}">Previous</a>
+                        {% endif %}
+                        Page {{ issues.number }} of {{ issues.paginator.num_pages }}
+                        {% if issues.has_next %}
+                        <a href="?page={{issues.next_page_number}}">Next</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

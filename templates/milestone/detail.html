@@ -11,12 +11,50 @@
 </div>
 <div class="col-lg-8 col-md-8 col-sm-8">
     <div class="panel panel-default">
-        <div class="panel-heading"><h3>Milestone details</h3></div>
+        <div class="panel-heading">
+            <h3>
+                <a href="/porter/{{ project_title }}">{{ project_title }}</a>
+                /
+                <a href="/porter/{{ project_title }}/repository/{{ object.repository.title }}">{{ object.repository.title }}</a>
+                {{ object.title }}
+            </h3></div>
 
         <div class="panel-body">
-            {% with title="Milestone" %}
-            {% include "general/generic_detail.html" %}
-            {% endwith %}
+            <p>{{ milestone.description }}</p>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3>Milestone issues</h3></div>
+
+        <div class="panel-body">
+        {% if issues %}
+             <table class="table">
+                 <thead>
+                    <tr>
+                        <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Assignee</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Creator</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Milestone</td>
+                        <td class="col-lg-2 col-md-2 col-sm-2"> </td>
+                    </tr>
+                 </thead>
+                 <tbody>
+                    {% for issue in issues %}
+                        {% with project_title=project_title issue=issue view_issue=view_issue change_issue=change_issue delete_issue=delete_issue%}
+                        {% include "issue/single_issue.html" %}
+                        {% endwith %}
+                    {% endfor %}
+                </tbody>
+             </table>
+        {% else %}
+            No issues at the moment. Would you like to add a new one?
+        {% endif %}
+        {% if add_issue %}
+            <a class="btn btn-success" href="{% url 'project:issues:new' project_title %}">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    New Issue
+            </a>
+        {% endif %}
         </div>
     </div>
 </div>

@@ -29,18 +29,17 @@ class RepositoryOverview(PorterAccessMixin, DetailView):
         context['project_title'] = self.kwargs['project_title']
         repository_title = self.kwargs['repository_title']
         repository = get_object_or_404(Repository, title=repository_title)
-        context['repository'] = repository.to_dict()
+        context['repository'] = repository
         context['issues'] = [
             object for object in Issue.objects.filter(repository__title=repository_title)
             ]
-        for item in context['issues']:
-            print(item)
-        print()
-        print()
         user = self.request.user
         context['view_repository'] = check_permissions(user, 'view_repository', **self.kwargs)
         context['change_repository'] = check_permissions(user, 'change_repository', **self.kwargs)
         context['delete_repository'] = check_permissions(user, 'delete_repository', **self.kwargs)
+        context['add_issue'] = check_permissions(user, 'add_issue', **self.kwargs)
+        context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
+        context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
 
 

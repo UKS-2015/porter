@@ -1,36 +1,45 @@
 {% extends "project/base.html" %}
+{% load show_navtabs %}
 
 {% block content %}
-<!-- TODO: Remove project/navtabs.html completely -->
-{% include "project/navtabs.html" with active="members" project_title=project_title %}
-<h3>Members</h3>
-<table class="table">
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <form action="{% url 'project:add_member' project_title %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" value="{{user.id}}" name="user_id">
-                <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
-                <td>
-                    <button class="btn btn-success btn-sm" type="submit">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                    </button>
-                </td>
-            </form>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<div class="pagination">
-    <span class="step-links">
-        {% if users.has_previous %}
-        <a href="?page={{ users.previous_page_number}}">Previous</a>
-        {% endif %}
-        Page {{ users.number }} of {{ users.paginator.num_pages }}
-        {% if users.has_next %}
-        <a href="?page={{users.next_page_number}}">Next</a>
-        {% endif %}
-    </span>
-</div>
+     <div class="col-lg-2 col-md-2 col-sm-2">
+    {% show_navtabs active="members" project_title=project_title user=user %}
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8">
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3>{{project_title}} members</h3></div>
+
+            <div class="panel-body">
+                <table class="table">
+                    <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <form action="{% url 'project:add_member' project_title %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{user.id}}" name="user_id">
+                                <td><a href="/user/{{user.id}}/">{{user.username}}</a></td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" type="submit">
+                                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </form>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if users.has_previous %}
+                            <a href="?page={{ users.previous_page_number}}">Previous</a>
+                        {% endif %}
+                        Page {{ users.number }} of {{ users.paginator.num_pages }}
+                        {% if users.has_next %}
+                            <a href="?page={{users.next_page_number}}">Next</a>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

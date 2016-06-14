@@ -13,36 +13,43 @@
         <div class="panel-heading"><h3>Milestones</h3></div>
 
         <div class="panel-body">
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
-                        <td class="col-lg-2 col-md-2 col-sm-2"></td>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for milestone in milestone_list %}
-                   {% with project_title=project_title milestone=milestone %}
-                   {% include "milestone/single_milestone.html" %}
-                   {% endwith %}
-                </tbody>
-                {% endfor %}
-            </table>
-            <div class="pagination">
-                <span class="step-links">
-                    {% if milestone_list.has_previous %}
-                    <a href="?page={{milestone_list.previous_page_number}}">Previous</a>
-                    {% endif %}
-                    Page {{ milestone_list.number }} of {{ milestone_list.paginator.num_pages }}
-                    {% if milestone_list.has_next %}
-                    <a href="?page={{milestone_list.next_page_number}}">Next</a>
-                    {% endif %}
-                </span>
-            </div>
+            {% if milestone_list %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
+                            <td class="col-lg-2 col-md-2 col-sm-2"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for milestone in milestone_list %}
+                       {% with project_title=project_title milestone=milestone %}
+                       {% include "milestone/single_milestone.html" %}
+                       {% endwith %}
+                    </tbody>
+                    {% endfor %}
+                </table>
+                <div class="pagination">
+                    <span class="step-links">
+                        {% if milestone_list.has_previous %}
+                        <a href="?page={{milestone_list.previous_page_number}}">Previous</a>
+                        {% endif %}
+                        Page {{ milestone_list.number }} of {{ milestone_list.paginator.num_pages }}
+                        {% if milestone_list.has_next %}
+                        <a href="?page={{milestone_list.next_page_number}}">Next</a>
+                        {% endif %}
+                    </span>
+                </div>
+            {% else %}
+                <p>No milestones at the moment. Would you like to add a new one?</p>
+            {% endif %}
             <p>
-            {% if add_issue %}
-            <a class="btn btn-success" href="{% url 'project:milestone:new' project_title %}">
+            {% if add_milestone %}
+                {% if repository_title %}
+                    <a class="btn btn-success" href="{% url 'project:repository:milestone:new' project_title repository_title %}">
+                {% else %}
+                    <a class="btn btn-success" href="{% url 'project:add_milestone' project_title %}">
+                {% endif %}
              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
             New
             </a>

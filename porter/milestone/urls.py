@@ -16,13 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from porter.milestone.views import MilestoneList, MilestoneCreate, MilestoneDetail, MilestoneUpdate, MilestoneDelete
 
-app_name = 'milestone'
+app_name = "milestone"
 
 urlpatterns = [
     url(r'^$', MilestoneList.as_view(), name='list'),
     url(r'new/$', MilestoneCreate.as_view(), name='new'),
-    url(r'(?P<pk>[^/\\]+)/change/$', MilestoneUpdate.as_view(), name='change'),
-    url(r'(?P<pk>[^/\\]+)/delete/$',MilestoneDelete.as_view(), name='delete'),
-    url(r'(?P<pk>[^/\\]+)/$',MilestoneDetail.as_view(), name='overview'),
+    url(r'(?P<pk>[0-9]+)/change/$', MilestoneUpdate.as_view(), name='change'),
+    url(r'(?P<pk>[0-9]+)/delete/$', MilestoneDelete.as_view(), name='delete'),
+    url(r'(?P<pk>[0-9]+)/$', MilestoneDetail.as_view(), name='overview'),
 
 ]

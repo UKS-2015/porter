@@ -1,8 +1,7 @@
 from django.conf.urls import url, include
-from porter.project.views import ProjectDetail, ProjectMembers, ProjectMemberRemove, \
-    ProjectMemberAdd, ProjectSettings, ProjectDelete, ProjectAssignRole
+from porter.project.views import ProjectDetail, ProjectMembers, ProjectMemberRemove, ProjectMemberAdd, ProjectSettings, \
+    ProjectDelete, ProjectAssignRole, ProjectMilestones, ProjectMilestoneAdd
 from porter.repository import urls as repository_urls
-from porter.milestone import urls as milestone_urls
 from porter.issue import urls as issue_urls
 
 app_name = 'project'
@@ -18,5 +17,7 @@ urlpatterns = [
     url(r'^repository/', include(repository_urls), name='repositories'),
     # TODO: Modify issue application
     url(r'^issues/', include(issue_urls), name='issues'),
-    url(r'^milestones/', include(milestone_urls), name='milestones'),
+    url(r'^milestones/add/$', ProjectMilestoneAdd.as_view(), name='add_milestone'),
+    url(r'^milestones/', ProjectMilestones.as_view(), name='all_milestones'),
+
 ]

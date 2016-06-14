@@ -1,7 +1,7 @@
 from core.mixins import PorterAccessMixin, check_permissions
 from django.shortcuts import redirect
-from core.models import Milestone, Repository
-from core.forms import MilestoneForm
+from core.models import Milestone, Repository, Issue
+from core.forms import MilestoneWithRepoForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -11,32 +11,33 @@ from django.http import HttpResponseBadRequest
 
 class MilestoneCreate(PorterAccessMixin, CreateView):
     model = Milestone
-    fields = MilestoneForm.Meta.fields
+    fields = MilestoneWithRepoForm.Meta.fields
     template_name = 'milestone/form.html'
     required_permissions = "add_milestone"
 
     def get_context_data(self, **kwargs):
         context = super(MilestoneCreate, self).get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
+        context['repository_title'] = self.kwargs['repository_title']
         return context
 
     def post(self, request, **kwargs):
         # create a form instance and populate it with data from the request:
-        form = MilestoneForm(request.POST, auto_id=True)
+        form = MilestoneWithRepoForm(request.POST, auto_id=True)
         # check whether it's valid:
         if form.is_valid():
             repository_title = kwargs['repository_title']
-            repository = Repository.objects.get(repository_title=repository_title)
+            repository = Repository.objects.get(title=repository_title)
             form.instance.repository = repository
             form.save()
-            return redirect(reverse('project:milestone:list', kwargs={'project_title': kwargs['project_title']}))
+            return redirect(reverse('project:repository:milestone:list', kwargs={'project_title': kwargs['project_title'], 'repository_title': kwargs['repository_title']}))
         else:
             return HttpResponseBadRequest
 
 
 class MilestoneUpdate(PorterAccessMixin, UpdateView):
     model = Milestone
-    fields = MilestoneForm.Meta.fields
+    fields = MilestoneWithRepoForm.Meta.fields
     template_name = 'milestone/form.html'
     success_url = reverse_lazy('list')
     required_permissions = "change_milestone"
@@ -48,6 +49,7 @@ class MilestoneUpdate(PorterAccessMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(MilestoneUpdate, self).get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
+        context['repository_title'] = self.kwargs['repository_title']
         return context
 
     def post(self, request, *args, **kwargs):
@@ -71,8 +73,17 @@ class MilestoneDetail(PorterAccessMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(MilestoneDetail, self).get_context_data(**kwargs)
         milestone = Milestone.objects.get(pk=self.kwargs['pk'])
-        context['object'] = milestone.to_dict()
+        issues = Issue.objects.filter(milestone = milestone.id)
+        context['object'] = milestone
+        context['issues'] = issues
         context['project_title'] = self.kwargs['project_title']
+        context['repository_title'] = self.kwargs['repository_title']
+
+        user = self.request.user
+
+        context['view_milestone'] = check_permissions(user, 'view_milestone', **self.kwargs)
+        context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
+        context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
 
 
@@ -94,6 +105,7 @@ class MilestoneList(PorterAccessMixin, ListView):
             context['page_obj'] = [
                 object.to_dict() for object in Milestone.objects.filter(repository__title=repo_title)
                 ]
+            context['repository_title'] = self.kwargs['repository_title']
         else:
             context['page_obj'] = [
                 object.to_dict() for object in Milestone.objects.filter(repository__project__title=self.kwargs['project_title'])

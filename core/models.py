@@ -63,6 +63,7 @@ class Project(models.Model):
 class Repository(models.Model):
     title = models.CharField(max_length=50)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    description = models.CharField(max_length=255, null=False, blank=False)
 
     class Meta:
         permissions = [
@@ -84,6 +85,7 @@ class Repository(models.Model):
 class Milestone(models.Model):
     title = models.CharField(max_length=50)
     repository = models.ForeignKey(Repository, related_name='milestones')
+    description = models.CharField(max_length=255, null=False, blank=False)
 
     def get_absolute_url(self):
         return reverse('milestone-detail', kwargs={'pk': self.pk})
@@ -130,6 +132,7 @@ class Issue(models.Model):
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     milestone = models.ForeignKey(Milestone, null=True, blank=True, related_name="issues")
     labels = models.ManyToManyField(Label)
+    description = models.CharField(max_length=255, null=False, blank=False)
 
     class Meta:
         permissions = [

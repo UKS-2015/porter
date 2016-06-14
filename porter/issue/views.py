@@ -1,6 +1,6 @@
-from core.forms import IssueForm
+from core.forms import IssueForm, IssueWithRepoForm, IssueFormWithMilestone
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Issue, IssueLog
+from core.models import Issue, IssueLog, Repository
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect
@@ -45,7 +45,7 @@ def create_issue_log(log_type, user, issue):
 
 class IssueCreate(PorterAccessMixin, CreateView):
     model = Issue
-    fields = IssueForm.Meta.fields
+    fields = IssueWithRepoForm.Meta.fields
     template_name = 'issue/form.html'
     required_permissions = "add_issue"
 
@@ -54,21 +54,25 @@ class IssueCreate(PorterAccessMixin, CreateView):
         context['project_title'] = self.kwargs['project_title']
         return context
 
-    def post(self, request, project_title=None):
+    def post(self, request, *args, **kwargs):
+
         # create a form instance and populate it with data from the request:
         form = IssueForm(request.POST, auto_id=True)
         # check whether it's valid:
         if form.is_valid():
             form.instance.creator = request.user
+
+            if not form.instance.repository:
+                form.instance.repository = Repository.objects.get(title=kwargs['repository_title'])
             form.save()
-            return redirect(reverse('project:issues:list', kwargs={'project_title': project_title}))
+            return redirect(reverse('project:issues:list', kwargs={'project_title': kwargs['project_title']}))
         else:
             return HttpResponseBadRequest
 
 
 class IssueUpdate(PorterAccessMixin, UpdateView):
     model = Issue
-    fields = IssueForm.Meta.fields
+    fields = IssueFormWithMilestone.Meta.fields
     template_name = 'issue/form.html'
     success_url = reverse_lazy('list')
     required_permissions = "change_issue"
@@ -84,7 +88,7 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        self.success_url = reverse('project:issues:list_all',
+        self.success_url = reverse('project:issues:list',
                                    kwargs={'project_title': kwargs['project_title']})
         return super(IssueUpdate, self).post(request, *args, **kwargs)
 
@@ -125,12 +129,12 @@ class IssueList(PorterAccessMixin, ListView):
         # If url contains repo title param show only milestones for that repo
         if 'repository_title' in self.kwargs:
             repo_title = self.kwargs['repository_title']
-            context['page_obj'] = [
-                object.to_dict() for object in Issue.objects.filter(repository__title=repo_title)
+            context['issue_list'] = [
+                object for object in Issue.objects.filter(repository__title=repo_title)
             ]
         else:
-            context['page_obj'] = [
-                object.to_dict() for object in Issue.objects.filter(repository__project__title=project_title)
+            context['issue_list'] = [
+                object for object in Issue.objects.filter(repository__project__title=project_title)
             ]
 
         user = self.request.user
