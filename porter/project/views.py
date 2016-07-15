@@ -52,7 +52,6 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
     model = Project
     fields = ProjectForm.Meta.fields
     template_name = 'project/form.html'
-    # success_url = reverse_lazy('project:overview')
     required_permissions = 'change_project'
 
     def get_object(self):

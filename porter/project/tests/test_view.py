@@ -44,6 +44,18 @@ class ProjectTests(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.context['project'], self.project)
 
+        new_title = 'New title'
+        new_description = 'New description'
+        response = self.client.post(
+            reverse('project:settings', kwargs={'project_title': self.project.title}),
+            {'title': new_title, 'description': new_description}
+        )
+        self.assertRedirects(response, reverse('project:overview', kwargs={'project_title': new_title}))
+
+        project = Project.objects.get(pk=self.project.id)
+        self.assertEquals(project.title, new_title)
+        self.assertEquals(project.description, new_description)
+
     def test_project_members(self):
         user = User.objects.get(username='porter')
         role = Group.objects.get(name=DEVELOPER_ROLE)
