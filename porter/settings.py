@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'core',
     'bootstrap3',
     'bootstrap_pagination',
+    'django_nose',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -129,3 +130,12 @@ STATICFILES_DIRS = [
 #Rest of the settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'foo' and 'bar' apps
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=porter',
+]
