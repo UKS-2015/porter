@@ -13,7 +13,7 @@
         <div class="panel-heading"><h3>Repositories</h3></div>
 
         <div class="panel-body">
-
+        {% if repository_list %}
             <table class="table">
                 <tbody>
                     {% for repository in repository_list %}
@@ -53,6 +53,9 @@
                     {% endif %}
                 </span>
             </div>
+            {% else %}
+                <p>No repositories at the moment. Would you like to add a new one?</p>
+            {% endif %}
             <p>
                 {% if add_repository %}
                 <a class="btn btn-success" href="{% url 'project:repository:create' project_title %}">
