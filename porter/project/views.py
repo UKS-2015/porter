@@ -52,7 +52,7 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
     model = Project
     fields = ProjectForm.Meta.fields
     template_name = 'project/form.html'
-    success_url = reverse_lazy('project:overview')
+    # success_url = reverse_lazy('project:overview')
     required_permissions = 'change_project'
 
     def get_object(self):
@@ -66,6 +66,11 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
         context['change_project'] = check_permissions(user, 'change_project', **self.kwargs)
         context['delete_repository'] = check_permissions(user, 'delete_repository', **self.kwargs)
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('project:overview', kwargs={'project_title': request.POST.get('title')})
+        return super(ProjectSettings, self).post(request, *args, **kwargs)
+
 
 
 class ProjectDelete(PorterAccessMixin, DeleteView):
