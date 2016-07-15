@@ -73,6 +73,20 @@ class ProjectDelete(PorterAccessMixin, DeleteView):
     template_name = 'project/confirm-delete.html'
     success_url = reverse_lazy('project:overview')
 
+    def get_object(self):
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
+        return Project.objects.get(title=project_title)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectDelete, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('user_projects')
+        return super(ProjectDelete, self).post(request, *args, **kwargs)
+
 
 class ProjectMembers(PorterAccessMixin, DetailView):
     model = Project
@@ -160,7 +174,7 @@ class ProjectMemberAdd(PorterAccessMixin, View):
     def get(self, request, *args, **kwargs):
         project_title = kwargs['project_title']
         project = get_object_or_404(Project, title=project_title)
-        all_users =[user for user in User.objects.all() if user not in project.users.all()]
+        all_users = [user for user in User.objects.all() if user not in project.users.all()]
         paginator = Paginator(all_users, 25)
         page = request.GET.get('page')
         try:
@@ -187,6 +201,7 @@ class ProjectMemberAdd(PorterAccessMixin, View):
         UserProjectRole.save(upr)
 
         return redirect(reverse('project:members', kwargs={'project_title': project_title}))
+
 
 class ProjectMilestones(PorterAccessMixin, DetailView):
     model = Project
@@ -215,6 +230,7 @@ class ProjectMilestones(PorterAccessMixin, DetailView):
 
         return context
 
+
 class ProjectMilestoneAdd(PorterAccessMixin, CreateView):
     model = Milestone
     fields = MilestoneForm.Meta.fields
@@ -235,4 +251,3 @@ class ProjectMilestoneAdd(PorterAccessMixin, CreateView):
             return redirect(reverse('project:all_milestones', kwargs={'project_title': kwargs['project_title']}))
         else:
             return HttpResponseBadRequest
-
