@@ -105,8 +105,6 @@ class ProjectMembers(PorterAccessMixin, DetailView):
         users = []
         uprs = UserProjectRole.objects.filter(project__title=project_title).all()
 
-        # Make it easier to get user roles
-        # A little bit of monkey patching never hurt nobody
         for upr in uprs:
             user = upr.user
             user.role = upr.role
@@ -134,6 +132,8 @@ class ProjectMemberRemove(PorterAccessMixin, View):
         user = User.objects.get(pk=self.kwargs['user_id'])
         upr = UserProjectRole.objects.get(project__title=project_title, user=user)
         UserProjectRole.delete(upr)
+        project = Project.objects.get(title=project_title)
+        project.users.remove(user)
         return redirect(reverse('project:members', kwargs={'project_title': project_title}))
 
 
@@ -193,8 +193,9 @@ class ProjectMemberAdd(PorterAccessMixin, View):
         project = get_object_or_404(Project, title=project_title)
         user = get_object_or_404(User, pk=user_id)
         project.users.add(user)
-        upr = UserProjectRole()
+        project.save()
 
+        upr = UserProjectRole()
         upr.role = Group.objects.get(name=GUEST_ROLE)
         upr.user = user
         upr.project = project
