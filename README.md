@@ -7,5 +7,5 @@ A tiny tool that aims to support software development process.
 3. Start application with ```python manage.py runserver```
 
 # Tests
-Tests are located in its corresponding module package.Run tests with ```python manage.py test```  
-Fixture for test database is 'test_fixture.json'.
+Tests are located in its corresponding module package. Run tests with ```python manage.py test```  
+Data for test database is stored in fixture 'test_fixture.json'.
