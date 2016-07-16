@@ -126,13 +126,21 @@ class Label(models.Model):
 
 
 class Issue(models.Model):
+
     title = models.CharField(max_length=50)
     creator = models.ForeignKey(User, related_name='issues')
     assignee = models.ForeignKey(User, null=True, blank=True)
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     milestone = models.ForeignKey(Milestone, null=True, blank=True, related_name="issues")
-    labels = models.ManyToManyField(Label)
+    labels = models.ManyToManyField(Label, blank=True)
     description = models.CharField(max_length=255, null=False, blank=False)
+
+    STATUS_CHOICES = (
+        ('OPENED', 'Opened'),
+        ('ASSIGNED', 'Assigned'),
+        ('CLOSED', 'Closed'),
+    )
+    status = models.CharField(max_length=8, choices = STATUS_CHOICES, default='Opened')
 
     class Meta:
         permissions = [

@@ -1,6 +1,6 @@
-from core.forms import ProjectForm, MilestoneForm
+from core.forms import ProjectForm, MilestoneForm, IssueForm
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Project, UserProjectRole, Milestone
+from core.models import Project, UserProjectRole, Milestone, Repository, Issue
 from django.contrib.auth.models import User, Group
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.core.paginator import Paginator
@@ -90,6 +90,7 @@ class ProjectDelete(PorterAccessMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         self.success_url = reverse('user_projects')
         return super(ProjectDelete, self).post(request, *args, **kwargs)
+
 
 
 class ProjectMembers(PorterAccessMixin, DetailView):
@@ -229,30 +230,33 @@ class ProjectMilestones(PorterAccessMixin, DetailView):
         current_user = self.request.user
         context['project_title'] = project_title
         context['remove_milestone'] = check_permissions(current_user, 'remove_milestone', **self.kwargs)
-        context['add_milestone'] = check_permissions(current_user, 'add_milestone', **self.kwargs)
         context['change_milestone'] = check_permissions(current_user, 'change_milestone', **self.kwargs)
         context['delete_milestone'] = check_permissions(current_user, 'change_milestone', **self.kwargs)
 
         return context
 
 
-class ProjectMilestoneAdd(PorterAccessMixin, CreateView):
-    model = Milestone
-    fields = MilestoneForm.Meta.fields
-    template_name = 'milestone/form.html'
-    required_permissions = "add_milestone"
+class ProjectIssues(PorterAccessMixin, DetailView):
+    model = Project
+    template_name = 'issue/list.html'
+    success_url = reverse_lazy('project:overview')
+    paginate_by = 10
+    required_permissions = "view_issue"
+
+    def get_object(self):
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
+        return Project.objects.get(title=project_title)
 
     def get_context_data(self, **kwargs):
-        context = super(ProjectMilestoneAdd, self).get_context_data(**kwargs)
+        context = super(ProjectIssues, self).get_context_data(**kwargs)
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
         context['project_title'] = self.kwargs['project_title']
+        context['issue_list'] = Issue.objects.filter(repository__project__title=project_title)
+        user = self.request.user
+        context['view_issue'] = check_permissions(user, 'view_issue', **self.kwargs)
+        context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
+        context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
 
-    def post(self, request, **kwargs):
-        # create a form instance and populate it with data from the request:
-        form = MilestoneForm(request.POST, auto_id=True)
-        # check whether it's valid:
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('project:all_milestones', kwargs={'project_title': kwargs['project_title']}))
-        else:
-            return HttpResponseBadRequest
