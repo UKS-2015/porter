@@ -1,0 +1,591 @@
+[
+{
+    "model": "core.repository",
+    "pk": 4,
+    "fields": {
+        "title": "Porter Web",
+        "project": 3,
+        "description": "Description"
+    }
+},
+{
+    "model": "core.repository",
+    "pk": 5,
+    "fields": {
+        "title": "Porter Core",
+        "project": 3,
+        "description": "Description"
+    }
+},
+{
+    "model": "core.repository",
+    "pk": 6,
+    "fields": {
+        "title": "Genan Core",
+        "project": 4,
+        "description": "Description"
+    }
+},
+{
+    "model": "core.repository",
+    "pk": 18,
+    "fields": {
+        "title": "asd",
+        "project": 3,
+        "description": "Description"
+    }
+},
+{
+    "model": "core.label",
+    "pk": 2,
+    "fields": {
+        "title": "bugfix"
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 5,
+    "fields": {
+        "name": "Project owner",
+        "permissions": [
+            [
+                "add_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "can_close_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "change_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "delete_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "view_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "add_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "change_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "delete_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "view_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "add_member",
+                "core",
+                "porteruser"
+            ],
+            [
+                "assign_role",
+                "core",
+                "porteruser"
+            ],
+            [
+                "remove_member",
+                "core",
+                "porteruser"
+            ],
+            [
+                "view_member",
+                "core",
+                "porteruser"
+            ],
+            [
+                "add_project",
+                "core",
+                "project"
+            ],
+            [
+                "change_project",
+                "core",
+                "project"
+            ],
+            [
+                "delete_project",
+                "core",
+                "project"
+            ],
+            [
+                "view_projects",
+                "core",
+                "project"
+            ],
+            [
+                "add_repository",
+                "core",
+                "repository"
+            ],
+            [
+                "change_repository",
+                "core",
+                "repository"
+            ],
+            [
+                "delete_repository",
+                "core",
+                "repository"
+            ],
+            [
+                "view_repository",
+                "core",
+                "repository"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 6,
+    "fields": {
+        "name": "Project lead",
+        "permissions": [
+            [
+                "add_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "can_close_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "change_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "delete_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "view_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "add_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "change_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "delete_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "view_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "add_member",
+                "core",
+                "porteruser"
+            ],
+            [
+                "assign_role",
+                "core",
+                "porteruser"
+            ],
+            [
+                "remove_member",
+                "core",
+                "porteruser"
+            ],
+            [
+                "view_member",
+                "core",
+                "porteruser"
+            ],
+            [
+                "add_project",
+                "core",
+                "project"
+            ],
+            [
+                "change_project",
+                "core",
+                "project"
+            ],
+            [
+                "view_projects",
+                "core",
+                "project"
+            ],
+            [
+                "add_repository",
+                "core",
+                "repository"
+            ],
+            [
+                "change_repository",
+                "core",
+                "repository"
+            ],
+            [
+                "view_repository",
+                "core",
+                "repository"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 7,
+    "fields": {
+        "name": "Developer",
+        "permissions": [
+            [
+                "add_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "can_change_own_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "can_close_own_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "can_delete_own_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "view_issue",
+                "core",
+                "issue"
+            ],
+            [
+                "view_milestone",
+                "core",
+                "milestone"
+            ],
+            [
+                "view_repository",
+                "core",
+                "repository"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.group",
+    "pk": 8,
+    "fields": {
+        "name": "Guest",
+        "permissions": [
+            [
+                "view_projects",
+                "core",
+                "project"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$mrGd6hcmT2eF$oBXOO62dKGbC2+xuHpab0CqrMRl/lA7yTvIXY0iQawc=",
+        "last_login": "2016-07-15T17:59:10.342Z",
+        "is_superuser": true,
+        "username": "porter",
+        "first_name": "Lazar",
+        "last_name": "Nikoli\u0107",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2016-04-29T15:25:41.774Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$3tIY02nFk6tm$rsDjswGS5M3qRcSgLCml34bbQkkYMWq2TvPp90oIbKw=",
+        "last_login": "2016-06-14T12:12:47.321Z",
+        "is_superuser": false,
+        "username": "owner",
+        "first_name": "Owner",
+        "last_name": "Ownerovski",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-04-29T15:30:12Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$kmlvlJ39y8C2$Mw7UwCDfFWxYnh5jGdFnCFuizYNDqFrdmJ9huyBa67I=",
+        "last_login": "2016-05-12T11:11:41.137Z",
+        "is_superuser": false,
+        "username": "lead",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-04-29T15:30:19.998Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 10,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$eNNEYjiGKvAp$qLlBSI+8jpT8WqbayjxlsTvlvPclFjvEKI1xwfy9YWM=",
+        "last_login": "2016-05-12T11:11:16.352Z",
+        "is_superuser": false,
+        "username": "developer",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-04-29T15:30:29.670Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 11,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$acbV604hkdPo$f78sfJ/grAxtkWli4bEHiV83/uv5kjrDX1rerhZ60Hg=",
+        "last_login": "2016-05-01T18:42:18.589Z",
+        "is_superuser": false,
+        "username": "guest",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-04-29T15:30:38.670Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 12,
+    "fields": {
+        "password": "pbkdf2_sha256$24000$fwG5L1unTDMl$/yNjbYUPO9gUMYDDk5yxgnng03itF92tamX3Vb1CFTA=",
+        "last_login": "2016-05-08T21:42:59.033Z",
+        "is_superuser": false,
+        "username": "test",
+        "first_name": "test",
+        "last_name": "test",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2016-05-05T09:13:04.601Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "core.issuelog",
+    "pk": 1,
+    "fields": {
+        "content": "owner created the issue.",
+        "log_type": 1,
+        "object_user": [
+            "owner"
+        ],
+        "subject_user": [
+            "developer"
+        ],
+        "issue": 1,
+        "date_modified": "2016-05-01T14:33:17.086Z"
+    }
+},
+{
+    "model": "core.userprojectrole",
+    "pk": 6,
+    "fields": {
+        "role": [
+            "Project lead"
+        ],
+        "user": [
+            "lead"
+        ],
+        "project": 3
+    }
+},
+{
+    "model": "core.userprojectrole",
+    "pk": 7,
+    "fields": {
+        "role": [
+            "Project owner"
+        ],
+        "user": [
+            "owner"
+        ],
+        "project": 3
+    }
+},
+{
+    "model": "core.userprojectrole",
+    "pk": 9,
+    "fields": {
+        "role": [
+            "Developer"
+        ],
+        "user": [
+            "developer"
+        ],
+        "project": 3
+    }
+},
+{
+    "model": "core.userprojectrole",
+    "pk": 10,
+    "fields": {
+        "role": [
+            "Project owner"
+        ],
+        "user": [
+            "owner"
+        ],
+        "project": 4
+    }
+},
+{
+    "model": "core.issue",
+    "pk": 1,
+    "fields": {
+        "title": "Fix this",
+        "creator": [
+            "owner"
+        ],
+        "assignee": [
+            "developer"
+        ],
+        "repository": 5,
+        "milestone": null,
+        "description": "Description",
+        "labels": [
+            2
+        ]
+    }
+},
+{
+    "model": "core.project",
+    "pk": 3,
+    "fields": {
+        "title": "Porter",
+        "description": "A small tool to help you blah blah",
+        "users": [
+            [
+                "porter"
+            ],
+            [
+                "owner"
+            ],
+            [
+                "lead"
+            ],
+            [
+                "developer"
+            ]
+        ]
+    }
+},
+{
+    "model": "core.project",
+    "pk": 4,
+    "fields": {
+        "title": "Test",
+        "description": "Test description",
+        "users": [
+            [
+                "owner"
+            ]
+        ]
+    }
+},
+{
+    "model": "core.porteruser",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "test"
+        ],
+        "picture": "users/Screenshot_from_2016-05-06_230354_TqpgoGM.png"
+    }
+},
+{
+    "model": "core.porteruser",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "owner"
+        ],
+        "picture": "users/owner.jpg"
+    }
+},
+{
+    "model": "core.porteruser",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "lead"
+        ],
+        "picture": "users/leader-2_djjDKdq.jpg"
+    }
+},
+{
+    "model": "core.porteruser",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "porter"
+        ],
+        "picture": "users/owner_HwIG4RS.jpg"
+    }
+}
+]

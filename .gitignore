@@ -9,3 +9,15 @@
 /static/fonts/
 static/js/
 delete.sql
+*.org
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/

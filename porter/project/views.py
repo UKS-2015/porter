@@ -40,7 +40,7 @@ class ProjectCreate(PorterAccessMixin, CreateView):
         if form.is_valid():
             form.save()
             form.instance.users = [request.user]
-            group = Group.objects.get(name='owner')
+            group = Group.objects.get(name=OWNER_ROLE)
             user_project_role = UserProjectRole(role=group, user=request.user, project=form.instance)
             user_project_role.save()
             return redirect(reverse('user_projects'))
@@ -52,7 +52,6 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
     model = Project
     fields = ProjectForm.Meta.fields
     template_name = 'project/form.html'
-    success_url = reverse_lazy('project:overview')
     required_permissions = 'change_project'
 
     def get_object(self):
@@ -67,11 +66,30 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
         context['delete_repository'] = check_permissions(user, 'delete_repository', **self.kwargs)
         return context
 
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('project:overview', kwargs={'project_title': request.POST.get('title')})
+        return super(ProjectSettings, self).post(request, *args, **kwargs)
+
+
 
 class ProjectDelete(PorterAccessMixin, DeleteView):
     model = Project
     template_name = 'project/confirm-delete.html'
     success_url = reverse_lazy('project:overview')
+
+    def get_object(self):
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
+        return Project.objects.get(title=project_title)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectDelete, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('user_projects')
+        return super(ProjectDelete, self).post(request, *args, **kwargs)
 
 
 
@@ -92,8 +110,6 @@ class ProjectMembers(PorterAccessMixin, DetailView):
         users = []
         uprs = UserProjectRole.objects.filter(project__title=project_title).all()
 
-        # Make it easier to get user roles
-        # A little bit of monkey patching never hurt nobody
         for upr in uprs:
             user = upr.user
             user.role = upr.role
@@ -121,6 +137,8 @@ class ProjectMemberRemove(PorterAccessMixin, View):
         user = User.objects.get(pk=self.kwargs['user_id'])
         upr = UserProjectRole.objects.get(project__title=project_title, user=user)
         UserProjectRole.delete(upr)
+        project = Project.objects.get(title=project_title)
+        project.users.remove(user)
         return redirect(reverse('project:members', kwargs={'project_title': project_title}))
 
 
@@ -161,7 +179,7 @@ class ProjectMemberAdd(PorterAccessMixin, View):
     def get(self, request, *args, **kwargs):
         project_title = kwargs['project_title']
         project = get_object_or_404(Project, title=project_title)
-        all_users =[user for user in User.objects.all() if user not in project.users.all()]
+        all_users = [user for user in User.objects.all() if user not in project.users.all()]
         paginator = Paginator(all_users, 25)
         page = request.GET.get('page')
         try:
@@ -180,14 +198,16 @@ class ProjectMemberAdd(PorterAccessMixin, View):
         project = get_object_or_404(Project, title=project_title)
         user = get_object_or_404(User, pk=user_id)
         project.users.add(user)
-        upr = UserProjectRole()
+        project.save()
 
+        upr = UserProjectRole()
         upr.role = Group.objects.get(name=GUEST_ROLE)
         upr.user = user
         upr.project = project
         UserProjectRole.save(upr)
 
         return redirect(reverse('project:members', kwargs={'project_title': project_title}))
+
 
 class ProjectMilestones(PorterAccessMixin, DetailView):
     model = Project
@@ -215,6 +235,7 @@ class ProjectMilestones(PorterAccessMixin, DetailView):
 
         return context
 
+
 class ProjectIssues(PorterAccessMixin, DetailView):
     model = Project
     template_name = 'issue/list.html'
@@ -238,3 +259,4 @@ class ProjectIssues(PorterAccessMixin, DetailView):
         context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
         context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
+
