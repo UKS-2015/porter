@@ -28,13 +28,15 @@ class RepositoryOverview(PorterAccessMixin, DetailView):
         context = super(RepositoryOverview, self).get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
         repository_title = self.kwargs['repository_title']
-        repository = get_object_or_404(Repository, title=repository_title, project__title = self.kwargs['project_title'])
+        repository = get_object_or_404(Repository, title=repository_title, project__title=self.kwargs['project_title'])
         context['repository'] = repository
         context['issues'] = [
-            object for object in Issue.objects.filter(repository__title=repository_title, repository__project__title=self.kwargs['project_title'])
+            object for object in Issue.objects.filter(repository__title=repository_title,
+                                                      repository__project__title=self.kwargs['project_title'])
             ]
         context['milestones'] = [
-            object for object in Milestone.objects.filter(repository__title=repository_title, repository__project__title=self.kwargs['project_title'])
+            object for object in Milestone.objects.filter(repository__title=repository_title,
+                                                          repository__project__title=self.kwargs['project_title'])
             ]
         user = self.request.user
         context['view_repository'] = check_permissions(user, 'view_repository', **self.kwargs)
@@ -84,29 +86,36 @@ class RepositoryUpdate(PorterAccessMixin, UpdateView):
     required_permissions = "change_repository"
     success_url = reverse_lazy('list_all')
     project_title = 'project_title'
-    #slug_field = 'repository_title'
+
+    # slug_field = 'repository_title'
 
     def get_object(self, queryset=None):
         return _get_object(self)
 
     def get(self, request, *args, **kwargs):
-        repo = Repository.objects.get(title=kwargs['repository_title'], project__title = kwargs['project_title'])
+        repo = Repository.objects.get(title=kwargs['repository_title'], project__title=kwargs['project_title'])
         form = RepositoryForm(instance=repo)
 
-        return render(request, 'repository/form.html', {'project_title': kwargs['project_title'], 'form':form})
+        return render(request, 'repository/form.html', {'project_title': kwargs['project_title'], 'form': form})
 
     def post(self, request, *args, **kwargs):
-        print()
-        print()
-        print()
         form = RepositoryForm(request.POST)
-        form.instance.id = Repository.objects.get(title=kwargs['repository_title'], project__title=kwargs['project_title']).id
-        form.instance.project_id = Project.objects.get(title = kwargs['project_title']).id
+        if form.is_valid():
+            form.instance.id = Repository.objects.get(title=kwargs['repository_title'],
+                                                      project__title=kwargs['project_title']).id
+            form.instance.project = Project.objects.get(title=kwargs['project_title'])
 
-        form.save()
-        # self.success_url = reverse('project:repository:list_all',
-        #                            kwargs={'project_title': kwargs['project_title']})
-        return reverse('project:repository:list_all', kwargs={'project_title': kwargs['project_title']})
+            form.save()
+            # self.success_url = reverse('project:repository:list_all',
+            #                            kwargs={'project_title': kwargs['project_title']})
+            return redirect(
+                reverse('project:repository:overview', kwargs={
+                    'project_title': kwargs['project_title'],
+                    'repository_title': form.instance.title
+                })
+            )
+        else:
+            return HttpResponseBadRequest
 
 
 class RepositoryDelete(PorterAccessMixin, DeleteView):
