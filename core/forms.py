@@ -3,7 +3,7 @@ from core.models import IssueLog, UserProjectRole, \
     Milestone, Label, Issue, User, Project, Repository, PorterUser
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
-from django.forms import ModelForm, inlineformset_factory, PasswordInput
+from django.forms import ModelForm, inlineformset_factory
 
 PorterUserFormSet = inlineformset_factory(User, PorterUser, fields=('picture',))
 
@@ -37,6 +37,11 @@ class UserProjectRoleForm(ModelForm):
 
 
 class MilestoneForm(ModelForm):
+    def __init__(self, *args,**kwargs):
+        super (MilestoneForm,self ).__init__(*args,**kwargs)
+        print(self.fields['repository'].queryset)
+        self.initial['repository'] = Repository.objects.filter(project__title='Projekat')
+
     class Meta:
         model = Milestone
         fields = ['title', 'description', 'repository']
@@ -62,6 +67,7 @@ class IssueWithRepoForm(ModelForm):
         fields = ['title', 'description', 'assignee', 'labels']
 
 class IssueFormWithMilestone(ModelForm):
+
     class Meta:
         model = Issue
         fields = ['title', 'description', 'assignee', 'milestone', 'labels']
@@ -87,7 +93,7 @@ class UserPasswordForm(PasswordChangeForm):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'description']
+        fields = '__all__'
 
 
 class RepositoryForm(ModelForm):
