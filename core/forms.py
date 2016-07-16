@@ -1,6 +1,6 @@
 from bootstrap3 import forms
 from core.models import IssueLog, UserProjectRole, \
-    Milestone, Label, Issue, User, Project, Repository, PorterUser
+    Milestone, Label, Issue, User, Project, Repository, PorterUser, Comment
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.forms import ModelForm, inlineformset_factory
@@ -37,8 +37,8 @@ class UserProjectRoleForm(ModelForm):
 
 
 class MilestoneForm(ModelForm):
-    def __init__(self, *args,**kwargs):
-        super (MilestoneForm,self ).__init__(*args,**kwargs)
+    def __init__(self, *args, **kwargs):
+        super(MilestoneForm, self).__init__(*args, **kwargs)
         print(self.fields['repository'].queryset)
         self.initial['repository'] = Repository.objects.filter(project__title='Projekat')
 
@@ -46,31 +46,36 @@ class MilestoneForm(ModelForm):
         model = Milestone
         fields = ['title', 'description', 'repository']
 
+
 class MilestoneWithRepoForm(ModelForm):
     class Meta:
         model = Milestone
         fields = ['title', 'description']
+
 
 class LabelForm(ModelForm):
     class Meta:
         model = Label
         fields = '__all__'
 
+
 class IssueForm(ModelForm):
     class Meta:
         model = Issue
         fields = ['title', 'description', 'assignee', 'repository', 'labels']
+
 
 class IssueWithRepoForm(ModelForm):
     class Meta:
         model = Issue
         fields = ['title', 'description', 'assignee', 'labels']
 
-class IssueFormWithMilestone(ModelForm):
 
+class IssueFormWithMilestone(ModelForm):
     class Meta:
         model = Issue
         fields = ['title', 'description', 'assignee', 'milestone', 'labels']
+
 
 class UserForm(ModelForm):
     class Meta:
@@ -110,3 +115,9 @@ class RepositoryProjectForm(ModelForm):
     class Meta:
         model = Repository
         exclude = ['id', 'project']
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']

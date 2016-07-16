@@ -41,6 +41,58 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-sm-1">
+            <div>
+                <img src="{{porteruser.picture.url}}" class="porter-thumbnail ">
+            </div>
+        </div>
+        <div class="col-sm-11">
+            <div class="panel comment panel-default">
+                <div class="panel-heading">
+                    Leave a comment
+                </div>
+                <div class="panel-body">
+                    <form id="add_comment" method="post" >
+                        {% csrf_token %}
+                        <textarea class="form-control" name="content" placeholder="Comment..." style="resize: vertical"></textarea>
+                        <button class="btn btn-success comment-submit" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Comments</h4>
+        </div>
+        <div class="panel-body">
+        {% for comment in comments %}
+        <div class="row">
+            <div class="col-sm-1">
+                <div>
+                    <img src="{{porteruser.picture.url}}" class="porter-thumbnail ">
+                </div>
+            </div>
+            <div class="col-sm-11">
+                <div class="panel comment panel-default">
+                    <div class="panel-heading">
+                        <a href="{% url 'profile' %}"><strong>{{comment.user.username}}</strong></a> commented
+                    </div>
+                    <div class="panel-body">
+                        <span>
+                        <p>{{comment.content}}</p>
+                        <p class="text-muted"><span class="glyphicon glyphicon-time"></span> {{ comment.datestamp|timesince }} ago</p>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
 </div>
 <div class="col-lg-2 col-md-2 col-sm-2">
 
@@ -54,5 +106,8 @@
                 {% endif %}
             </div>
         </div>
+</div>
+<div class="col-lg-8 col-md-8 col-sm-8">
+
 </div>
 {% endblock %}
