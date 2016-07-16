@@ -19,20 +19,11 @@
 },
 {
     "model": "core.repository",
-    "pk": 6,
+    "pk": 7,
     "fields": {
-        "title": "Genan Core",
+        "title": "Test repository",
         "project": 4,
-        "description": "Description"
-    }
-},
-{
-    "model": "core.repository",
-    "pk": 18,
-    "fields": {
-        "title": "asd",
-        "project": 3,
-        "description": "Description"
+        "description": "Test repository description"
     }
 },
 {
