@@ -1,6 +1,6 @@
-from core.forms import ProjectForm, MilestoneForm
+from core.forms import ProjectForm, MilestoneForm, IssueForm
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Project, UserProjectRole, Milestone
+from core.models import Project, UserProjectRole, Milestone, Repository, Issue
 from django.contrib.auth.models import User, Group
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.core.paginator import Paginator
@@ -40,7 +40,7 @@ class ProjectCreate(PorterAccessMixin, CreateView):
         if form.is_valid():
             form.save()
             form.instance.users = [request.user]
-            group = Group.objects.get(name='owner')
+            group = Group.objects.get(name=OWNER_ROLE)
             user_project_role = UserProjectRole(role=group, user=request.user, project=form.instance)
             user_project_role.save()
             return redirect(reverse('user_projects'))
@@ -52,7 +52,6 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
     model = Project
     fields = ProjectForm.Meta.fields
     template_name = 'project/form.html'
-    success_url = reverse_lazy('project:overview')
     required_permissions = 'change_project'
 
     def get_object(self):
@@ -67,11 +66,31 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
         context['delete_repository'] = check_permissions(user, 'delete_repository', **self.kwargs)
         return context
 
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('project:overview', kwargs={'project_title': request.POST.get('title')})
+        return super(ProjectSettings, self).post(request, *args, **kwargs)
+
+
 
 class ProjectDelete(PorterAccessMixin, DeleteView):
     model = Project
     template_name = 'project/confirm-delete.html'
     success_url = reverse_lazy('project:overview')
+
+    def get_object(self):
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
+        return Project.objects.get(title=project_title)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectDelete, self).get_context_data(**kwargs)
+        context['project_title'] = self.kwargs['project_title']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.success_url = reverse('user_projects')
+        return super(ProjectDelete, self).post(request, *args, **kwargs)
+
 
 
 class ProjectMembers(PorterAccessMixin, DetailView):
@@ -91,8 +110,6 @@ class ProjectMembers(PorterAccessMixin, DetailView):
         users = []
         uprs = UserProjectRole.objects.filter(project__title=project_title).all()
 
-        # Make it easier to get user roles
-        # A little bit of monkey patching never hurt nobody
         for upr in uprs:
             user = upr.user
             user.role = upr.role
@@ -120,6 +137,8 @@ class ProjectMemberRemove(PorterAccessMixin, View):
         user = User.objects.get(pk=self.kwargs['user_id'])
         upr = UserProjectRole.objects.get(project__title=project_title, user=user)
         UserProjectRole.delete(upr)
+        project = Project.objects.get(title=project_title)
+        project.users.remove(user)
         return redirect(reverse('project:members', kwargs={'project_title': project_title}))
 
 
@@ -160,7 +179,7 @@ class ProjectMemberAdd(PorterAccessMixin, View):
     def get(self, request, *args, **kwargs):
         project_title = kwargs['project_title']
         project = get_object_or_404(Project, title=project_title)
-        all_users =[user for user in User.objects.all() if user not in project.users.all()]
+        all_users = [user for user in User.objects.all() if user not in project.users.all()]
         paginator = Paginator(all_users, 25)
         page = request.GET.get('page')
         try:
@@ -179,14 +198,16 @@ class ProjectMemberAdd(PorterAccessMixin, View):
         project = get_object_or_404(Project, title=project_title)
         user = get_object_or_404(User, pk=user_id)
         project.users.add(user)
-        upr = UserProjectRole()
+        project.save()
 
+        upr = UserProjectRole()
         upr.role = Group.objects.get(name=GUEST_ROLE)
         upr.user = user
         upr.project = project
         UserProjectRole.save(upr)
 
         return redirect(reverse('project:members', kwargs={'project_title': project_title}))
+
 
 class ProjectMilestones(PorterAccessMixin, DetailView):
     model = Project
@@ -209,30 +230,33 @@ class ProjectMilestones(PorterAccessMixin, DetailView):
         current_user = self.request.user
         context['project_title'] = project_title
         context['remove_milestone'] = check_permissions(current_user, 'remove_milestone', **self.kwargs)
-        context['add_milestone'] = check_permissions(current_user, 'add_milestone', **self.kwargs)
         context['change_milestone'] = check_permissions(current_user, 'change_milestone', **self.kwargs)
         context['delete_milestone'] = check_permissions(current_user, 'change_milestone', **self.kwargs)
 
         return context
 
-class ProjectMilestoneAdd(PorterAccessMixin, CreateView):
-    model = Milestone
-    fields = MilestoneForm.Meta.fields
-    template_name = 'milestone/form.html'
-    required_permissions = "add_milestone"
+
+class ProjectIssues(PorterAccessMixin, DetailView):
+    model = Project
+    template_name = 'issue/list.html'
+    success_url = reverse_lazy('project:overview')
+    paginate_by = 10
+    required_permissions = "view_issue"
+
+    def get_object(self):
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
+        return Project.objects.get(title=project_title)
 
     def get_context_data(self, **kwargs):
-        context = super(ProjectMilestoneAdd, self).get_context_data(**kwargs)
+        context = super(ProjectIssues, self).get_context_data(**kwargs)
+        # Get project title from url params
+        project_title = self.kwargs['project_title']
         context['project_title'] = self.kwargs['project_title']
+        context['issue_list'] = Issue.objects.filter(repository__project__title=project_title)
+        user = self.request.user
+        context['view_issue'] = check_permissions(user, 'view_issue', **self.kwargs)
+        context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
+        context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
-
-    def post(self, request, **kwargs):
-        # create a form instance and populate it with data from the request:
-        form = MilestoneForm(request.POST, auto_id=True)
-        # check whether it's valid:
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('project:all_milestones', kwargs={'project_title': kwargs['project_title']}))
-        else:
-            return HttpResponseBadRequest
 

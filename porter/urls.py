@@ -27,7 +27,7 @@ app_name = 'porter'
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
-    url(r'^accounts/login/$', login),
+    url(r'^accounts/login/$', login, name='login'),
     url(r'^porter/login/$', login),
     url(r'^porter/logout/$', logout_then_login, name='logout'),
     url(r'^porter/profile/$', UserProfile.as_view(), name='profile'),

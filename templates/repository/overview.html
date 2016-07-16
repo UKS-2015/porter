@@ -9,7 +9,7 @@
 <div class="col-lg-2 col-md-2 col-sm-2">
     {% show_navtabs active_tab="repositories" project_title=project_title user=user %}
 </div>
-<div class="col-lg-8 col-md-8 col-sm-8">
+<div class="col-lg-9 col-md-9 col-sm-9">
     <div class="panel panel-default">
         <div class="panel-heading"><h3>{{ repository.title }}</h3></div>
 
@@ -26,6 +26,7 @@
                  <thead>
                     <tr>
                         <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1">Status</td>
                         <td class="col-lg-1 col-md-1 col-sm-1">Assignee</td>
                         <td class="col-lg-1 col-md-1 col-sm-1">Creator</td>
                         <td class="col-lg-1 col-md-1 col-sm-1">Milestone</td>
@@ -44,10 +45,46 @@
             No issues at the moment. Would you like to add a new one?
         {% endif %}
         {% if add_issue %}
-            <a class="btn btn-success" href="{% url 'project:issues:new' project_title %}">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    New Issue
-            </a>
+            <p>
+                <a class="btn btn-success" href="{% url 'project:repository:issue:new' project_title repository.title %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        New Issue
+                </a>
+            </p>
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading"><h3>Repository milestones</h3></div>
+
+        <div class="panel-body">
+        {% if milestones %}
+              <table class="table">
+                    <thead>
+                        <tr>
+                            <td class="col-lg-6 col-md-6 col-sm-6">Title</td>
+                            <td class="col-lg-2 col-md-2 col-sm-2"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for milestone in milestones %}
+                       {% with project_title=project_title milestone=milestone %}
+                       {% include "milestone/single_milestone.html" %}
+                       {% endwith %}
+                    </tbody>
+                    {% endfor %}
+                </table>
+        {% else %}
+            No milestones at the moment. Would you like to add a new one?
+        {% endif %}
+        {% if add_milestone %}
+            <p>
+                <a class="btn btn-success" href="{% url 'project:repository:milestone:new' project_title repository.title %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        New Milestone
+                </a>
+            </p>
         {% endif %}
         </div>
     </div>

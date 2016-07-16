@@ -3,7 +3,7 @@
     <div class="well col-md-6">
         <p>
             <b>
-                <a href="{% url 'project:issues:overview' project_title=recent_log.issue.repository.project.title pk=recent_log.issue.id%}">
+                <a href="{% url 'project:repository:issue:overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title pk=recent_log.issue.id%}">
                     {{recent_log.issue.title}}
                 </a> -
                 <a

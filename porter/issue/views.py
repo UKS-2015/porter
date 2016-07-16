@@ -1,4 +1,4 @@
-from core.forms import IssueForm, IssueWithRepoForm, IssueFormWithMilestone
+from core.forms import IssueWithRepoForm, IssueFormWithMilestone
 from core.mixins import PorterAccessMixin, check_permissions
 from core.models import Issue, IssueLog, Repository
 from django.core.urlresolvers import reverse_lazy, reverse
@@ -8,6 +8,7 @@ from django.utils.datetime_safe import datetime
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from django.views.generic.base import View
 
 
 class IssueLogType:
@@ -57,18 +58,21 @@ class IssueCreate(PorterAccessMixin, CreateView):
     def post(self, request, *args, **kwargs):
 
         # create a form instance and populate it with data from the request:
-        form = IssueForm(request.POST, auto_id=True)
+        form = IssueWithRepoForm(request.POST, auto_id=True)
         # check whether it's valid:
         if form.is_valid():
             form.instance.creator = request.user
-
-            if not form.instance.repository:
-                form.instance.repository = Repository.objects.get(title=kwargs['repository_title'])
+            form.instance.repository = Repository.objects.get(title=kwargs['repository_title'], project__title=kwargs['project_title'])
+            if form.instance.assignee:
+                form.instance.status = 'Assigned'
             form.save()
-            return redirect(reverse('project:issues:list', kwargs={'project_title': kwargs['project_title']}))
+            return redirect(reverse('project:repository:issue:list', kwargs={'project_title': kwargs['project_title'], 'repository_title': kwargs['repository_title']}))
         else:
             return HttpResponseBadRequest
 
+    def form_valid(self, form):
+        form.instance.creator = self.request.user
+        return super(IssueCreate, self).form_valid(form)
 
 class IssueUpdate(PorterAccessMixin, UpdateView):
     model = Issue
@@ -85,12 +89,31 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(IssueUpdate, self).get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
+        context['issue'] = self.kwargs['pk']
         return context
 
+
     def post(self, request, *args, **kwargs):
-        self.success_url = reverse('project:issues:list',
-                                   kwargs={'project_title': kwargs['project_title']})
-        return super(IssueUpdate, self).post(request, *args, **kwargs)
+        form = IssueFormWithMilestone(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            form.instance.repository = Repository.objects.get(title=kwargs['repository_title'], project__title=kwargs['project_title'])
+            if form.instance.assignee:
+                form.instance.status = 'Assigned'
+
+            form.instance.id = kwargs['pk']
+            form.instance.creator = Issue.objects.get(id=kwargs['pk']).creator
+
+            form.save()
+            if kwargs['repository_title']:
+                return redirect(reverse('project:repository:issue:list', kwargs={'project_title': kwargs['project_title'], 'repository_title': kwargs['repository_title']}))
+            else:
+                reverse('project:issues:list', kwargs={'project_title': kwargs['project_title']})
+        else:
+            return HttpResponseBadRequest
+        # self.success_url = reverse('project:issues:list',
+        #                            kwargs={'project_title': kwargs['project_title']})
+        # return super(IssueUpdate, self).post(request, *args, **kwargs)
 
 class IssueDelete(PorterAccessMixin, DeleteView):
     model = Issue
@@ -100,6 +123,25 @@ class IssueDelete(PorterAccessMixin, DeleteView):
     def get_success_url(self):
         return reverse_lazy('project:issues:list',
                             args=[self.object.repository.project.title])
+
+class IssueChangeStatus(PorterAccessMixin, View):
+    def get(self, request, *args, **kwargs):
+
+        return reverse_lazy('project:issues:list',
+                            args=[self.object.repository.project.title])
+
+    def post(self, request, *args, **kwargs):
+        issue = Issue.objects.get(pk = kwargs['pk'])
+        if issue.status == 'Closed':
+            if issue.assignee:
+                issue.status = 'Assigned'
+            else:
+                issue.status = 'Opened'
+        else:
+            issue.status = 'Closed'
+        issue.save()
+        return redirect(reverse('project:repository:issue:list', kwargs={'project_title': kwargs['project_title'], 'repository_title': kwargs['repository_title']}))
+
 
 class IssueOverview(PorterAccessMixin, DetailView):
     model = Issue
@@ -122,7 +164,6 @@ class IssueList(PorterAccessMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IssueList, self).get_context_data(**kwargs)
-
         # Get project title from url params
         project_title = self.kwargs['project_title']
         context['project_title'] = self.kwargs['project_title']
@@ -130,7 +171,7 @@ class IssueList(PorterAccessMixin, ListView):
         if 'repository_title' in self.kwargs:
             repo_title = self.kwargs['repository_title']
             context['issue_list'] = [
-                object for object in Issue.objects.filter(repository__title=repo_title)
+                object for object in Issue.objects.filter(repository__title=repo_title, repository__project__title = project_title)
             ]
         else:
             context['issue_list'] = [

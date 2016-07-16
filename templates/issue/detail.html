@@ -17,6 +17,9 @@
                 /
                 <a href="/porter/{{ project_title }}/repository/{{ object.repository.title }}">{{ object.repository.title }}</a>
                 {{ object.title }}
+            <span class="pull-right">
+                    <span class="label label-info">{{ issue.status }}</span>
+            </span>
             </h3>
 
             {% for label in object.labels.all %}
@@ -40,13 +43,16 @@
     </div>
 </div>
 <div class="col-lg-2 col-md-2 col-sm-2">
-    {% if object.milestone %}
+
         <div class="panel panel-default">
             <div class="panel-heading"><h4>Milestone</h4></div>
             <div class="panel-body">
-                {{ object.milestone }}
+                {% if object.milestone %}
+                    {{ object.milestone }}
+                {% else %}
+                    No milestone.
+                {% endif %}
             </div>
         </div>
-    {% endif %}
 </div>
 {% endblock %}
