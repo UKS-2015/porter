@@ -1,6 +1,6 @@
-from core.forms import ProjectForm, MilestoneForm, IssueForm
+from core.forms import ProjectForm
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Project, UserProjectRole, Milestone, Repository, Issue
+from core.models import Project, UserProjectRole, Milestone, Issue
 from django.contrib.auth.models import User, Group
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.core.paginator import Paginator
@@ -259,4 +259,3 @@ class ProjectIssues(PorterAccessMixin, DetailView):
         context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
         context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
         return context
-
