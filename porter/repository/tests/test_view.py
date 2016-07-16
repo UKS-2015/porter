@@ -59,7 +59,7 @@ class RepositoryTests(TestCase):
             )
         )
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.context['repository'], self.repository)
+        self.assertEquals(response.context['form'].instance, self.repository)
 
         new_title = 'New title'
         new_description = 'New description'
@@ -72,7 +72,10 @@ class RepositoryTests(TestCase):
         )
         self.assertRedirects(
             response,
-            reverse('project:repository:list_all', kwargs={'project_title': self.repository.project.title})
+            reverse(
+                'project:repository:overview',
+                kwargs={'project_title': self.repository.project.title, 'repository_title': new_title}
+            )
         )
 
         repository = Repository.objects.get(pk=self.repository.id)
