@@ -26,9 +26,9 @@ urlpatterns = [
     # ex: /issue/5/update/
     url(r'(?P<pk>[^/\\]+)/change/$', IssueUpdate.as_view(), name='change'),
     # ex: /issue/5/delete/
-    url(r'(?P<pk>[^/\\]+)/delete/$',IssueDelete.as_view(), name='delete'),
+    url(r'(?P<pk>[^/\\]+)/delete/$', IssueDelete.as_view(), name='delete'),
     # ex: /issue/5/
-    url(r'(?P<pk>[^/\\]+)/change_status$',IssueChangeStatus.as_view(), name='change_status'),
+    url(r'(?P<pk>[^/\\]+)/change_status$', IssueChangeStatus.as_view(), name='change_status'),
     # ex: /issue/5/
-    url(r'(?P<pk>[^/\\]+)/$',IssueOverview.as_view(), name='overview'),
+    url(r'(?P<pk>[^/\\]+)/$', IssueOverview.as_view(), name='overview')
 ]

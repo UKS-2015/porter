@@ -2,6 +2,11 @@
 {% load bootstrap3 %}
 {% load filters %}
 
+{% block bootstrap3_extra_head %}
+    {% load staticfiles %}
+    <link href="{% static 'porter/css/project.css' %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block bootstrap3_title %}
 Porter
 {% endblock %}

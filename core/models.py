@@ -126,7 +126,6 @@ class Label(models.Model):
 
 
 class Issue(models.Model):
-
     title = models.CharField(max_length=50)
     creator = models.ForeignKey(User, related_name='issues')
     assignee = models.ForeignKey(User, null=True, blank=True)
@@ -140,7 +139,7 @@ class Issue(models.Model):
         ('ASSIGNED', 'Assigned'),
         ('CLOSED', 'Closed'),
     )
-    status = models.CharField(max_length=8, choices = STATUS_CHOICES, default='Opened')
+    status = models.CharField(max_length=8, choices=STATUS_CHOICES, default='Opened')
 
     class Meta:
         permissions = [
@@ -213,12 +212,15 @@ class IssueLog(models.Model):
         return self.content
 
     def to_dict(instance):
-        return {'id' : instance.id,
-                'content' : instance.content,
-                'log_type' : instance.log_type,
-                'object_user' : User.objects.get(pk=instance.object_user.id),
-                'subject_user' : User.objects.get(pk=instance.subject_user.id),
-                'issue' : Issue.objects.get(pk=instance.issue.id)}
+        return {
+            'id': instance.id,
+            'content': instance.content,
+            'log_type': instance.log_type,
+            'object_user': User.objects.get(pk=instance.object_user.id),
+            'subject_user': User.objects.get(pk=instance.subject_user.id),
+            'issue': Issue.objects.get(pk=instance.issue.id)
+        }
+
 
 class PorterGroup(Group):
     """
@@ -238,3 +240,19 @@ class PorterGroup(Group):
         data['id'] = instance.id
         data['name'] = instance.name
         return data
+
+
+class Comment(models.Model):
+    content = models.TextField()
+    user = models.ForeignKey(User)
+    datestamp = models.DateTimeField(null=False, auto_now=True)
+    issue = models.ForeignKey(Issue, related_name='issue_comments')
+
+    def to_dict(instance):
+        return {
+            'id': instance.id,
+            'content': instance.content,
+            'user': User.objects.get(pk=instance.user.id),
+            'datestamp': instance.datestamp,
+            'issue': Issue.objects.get(pk=instance.issue.id)
+        }
