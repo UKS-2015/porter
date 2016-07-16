@@ -1,6 +1,6 @@
-from core.forms import ProjectForm, MilestoneForm, IssueForm
+from core.forms import ProjectForm
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Project, UserProjectRole, Milestone, Repository, Issue
+from core.models import Project, UserProjectRole, Milestone, Issue
 from django.contrib.auth.models import User, Group
 from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.core.paginator import Paginator

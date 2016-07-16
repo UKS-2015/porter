@@ -16,7 +16,7 @@ from core import views
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import login, logout_then_login, password_change
+from django.contrib.auth.views import login, logout_then_login
 from porter import settings
 from porter.project import urls as new_project_urls
 from porter.user.views import UserProfile, UserChange, UserPassword, UserDetail
