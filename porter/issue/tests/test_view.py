@@ -34,43 +34,43 @@ class IssueTests(TestCase):
         self.assertEquals(response.context['object'], issue)
         self.assertEquals(response.context['comments'], [])
 
-    # def test_add_comment(self):
-    #     issue = Issue.objects.get(pk=1)
-    #
-    #     response = self.client.get(
-    #         reverse(
-    #             'project:repository:issue:overview',
-    #             kwargs={
-    #                 'project_title': issue.project.title,
-    #                 'repository_title': issue.project.repository.title,
-    #                 'pk': issue.project.repository.pk
-    #             }
-    #         ),
-    #         {'content': 'Hello!'}
-    #     )
-    #
-    #     self.assertRedirects(
-    #         response,
-    #         reverse(
-    #             'project:repository:issue:overview',
-    #             kwargs={
-    #                 'project_title': issue.project.title,
-    #                 'repository_title': issue.project.repository.title,
-    #                 'pk': issue.project.repository.pk
-    #             }
-    #         )
-    #     )
-    #
-    #     response = self.client.get(
-    #         reverse(
-    #             'project:repository:issue:overview',
-    #             kwargs={
-    #                 'project_title': issue.project.title,
-    #                 'repository_title': issue.project.repository.title,
-    #                 'pk': issue.project.repository.pk
-    #             }
-    #         )
-    #     )
-    #     self.assertEquals(response.status_code, 200)
-    #     self.assertEquals(len(response.context['comments']), 1)
-    #     self.assertEquals(response.context['comments'][0].content, 'Hello!')
+    def test_add_comment(self):
+        issue = Issue.objects.get(pk=1)
+
+        response = self.client.post(
+            reverse(
+                'project:repository:issue:overview',
+                kwargs={
+                    'project_title': issue.repository.project.title,
+                    'repository_title': issue.repository.title,
+                    'pk': issue.id
+                }
+            ),
+            {'content': 'Hello!'}
+        )
+
+        self.assertRedirects(
+            response,
+            reverse(
+                'project:repository:issue:overview',
+                kwargs={
+                    'project_title': issue.repository.project.title,
+                    'repository_title': issue.repository.title,
+                    'pk': issue.id
+                }
+            )
+        )
+
+        response = self.client.get(
+            reverse(
+                'project:repository:issue:overview',
+                kwargs={
+                    'project_title': issue.repository.project.title,
+                    'repository_title': issue.repository.title,
+                    'pk': issue.id
+                }
+            )
+        )
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(len(response.context['comments']), 1)
+        self.assertEquals(response.context['comments'][0].content, 'Hello!')
