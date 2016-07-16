@@ -14,9 +14,9 @@ urlpatterns = [
     url(r'^members/add/$', ProjectMemberAdd.as_view(), name='add_member'),
     url(r'^members/assign_role/$', ProjectAssignRole.as_view(), name='assign_role'),
     # TODO: Modify issue application
-    url(r'^issues/', ProjectIssues.as_view(), name='all_issues'),
+    url(r'^issues/$', ProjectIssues.as_view(), name='all_issues'),
 
     url(r'^repository/', include(repository_urls), name='repository'),
-    url(r'^milestones/', ProjectMilestones.as_view(), name='all_milestones'),
+    url(r'^milestones/$', ProjectMilestones.as_view(), name='all_milestones'),
 
 ]
