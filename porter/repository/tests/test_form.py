@@ -1,4 +1,5 @@
 from core.forms import RepositoryForm
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -7,7 +8,8 @@ class RepositoryTests(TestCase):
     fixtures = ['test_fixture.json']
 
     def test_form_valid(self):
-        form = RepositoryForm(data={'title': 'Repository', 'description': 'Repository description'})
+        user = User.objects.get(username='owner')
+        form = RepositoryForm(data={'title': 'Repository', 'description': 'Repository description', 'users': [user]})
         self.assertTrue(form.is_valid(), 'Repository form should be valid: %s' % form.errors)
 
     def test_form_invalid(self):

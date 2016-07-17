@@ -67,9 +67,14 @@ class ProjectSettings(PorterAccessMixin, UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        self.success_url = reverse('project:overview', kwargs={'project_title': request.POST.get('title')})
-        return super(ProjectSettings, self).post(request, *args, **kwargs)
-
+        form = ProjectForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            form.instance.id = Project.objects.get(title=kwargs['project_title']).id
+            form.save()
+            return redirect(reverse('project:overview', kwargs={'project_title': request.POST.get('title')}))
+        else:
+            return HttpResponseBadRequest
 
 
 class ProjectDelete(PorterAccessMixin, DeleteView):
@@ -90,7 +95,6 @@ class ProjectDelete(PorterAccessMixin, DeleteView):
     def post(self, request, *args, **kwargs):
         self.success_url = reverse('user_projects')
         return super(ProjectDelete, self).post(request, *args, **kwargs)
-
 
 
 class ProjectMembers(PorterAccessMixin, DetailView):

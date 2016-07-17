@@ -1,4 +1,5 @@
 from core.forms import ProjectForm
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -7,7 +8,8 @@ class ProjectTests(TestCase):
     fixtures = ['test_fixture.json']
 
     def test_form_valid(self):
-        form = ProjectForm(data={'title': 'Project', 'description': 'Project description'})
+        user = User.objects.get(username='owner')
+        form = ProjectForm(data={'title': 'Project', 'description': 'Project description', 'users': [user.id]})
         self.assertTrue(form.is_valid(), 'Project form should be valid: %s' % form.errors)
 
     def test_form_invalid(self):
@@ -23,6 +25,7 @@ class ProjectTests(TestCase):
         self.assertFalse(form.is_valid(), 'Project form should be valid: %s' % form.errors)
 
     def test_project_settings_form(self):
+        user = User.objects.get(username='owner')
         logged_in = self.client.login(username='owner', password='admin1234')
         self.assertTrue(logged_in)
 
@@ -34,5 +37,5 @@ class ProjectTests(TestCase):
         # Form would be invalid because of uniqueness constraint
         # We know that it exists because we fetched it, so we can change its title
         project.title = 'New title'
-        form = ProjectForm(data={'title': project.title, 'description': project.description})
+        form = ProjectForm(data={'title': project.title, 'description': project.description, 'users': [user.id]})
         self.assertTrue(form.is_valid(), form.errors)
