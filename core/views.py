@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 
 # Create your views here.
 
-# TODO: Testing only
 from django.shortcuts import redirect, render
 
 def index(request):
