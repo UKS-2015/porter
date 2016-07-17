@@ -10,8 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.views.generic.base import View
 
-
-class IssueLogType:
+class IssueLogType():
     CREATED = 'Created'
     UPDATED = 'Updated'
     OPENED = 'Opened'
@@ -26,23 +25,41 @@ class IssueLogType:
         DELETED: "deleted the issue"
     }
 
+    @classmethod
+    def to_num(cls, name):
+        if name == cls.CREATED:
+            return 1
+        elif name == cls.UPDATED:
+            return 2
+        elif name == cls.OPENED:
+            return 3
+        elif name == cls.CLOSED:
+            return 4
+        elif name == cls.DELETED:
+            return 5
 
-def create_issue_log(log_type, user, issue):
+
+def create_issue_log(issue, log_type, s_user, o_user):
     """
     Creates an issue log for an issue.
     :param log_type: Content of issue log is based on its type. See IssueLogType.
-    :param user: User that modified/created the issue
+    :param s_user: User that do an action on the the issue
+    :param o_user: User that is connected with an issue on some other way
+    (e.g. issue assignee)
     :param issue:
     :return:
     """
     issue_log = IssueLog()
-    issue_log.log_type = log_type
+    issue_log.log_type = IssueLogType.to_num(log_type)
 
-    issue_log.content = "{0} {1} {2}".format(user.name, IssueLogType.MESSAGES[log_type], issue.title)
-    issue_log.subject_user = user
+    issue_log.content = "{0} {1} {2}".format(s_user.username,
+                                             IssueLogType.MESSAGES[log_type],
+                                             issue.title)
+    issue_log.subject_user = s_user
+    issue_log.object_user = o_user
     issue_log.issue = issue
     issue_log.date_modified = datetime.now()
-    IssueLog.save(issue)
+    issue_log.save()
 
 
 class IssueCreate(PorterAccessMixin, CreateView):
@@ -63,14 +80,19 @@ class IssueCreate(PorterAccessMixin, CreateView):
         # check whether it's valid:
         if form.is_valid():
             form.instance.creator = request.user
-            form.instance.repository = Repository.objects.get(title=kwargs['repository_title'],
-                                                              project__title=kwargs['project_title'])
+            form.instance.repository = Repository.objects.get(
+                title=kwargs['repository_title'],
+                project__title=kwargs['project_title'])
+
             if form.instance.assignee:
                 form.instance.status = 'Assigned'
+
             form.save()
-            return redirect(reverse('project:repository:issue:list', kwargs={'project_title': kwargs['project_title'],
-                                                                             'repository_title': kwargs[
-                                                                                 'repository_title']}))
+            create_issue_log(form.instance, IssueLogType.CREATED,
+                             form.instance.creator, form.instance.assignee)
+            return redirect(reverse('project:repository:issue:list', kwargs={
+                'project_title': kwargs['project_title'],
+                'repository_title': kwargs['repository_title']}))
         else:
             return HttpResponseBadRequest
 
@@ -101,8 +123,10 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
         form = IssueFormWithMilestone(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            form.instance.repository = Repository.objects.get(title=kwargs['repository_title'],
-                                                              project__title=kwargs['project_title'])
+            form.instance.repository = Repository.objects.get(
+                title=kwargs['repository_title'],
+                project__title=kwargs['project_title'])
+
             if form.instance.assignee:
                 form.instance.status = 'Assigned'
 
@@ -111,17 +135,18 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
 
             form.save()
             if kwargs['repository_title']:
-                return redirect(reverse('project:repository:issue:list',
-                                        kwargs={'project_title': kwargs['project_title'],
-                                                'repository_title': kwargs['repository_title']}))
+                return redirect(
+                    reverse('project:repository:issue:list',
+                            kwargs={'project_title': kwargs['project_title'],
+                                    'repository_title': kwargs['repository_title']}))
             else:
-                reverse('project:issues:list', kwargs={'project_title': kwargs['project_title']})
+                reverse('project:issues:list',
+                        kwargs={'project_title': kwargs['project_title']})
         else:
-            return HttpResponseBadRequest
             # self.success_url = reverse('project:issues:list',
             #                            kwargs={'project_title': kwargs['project_title']})
             # return super(IssueUpdate, self).post(request, *args, **kwargs)
-
+            return HttpResponseBadRequest
 
 class IssueDelete(PorterAccessMixin, DeleteView):
     model = Issue
@@ -148,10 +173,12 @@ class IssueChangeStatus(PorterAccessMixin, View):
                 issue.status = 'Opened'
         else:
             issue.status = 'Closed'
-        issue.save()
-        return redirect(reverse('project:repository:issue:list', kwargs={'project_title': kwargs['project_title'],
-                                                                         'repository_title': kwargs[
-                                                                             'repository_title']}))
+            issue.save()
+            return redirect(
+                reverse('project:repository:issue:list',
+                        kwargs={'project_title': kwargs['project_title'],
+                                'repository_title': kwargs[
+                                    'repository_title']}))
 
 
 class IssueOverview(PorterAccessMixin, DetailView):
@@ -197,7 +224,7 @@ class IssueOverview(PorterAccessMixin, DetailView):
                             'repository_title': kwargs['repository_title'],
                             'pk': kwargs['pk']
                         }
-                        )
+                )
             )
         else:
             return HttpResponseBadRequest
@@ -219,16 +246,22 @@ class IssueList(PorterAccessMixin, ListView):
             repo_title = self.kwargs['repository_title']
             context['issue_list'] = [
                 object for object in
-                Issue.objects.filter(repository__title=repo_title, repository__project__title=project_title)
-                ]
+                Issue.objects.filter(repository__title=repo_title,
+                                     repository__project__title=project_title)
+            ]
         else:
             context['issue_list'] = [
-                object for object in Issue.objects.filter(repository__project__title=project_title)
-                ]
+                object for object in Issue.objects.filter(
+                    repository__project__title=project_title)
+            ]
 
         user = self.request.user
-        context['view_issue'] = check_permissions(user, 'view_issue', **self.kwargs)
-        context['change_issue'] = check_permissions(user, 'change_issue', **self.kwargs)
-        context['delete_issue'] = check_permissions(user, 'delete_issue', **self.kwargs)
-        context['add_issue'] = check_permissions(user, 'add_issue', **self.kwargs)
+        context['view_issue'] = check_permissions(user, 'view_issue',
+                                                  **self.kwargs)
+        context['change_issue'] = check_permissions(user, 'change_issue',
+                                                    **self.kwargs)
+        context['delete_issue'] = check_permissions(user, 'delete_issue',
+                                                    **self.kwargs)
+        context['add_issue'] = check_permissions(user, 'add_issue',
+                                                 **self.kwargs)
         return context
