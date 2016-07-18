@@ -66,6 +66,12 @@ class IssueForm(ModelForm):
 
 
 class IssueWithRepoForm(ModelForm):
+    def __init__(self, project_title=None, post_form=None,  **kwargs):
+        super().__init__(post_form, **kwargs)
+        if project_title:
+            self.fields['assignee'].queryset = Project.objects.get(
+                title=project_title).users
+
     class Meta:
         model = Issue
         fields = ['title', 'description', 'assignee', 'labels']

@@ -83,12 +83,14 @@ class IssueCreate(PorterAccessMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(IssueCreate, self).get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
+        context['form'] = IssueWithRepoForm(project_title=
+                                            context['project_title'])
         return context
 
     def post(self, request, *args, **kwargs):
 
         # create a form instance and populate it with data from the request:
-        form = IssueWithRepoForm(request.POST, auto_id=True)
+        form = IssueWithRepoForm(post_form=request.POST, auto_id=True)
         # check whether it's valid:
         if form.is_valid():
             form.instance.creator = request.user
