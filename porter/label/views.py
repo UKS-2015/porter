@@ -6,7 +6,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.core.urlresolvers import reverse_lazy,reverse
 from core.mixins import PorterAccessMixin,check_permissions
-
+from django.db.models import Q
 class LabelCreate(PorterAccessMixin, CreateView):
     model = Label
     fields = LabelForm.Meta.fields
@@ -95,8 +95,8 @@ class LabelList(PorterAccessMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(LabelList, self).get_context_data(**kwargs)
-        context['page_obj'] = [object.to_dict() for object in Label.objects.all()]
-        context['project_title'] = self.kwargs['project_title']
         user = self.request.user
+        context['project_title'] = self.kwargs['project_title']
+        context['label_list'] = Label.objects.filter(Q(project__title=self.kwargs['project_title']) | Q(project=None))
         context['change_label'] = check_permissions(user, 'change_label', **self.kwargs)
         return context
