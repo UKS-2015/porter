@@ -37,7 +37,8 @@ urlpatterns = [
     url(r'^porter/projects/$', views.user_projects, name='user_projects'),
     url(r'^porter/projects/new/$', ProjectCreate.as_view(), name='new_project'),
     url(r'^porter/issues/$', views.user_issues, name='user_issues'),
-    url(r'^porter/(?P<project_title>[^/\\]+)/', include(new_project_urls)),
+    url(r'^porter/(?P<project_title>[^/\\]+)/', include(new_project_urls),
+        name='project'),
     url(r'^porter/$', views.user_dashboard, name='user_dashboard'),
 
     # Allow media (such as pictures)

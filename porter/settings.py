@@ -140,3 +140,5 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=porter',
 ]
+
+LOGIN_REDIRECT_URL = '/porter/'

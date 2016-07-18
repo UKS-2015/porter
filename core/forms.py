@@ -62,12 +62,17 @@ class IssueForm(ModelForm):
 
 
 class IssueWithRepoForm(ModelForm):
-    def __init__(self, project_title=None, **kwargs):
-        super(IssueWithRepoForm, self).__init__(**kwargs)
+<<<<<<< HEAD
+    def __init__(self, project_title=None, post_form=None, **kwargs):
+        super(IssueWithRepoForm, self).__init__(post_form,**kwargs)
         if project_title:
             self.fields['labels'].queryset = Label.objects.filter(Q(project__title=project_title) | Q(project=None))
+            self.fields['assignee'].queryset = Project.objects.get(title=project_title).users
         else:
             self.fields['labels'].queryset = Label.objects.filter(project=None)
+
+        # super().__init__(post_form, **kwargs)
+
 
     class Meta:
         model = Issue

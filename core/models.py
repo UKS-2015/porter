@@ -137,6 +137,7 @@ class Issue(models.Model):
     labels = models.ManyToManyField(Label, blank=True)
     description = models.CharField(max_length=255, default='', null=False, blank=False)
 
+
     STATUS_CHOICES = (
         ('OPENED', 'Opened'),
         ('ASSIGNED', 'Assigned'),
