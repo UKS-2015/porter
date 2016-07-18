@@ -13,7 +13,7 @@
         </a>
 
         {% for label in issue.labels.all %}
-        <span class="label label-primary">{{ label }}</span>
+        <span class="label" style="background:{{ label.color }}">{{ label.title }}</span>
         {% endfor %}
     </td>
     <td class="col-lg-1 col-md-1 col-sm-1">
@@ -23,17 +23,17 @@
               <span class="caret"></span>
             </button>
 
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" class="col-md-12">
                 <li>
                 <form id="change_status_{{ issue.id }}" method="post" action="{% url 'project:repository:issue:change_status' issue.repository.project.title issue.repository.title issue.id %}">
                 {% csrf_token %}
-                    <a class="btn btn-primary" href="javascript:{}" onclick="document.getElementById('change_status_{{ issue.id }}').submit();">
+                    <button type="submit" class="btn btn-primary form-control">
                         {% if issue.status == 'Closed' %}
                             Reopen
                         {% else %}
                             Close
                         {% endif %}
-                    </a>
+                    </button>
                 </form>
                 </li>
             </ul>

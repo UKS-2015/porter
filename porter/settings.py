@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'bootstrap_pagination',
     'django_nose',
+    'colorful'
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -30,7 +30,33 @@
         "model": "core.label",
         "pk": 2,
         "fields": {
-            "title": "bugfix"
+            "title": "bugfix",
+            "color": "#c2c2a3" 
+
+        }
+    },
+    {
+        "model": "core.label",
+        "pk": 3,
+        "fields": {
+            "title": "enhancement",
+            "color": "#3333ff"
+        }
+    },
+    {
+        "model": "core.label",
+        "pk": 4,
+        "fields": {
+            "title": "bug",
+            "color": "#ff0000"
+        }
+    },
+    {
+        "model": "core.label",
+        "pk": 5,
+        "fields": {
+            "title": "help needed",
+            "color": "#33ff77"
         }
     },
     {
@@ -143,6 +169,11 @@
                     "view_repository",
                     "core",
                     "repository"
+                ],
+                [
+                    "change_label",
+                    "core",
+                    "label"
                 ]
             ]
         }
@@ -260,9 +291,6 @@
                 [
                     "add_issue",
                     "core",
-
-
-
                     "issue"
                 ],
                 [
@@ -441,7 +469,7 @@
         "pk": 6,
         "fields": {
             "role": [
-                "Project lead"
+                "Project lead"   
             ],
             "user": [
                 "lead"
@@ -528,6 +556,7 @@
                 ]
             ]
         }
+ 
     },
     {
         "model": "core.project",

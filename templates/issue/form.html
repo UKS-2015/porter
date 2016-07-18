@@ -19,6 +19,11 @@
             {% with title="Issue" namespace=cancel_url %}
             {% include "general/generic_form.html" %}
             {% endwith %}
+
+            <a class="btn btn-primary btn-sm" href="{% url 'project:label:new' project_title %}">
+                <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+            </a>
+
         </div>
     </div>
 </div>
