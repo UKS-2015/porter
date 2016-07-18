@@ -58,11 +58,11 @@
         </a>
         {% endif %}
         {% if delete_issue %}
-        <a class="btn btn-danger btn-sm delete" data-toggle="modal" href="#deleteModal">
+        <a class="btn btn-danger btn-sm delete" data-toggle="modal" href="#deleteModal{{issue.id}}">
             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
         </a>
         {% url 'project:repository:issue:delete' issue.repository.project.title issue.repository.title issue.id as delete_url %}
-        {% include "common/delete_modal.html" with action=delete_url entity=issue.title %}
+        {% include "common/delete_modal.html" with action=delete_url entity=issue.title modal_id=issue.id %}
         {% endif %}
     </td>
 </tr>

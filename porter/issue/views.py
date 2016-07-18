@@ -16,13 +16,15 @@ class IssueLogType():
     OPENED = 'Opened'
     CLOSED = 'Closed'
     DELETED = 'Deleted'
+    ASSIGNED = 'Assigned'
 
     MESSAGES = {
         CREATED: "created the issue",
         UPDATED: "updated the issue",
         OPENED: "opened the issue",
         CLOSED: "closed the issue",
-        DELETED: "deleted the issue"
+        DELETED: "deleted the issue",
+        ASSIGNED: "assigned the issue"
     }
 
     @classmethod
@@ -61,6 +63,16 @@ def create_issue_log(issue, log_type, s_user, o_user):
     issue_log.date_modified = datetime.now()
     issue_log.save()
 
+def delete_with_issue_log(method):
+    """Decorator that wraps POST method of IssueDelete to extend it with issue
+    log creation"""
+    def decorated_delete(request, *args, **kwargs):
+        issue = Issue.objects.get(pk=kwargs['pk'])
+        ret_val = method(request, *args, **kwargs)
+        create_issue_log(issue, IssueLogType.DELETED, issue.creator,
+                         issue.assignee)
+        return ret_val
+    return decorated_delete
 
 class IssueCreate(PorterAccessMixin, CreateView):
     model = Issue
@@ -132,8 +144,10 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
 
             form.instance.id = kwargs['pk']
             form.instance.creator = Issue.objects.get(id=kwargs['pk']).creator
-
             form.save()
+            create_issue_log(form.instance, IssueLogType.UPDATED,
+                             form.instance.creator, form.instance.assignee)
+
             if kwargs['repository_title']:
                 return redirect(
                     reverse('project:repository:issue:list',
@@ -154,8 +168,11 @@ class IssueDelete(PorterAccessMixin, DeleteView):
     required_permissions = "delete_issue"
 
     def get_success_url(self):
-        return reverse_lazy('project:issues:list',
-                            args=[self.object.repository.project.title])
+        return reverse_lazy(
+            'project:all_issues',
+            kwargs={'project_title': self.object.repository.project.title})
+
+    post = delete_with_issue_log(DeleteView.post)
 
 
 class IssueChangeStatus(PorterAccessMixin, View):
@@ -169,11 +186,17 @@ class IssueChangeStatus(PorterAccessMixin, View):
         if issue.status == 'Closed':
             if issue.assignee:
                 issue.status = 'Assigned'
+                create_issue_log(issue, IssueLogType.ASSIGNED, issue.creator,
+                                 issue.assignee)
             else:
                 issue.status = 'Opened'
+                create_issue_log(issue, IssueLogType.OPENED, issue.creator,
+                                 issue.assignee)
         else:
             issue.status = 'Closed'
             issue.save()
+            create_issue_log(issue, IssueLogType.CLOSED, issue.creator,
+                             issue.assignee)
             return redirect(
                 reverse('project:repository:issue:list',
                         kwargs={'project_title': kwargs['project_title'],
