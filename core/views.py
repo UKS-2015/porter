@@ -39,6 +39,7 @@ def user_projects(request, *args, **kwargs):
     user = request.user
     paginator = Paginator(Project.objects.filter(users=user).all(), 25)
     page = request.GET.get('page')
+    add_project =  check_permissions(user, 'view_project', **kwargs)
 
     try:
         projects = paginator.page(page)
@@ -46,7 +47,7 @@ def user_projects(request, *args, **kwargs):
         projects = paginator.page(1)
     except EmptyPage:
         projects = paginator.page(paginator.num_pages)
-        add_project =  check_permissions(user, 'view_project', **kwargs)
+
     return render(request, 'registration/projects.html', {'projects': projects, 'add_project':add_project})
 
 @login_required()
