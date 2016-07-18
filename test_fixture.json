@@ -154,6 +154,11 @@
                     "view_repository",
                     "core",
                     "repository"
+                ],
+                                [
+                    "change_label",
+                    "core",
+                    "label"
                 ]
             ]
         }

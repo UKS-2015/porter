@@ -44,7 +44,7 @@ class LabelFormTests(TestCase):
                 kwargs={'project_title': 'Test', 'pk':2}
             )
         )
-        #self.assertEquals(response.status_code, 200)
-        #self.assertEquals(response.context['project_title'], 'Test')
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.context['project_title'], 'Test')
 
 

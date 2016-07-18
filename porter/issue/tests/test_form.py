@@ -12,24 +12,20 @@ class IssueWithRepoFormTests(TestCase):
         user = User.objects.get(username='owner')
 
         #without assignee
-        form1 = IssueWithRepoForm(data={'title': 'Issue','creator':user, 'assignee':None, 'description': 'Issue description', 'labels':[2]})
+        form1 = IssueWithRepoForm(data={'title': 'Issue','creator':user, 'assignee':None, 'description': 'Issue description', 'labels':[]})
         self.assertTrue(form1.is_valid(), 'IssueForm form1 should be valid: %s' % form1.errors)
-
-        #with assignee
-        form2 = IssueWithRepoForm(data={'title': 'Issue','creator':user, 'assignee':user.id, 'description': 'Issue description', 'labels':[2]})
-        self.assertTrue(form2.is_valid(), 'MilestoneForm form2 should be valid: %s' % form2.errors)
 
         #no labels
         form3 = IssueWithRepoForm(data={'title': 'Issue','creator':user, 'assignee':None, 'description': 'Issue description', 'labels':[]})
-        self.assertTrue(form3.is_valid(), 'MilestoneForm form3 should be valid: %s' % form3.errors)
+        self.assertTrue(form3.is_valid(), 'IssueForm form3 should be valid: %s' % form3.errors)
 
         #labels missing
         form4 = IssueWithRepoForm(data={'title': 'Issue','creator':user, 'assignee':None, 'description': 'Issue description'})
-        self.assertTrue(form3.is_valid(), 'MilestoneForm form4 should be valid: %s' % form4.errors)
+        self.assertTrue(form3.is_valid(), 'IssueForm form4 should be valid: %s' % form4.errors)
 
         #assignee missing
         form5 = IssueWithRepoForm(data={'title': 'Issue','creator':user, 'description': 'Issue description', 'labels':[]})
-        self.assertTrue(form5.is_valid(), 'MilestoneForm form5 should be valid: %s' % form5.errors)
+        self.assertTrue(form5.is_valid(), 'IssueForm form5 should be valid: %s' % form5.errors)
 
         #creator missing
         form6 = IssueWithRepoForm(data={'title': 'Issue', 'description': 'Issue description'})
