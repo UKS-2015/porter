@@ -2,11 +2,13 @@ from abc import ABCMeta
 from core.forms import UserForm, PorterUserForm, UserPasswordForm
 from core.mixins import PorterAccessMixin
 from core.models import PorterUser, Project
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse_lazy, reverse
+from django.http import HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 
 
 class UserProfileAbstract(PorterAccessMixin, DetailView):
@@ -142,3 +144,22 @@ class UserChange(PorterAccessMixin, UpdateView):
             self.get_context_data(form=form,
                                   porter_user_form=porter_user_form)
         )
+
+class UserCreate(CreateView):
+    model = User
+    form_class = UserCreationForm
+    template_name = 'registration/registration.html'
+    success_url = '/porter'
+
+    def post(self, request, project_title=None):
+        # create a form instance and populate it with data from the request:
+        form = UserCreationForm(request.POST, auto_id=True)
+        # check whether it's valid:
+        if form.is_valid():
+            form.save()
+            porteruser = PorterUser()
+            porteruser.user = form.instance
+            porteruser.save()
+            return redirect(reverse('login'))
+        else:
+            return HttpResponseBadRequest

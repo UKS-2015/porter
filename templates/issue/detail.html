@@ -45,7 +45,9 @@
     <div class="row">
         <div class="col-sm-1">
             <div>
+                {% if porteruser.picture %}
                 <img src="{{porteruser.picture.url}}" class="porter-thumbnail ">
+                {% endif %}
             </div>
         </div>
         <div class="col-sm-11">
@@ -73,7 +75,9 @@
         <div class="row">
             <div class="col-sm-1">
                 <div>
-                    <img src="{{porteruser.picture.url}}" class="porter-thumbnail ">
+                    {% if porteruser.picture %}
+                    <img src="{{comment.porteruser.picture.url}}" class="porter-thumbnail ">
+                    {% endif %}
                 </div>
             </div>
             <div class="col-sm-11">
