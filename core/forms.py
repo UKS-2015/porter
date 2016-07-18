@@ -4,6 +4,7 @@ from core.models import IssueLog, UserProjectRole, \
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import Group
 from django.forms import ModelForm, inlineformset_factory
+from django.db.models import Q
 
 PorterUserFormSet = inlineformset_factory(User, PorterUser, fields=('picture',))
 
@@ -37,11 +38,6 @@ class UserProjectRoleForm(ModelForm):
 
 
 class MilestoneForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(MilestoneForm, self).__init__(*args, **kwargs)
-        print(self.fields['repository'].queryset)
-        self.initial['repository'] = Repository.objects.filter(project__title='Projekat')
-
     class Meta:
         model = Milestone
         fields = ['title', 'description', 'repository']
@@ -56,7 +52,7 @@ class MilestoneWithRepoForm(ModelForm):
 class LabelForm(ModelForm):
     class Meta:
         model = Label
-        fields = '__all__'
+        fields = ['title', 'color']
 
 
 class IssueForm(ModelForm):
@@ -66,11 +62,17 @@ class IssueForm(ModelForm):
 
 
 class IssueWithRepoForm(ModelForm):
-    def __init__(self, project_title=None, post_form=None,  **kwargs):
-        super().__init__(post_form, **kwargs)
+
+    def __init__(self, project_title=None, post_form=None, **kwargs):
+        super(IssueWithRepoForm, self).__init__(post_form,**kwargs)
         if project_title:
-            self.fields['assignee'].queryset = Project.objects.get(
-                title=project_title).users
+            self.fields['labels'].queryset = Label.objects.filter(Q(project__title=project_title) | Q(project=None))
+            self.fields['assignee'].queryset = Project.objects.get(title=project_title).users
+        else:
+            self.fields['labels'].queryset = Label.objects.filter(project=None)
+
+        # super().__init__(post_form, **kwargs)
+
 
     class Meta:
         model = Issue
@@ -78,6 +80,18 @@ class IssueWithRepoForm(ModelForm):
 
 
 class IssueFormWithMilestone(ModelForm):
+    def __init__(self, project_title=None, repository_title=None,  **kwargs):
+        super(IssueFormWithMilestone, self).__init__(**kwargs)
+        if project_title:
+            self.fields['labels'].queryset = Label.objects.filter(Q(project__title=project_title) | Q(project=None))
+        else:
+            self.fields['labels'].queryset = Label.objects.filter(project=None)
+
+        if repository_title:
+            self.fields['milestone'].queryset = Milestone.objects.filter(repository__title=repository_title )
+        else:
+            self.fields['milestone'].queryset = Milestone.objects.none()
+    #
     class Meta:
         model = Issue
         fields = ['title', 'description', 'assignee', 'milestone', 'labels']

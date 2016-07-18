@@ -1,9 +1,9 @@
-from core.forms import IssueWithRepoForm, IssueFormWithMilestone, CommentForm
+from core.forms import IssueWithRepoForm, IssueFormWithMilestone, CommentForm, IssueForm
 from core.mixins import PorterAccessMixin, check_permissions
-from core.models import Issue, IssueLog, Repository, PorterUser, Comment
+from core.models import Issue, IssueLog, Repository, PorterUser, Comment, Label, Milestone
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.http import HttpResponseBadRequest
-from django.shortcuts import redirect
+from django.http import HttpResponseBadRequest, HttpResponse
+from django.shortcuts import redirect,render
 from django.utils.datetime_safe import datetime
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -11,6 +11,7 @@ from django.views.generic.list import ListView
 from django.views.generic.base import View
 
 class IssueLogType():
+
     CREATED = 'Created'
     UPDATED = 'Updated'
     OPENED = 'Opened'
@@ -83,6 +84,10 @@ class IssueCreate(PorterAccessMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(IssueCreate, self).get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
+        form = IssueWithRepoForm(project_title=self.kwargs['project_title'])
+        context['form'] = form
+        user = self.request.user
+        context['change_label'] = check_permissions(user, 'change_label', **self.kwargs)
         context['form'] = IssueWithRepoForm(project_title=
                                             context['project_title'])
         return context
@@ -110,6 +115,7 @@ class IssueCreate(PorterAccessMixin, CreateView):
         else:
             return HttpResponseBadRequest
 
+
     def form_valid(self, form):
         form.instance.creator = self.request.user
         return super(IssueCreate, self).form_valid(form)
@@ -131,6 +137,11 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
         context = super(IssueUpdate, self).get_context_data(**kwargs)
         context['project_title'] = self.kwargs['project_title']
         context['issue'] = self.kwargs['pk']
+        instance = Issue.objects.get(pk=self.kwargs['pk'])
+        form = IssueFormWithMilestone(instance=instance, project_title=self.kwargs['project_title'],repository_title=self.kwargs['repository_title'])
+        context['form'] = form
+        user = self.request.user
+        context['change_label'] = check_permissions(user, 'change_label', **self.kwargs)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -159,10 +170,8 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
                 reverse('project:issues:list',
                         kwargs={'project_title': kwargs['project_title']})
         else:
-            # self.success_url = reverse('project:issues:list',
-            #                            kwargs={'project_title': kwargs['project_title']})
-            # return super(IssueUpdate, self).post(request, *args, **kwargs)
             return HttpResponseBadRequest
+
 
 class IssueDelete(PorterAccessMixin, DeleteView):
     model = Issue

@@ -3,6 +3,7 @@ from porter.project.views import ProjectDetail, ProjectMembers, \
     ProjectMemberRemove, ProjectMemberAdd, ProjectSettings, \
     ProjectDelete, ProjectAssignRole, ProjectMilestones, ProjectIssues
 from porter.repository import urls as repository_urls
+from porter.label import urls as label_urls
 
 app_name = 'project'
 
@@ -18,8 +19,8 @@ urlpatterns = [
         name='assign_role'),
     # TODO: Modify issue application
     url(r'^issues/$', ProjectIssues.as_view(), name='all_issues'),
-
+    url(r'^labels/', include(label_urls), name='label'),
     url(r'^repository/', include(repository_urls), name='repository'),
-    url(r'^milestones/$', ProjectMilestones.as_view(), name='all_milestones'),
+    url(r'^milestones/$', ProjectMilestones.as_view(), name='all_milestones')
 
 ]

@@ -23,7 +23,7 @@
             </h3>
 
             {% for label in object.labels.all %}
-            <span class="label label-primary">{{ label }}</span>
+            <span class="label" style="background:{{ label.color }}">{{ label.title }}</span>
             {% endfor %}
         </div>
 
