@@ -17,5 +17,5 @@ def show_recent_logs(**kwargs):
     # TODO: This union operand doesn't work as expected (bug #49)
     recent_logs = (recent_logs_deleted |
                    recent_logs_other).order_by('-date_modified')[:5]
-
+    import pdb; pdb.set_trace()
     return {'recent_logs': recent_logs or []}
