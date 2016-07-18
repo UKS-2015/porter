@@ -1,8 +1,11 @@
+FROM django:1.9.5
 FROM django:onbuild
 MAINTAINER Tim 4 <https://github.com/UKS-2015>
 
 # Instaling dependencies
 # RUN apt-get update && apt-get -y install python3 && apt-get -y install python3-pip && apt-get -y install git
+
+# RUN apt-get -y install git
 
 # RUN mkdir /opt/porter
 # ADD . /opt/porter
@@ -22,4 +25,5 @@ EXPOSE 8004
 
 # CMD ["python3", "/opt/porter/manage.py", "makemigrations", "--noinput"]
 CMD ["python3", "/opt/porter/manage.py", "migrate"]
+CMD ["python3", "/opt/porter/manage.py", "loaddata", "initial_data.json"]
 CMD ["python3", "/opt/porter/manage.py", "runserver", "0.0.0.0:8004"]
