@@ -30,7 +30,18 @@
         "model": "core.label",
         "pk": 2,
         "fields": {
-            "title": "bugfix"
+            "title": "bugfix",
+            "color": "#33ff77",
+            "project": 4
+        }
+    },
+    {
+        "model": "core.label",
+        "pk": 3,
+        "fields": {
+            "title": "bugfix",
+            "color": "#33ff77",
+            "project": 4
         }
     },
     {
@@ -507,6 +518,7 @@
             ]
         }
     },
+
     {
         "model": "core.project",
         "pk": 3,
@@ -580,6 +592,43 @@
                 "porter"
             ],
             "picture": "users/owner_HwIG4RS.jpg"
+        }
+    },
+        {
+        "model": "core.milestone",
+        "pk": 1,
+        "fields": {
+            "title": "Milestone1",
+            "repository": 5,
+            "description": "Milestone1 description"
+        }
+    },
+        {
+        "model": "core.milestone",
+        "pk": 2,
+        "fields": {
+            "title": "Milestone2",
+            "repository": 5,
+            "description": "Milestone2 description"
+        }
+    },
+    {
+        "model": "core.issue",
+        "pk": 2,
+        "fields": {
+            "title": "Issue1",
+            "creator": [
+                "owner"
+            ],
+            "assignee": [
+                "developer"
+            ],
+            "repository": 5,
+            "milestone": 1,
+            "description": "Issue1 description",
+            "labels": [
+                2
+            ]
         }
     }
 ]
