@@ -62,7 +62,7 @@ class IssueForm(ModelForm):
 
 
 class IssueWithRepoForm(ModelForm):
-<<<<<<< HEAD
+
     def __init__(self, project_title=None, post_form=None, **kwargs):
         super(IssueWithRepoForm, self).__init__(post_form,**kwargs)
         if project_title:
