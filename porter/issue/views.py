@@ -60,7 +60,7 @@ def create_issue_log(issue, log_type, s_user, o_user):
                                              issue.title)
     issue_log.subject_user = s_user
     issue_log.object_user = o_user
-    issue_log.issue = issue
+    issue_log.issue = None if log_type == IssueLogType.DELETED else issue
     issue_log.date_modified = datetime.now()
     issue_log.save()
 

@@ -10,7 +10,7 @@ def show_recent_logs(**kwargs):
     user = kwargs.get('user')
 
     recent_logs_deleted = IssueLog.objects.filter(Q(object_user=user)
-        | Q(subject_user=user))
+                                                  | Q(subject_user=user))
     recent_logs_other = IssueLog.objects.filter(
         issue__repository__project__users=user)
 
