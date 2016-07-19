@@ -12,3 +12,12 @@ A tiny tool that aims to support software development process.
 # Tests
 Tests are located in its corresponding module package. Run tests with ```./manage.py test```
 Data for test database is stored in fixture 'test_fixture.json'.
+
+# Contributions
+#### [Lazar Nikolić] (https://github.com/theshammy)
+- project module (CRUD, add/remove members, assign/unassign roles)
+- repository module (CRUD)
+- authorization (Auth Mixin) and authentication module (login and registration)
+- user profile management
+- issue comments
+- various view templates
