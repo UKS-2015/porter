@@ -15,7 +15,9 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-lg-8 col-md-8 col-sm-8">
+                    {% if porter.picture %}
                     <img src="{{porteruser.picture.url}}" class="img-responsive center-block">
+                    {% endif %}
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-8">
                     <b>{{porteruser.user.first_name}} {{porteruser.user.last_name}}</b>

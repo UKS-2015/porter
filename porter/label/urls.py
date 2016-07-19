@@ -19,9 +19,10 @@ from porter.label.views import LabelList, LabelCreate, LabelDetail, LabelUpdate,
 app_name = 'label'
 
 urlpatterns = [
-    url(r'^$', LabelList.as_view(), name='list'),
-    url(r'add/$', LabelCreate.as_view(), name='add'),
-    url(r'(?P<pk>[0-9]+)/$', LabelDetail.as_view(), name='detail'),
-    url(r'(?P<pk>[0-9]+)/update/$', LabelUpdate.as_view(), name='update'),
+
+    url(r'new/$', LabelCreate.as_view(), name='new'),
+    url(r'(?P<pk>[0-9]+)/$', LabelDetail.as_view(), name='overview'),
+    url(r'(?P<pk>[0-9]+)/change/$', LabelUpdate.as_view(), name='change'),
     url(r'(?P<pk>[0-9]+)/delete/$', LabelDelete.as_view(), name='delete'),
+    url(r'^$', LabelList.as_view(), name='list'),
 ]

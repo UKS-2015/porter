@@ -19,14 +19,15 @@ from django.contrib import admin
 from django.contrib.auth.views import login, logout_then_login
 from porter import settings
 from porter.project import urls as new_project_urls
-from porter.user.views import UserProfile, UserChange, UserPassword, UserDetail
 from porter.project.views import ProjectCreate
+from porter.user.views import UserProfile, UserChange, UserPassword, UserDetail, UserCreate
 
 app_name = 'porter'
 
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/register/$', UserCreate.as_view(), name='register'),
     url(r'^accounts/login/$', login, name='login'),
     url(r'^porter/login/$', login),
     url(r'^porter/logout/$', logout_then_login, name='logout'),

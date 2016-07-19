@@ -5,6 +5,7 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.db.models import OneToOneField
 from porter import settings
+from colorful.fields import RGBColorField
 
 
 class PorterUser(models.Model):
@@ -38,7 +39,7 @@ class PorterUser(models.Model):
 
 class Project(models.Model):
     title = models.CharField(max_length=50, unique=True, null=False, blank=False)
-    description = models.CharField(max_length=255, null=False, blank=False)
+    description = models.CharField(max_length=255, default='', null=False, blank=False)
     users = models.ManyToManyField(User)
 
     class Meta:
@@ -63,7 +64,7 @@ class Project(models.Model):
 class Repository(models.Model):
     title = models.CharField(max_length=50)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    description = models.CharField(max_length=255, null=False, blank=False)
+    description = models.CharField(max_length=255, default='', null=False, blank=False)
 
     class Meta:
         permissions = [
@@ -85,7 +86,7 @@ class Repository(models.Model):
 class Milestone(models.Model):
     title = models.CharField(max_length=50)
     repository = models.ForeignKey(Repository, related_name='milestones')
-    description = models.CharField(max_length=255, null=False, blank=False)
+    description = models.CharField(max_length=255, default='', null=False, blank=False)
 
     def get_absolute_url(self):
         return reverse('milestone-detail', kwargs={'pk': self.pk})
@@ -108,6 +109,8 @@ class Milestone(models.Model):
 
 class Label(models.Model):
     title = models.CharField(max_length=50)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+    color = RGBColorField()
 
     class Meta:
         permissions = [
@@ -132,7 +135,7 @@ class Issue(models.Model):
     repository = models.ForeignKey(Repository, on_delete=models.CASCADE)
     milestone = models.ForeignKey(Milestone, null=True, blank=True, related_name="issues")
     labels = models.ManyToManyField(Label, blank=True)
-    description = models.CharField(max_length=255, null=False, blank=False)
+    description = models.CharField(max_length=255, default='', null=False, blank=False)
 
 
     STATUS_CHOICES = (
@@ -201,7 +204,7 @@ class IssueLog(models.Model):
     object_user = models.ForeignKey(User, related_name='issue_log_object')
     subject_user = models.ForeignKey(User, related_name='issue_log_subject')
     issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
-    date_modified = models.DateTimeField(null=False, auto_now=True)
+    date_modified = models.DateTimeField(null=False,  auto_now=True)
 
     class Meta:
         permissions = [
