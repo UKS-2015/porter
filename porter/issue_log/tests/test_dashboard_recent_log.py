@@ -102,6 +102,8 @@ class IssueLogTest(TestCase):
 
         rl = response.context['recent_logs']
 
+        self.assertEqual(len(rl), 2)
+
         self.assertEqual(rl[0].log_type,
                          IssueLogType.to_num(IssueLogType.DELETED))
         self.assertEqual(rl[1].log_type,
