@@ -10,10 +10,11 @@ A tiny tool that aims to support software development process.
 5. Start application with ```./manage.py runserver```
 
 # Tests
-Tests are located in its corresponding module package. Run tests with ```./manage.py test```
-Data for test database is stored in fixture 'test_fixture.json'.
+Tests are located in its corresponding module package. Run tests with ```./manage.py test```.
+Data for test database is stored in fixtures `test_fixture.json` and `test_fixture_recent_log_tests.json`.
 
 # Contributors
+
 #### [Lazar Nikolić] (https://github.com/theshammy)
 - project module (CRUD, add/remove members, assign/unassign roles)
 - repository module (CRUD)
@@ -21,6 +22,7 @@ Data for test database is stored in fixture 'test_fixture.json'.
 - user profile management
 - issue comments
 - various view templates
+
 #### [Bojana Zoranović] (https://github.com/BojanaZ)
 - issue module (CRUD, all user's issues, change status, add milestone)
 - milestone module (CRUD)
@@ -28,3 +30,10 @@ Data for test database is stored in fixture 'test_fixture.json'.
 - project layouting
 - generic/base templates
 - various view templates
+
+#### [Novak Boškov](https://github.com/novakboskov)
+- initial MVC for repository, poject and user entities
+- dashboard and event logging module
+- deletion UI
+- A bit picking around HTML templates organization
+- A bit of bug hunting.

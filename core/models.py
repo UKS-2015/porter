@@ -203,7 +203,7 @@ class IssueLog(models.Model):
     log_type = models.IntegerField()
     object_user = models.ForeignKey(User, related_name='issue_log_object')
     subject_user = models.ForeignKey(User, related_name='issue_log_subject')
-    issue = models.ForeignKey(Issue, on_delete=models.CASCADE)
+    issue = models.ForeignKey(Issue, on_delete=models.SET_NULL, null=True)
     date_modified = models.DateTimeField(null=False,  auto_now=True)
 
     class Meta:

@@ -2,7 +2,7 @@
 <div class="row">
     <div class="well col-md-6">
         <!-- Show following <p> only when recent log is not deletion -->
-        {% if recent_log.log_type != 5 %}
+        {% if recent_log.issue %}
         <p>
             <b>
                 <a href="{% url 'project:repository:issue:overview' project_title=recent_log.issue.repository.project.title repository_title=recent_log.issue.repository.title pk=recent_log.issue.id%}">
