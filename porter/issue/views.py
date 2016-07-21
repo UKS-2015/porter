@@ -145,7 +145,7 @@ class IssueUpdate(PorterAccessMixin, UpdateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        form = IssueFormWithMilestone(request.POST)
+        form = IssueFormWithMilestone(post_form = request.POST)
         # check whether it's valid:
         if form.is_valid():
             form.instance.repository = Repository.objects.get(

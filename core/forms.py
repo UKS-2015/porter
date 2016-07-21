@@ -71,26 +71,24 @@ class IssueWithRepoForm(ModelForm):
         else:
             self.fields['labels'].queryset = Label.objects.filter(project=None)
 
-        # super().__init__(post_form, **kwargs)
-
-
     class Meta:
         model = Issue
         fields = ['title', 'description', 'assignee', 'labels']
 
 
 class IssueFormWithMilestone(ModelForm):
-    def __init__(self, project_title=None, repository_title=None,  **kwargs):
-        super(IssueFormWithMilestone, self).__init__(**kwargs)
-        if project_title:
-            self.fields['labels'].queryset = Label.objects.filter(Q(project__title=project_title) | Q(project=None))
-        else:
-            self.fields['labels'].queryset = Label.objects.filter(project=None)
+    def __init__(self, project_title=None, repository_title=None, post_form=None, **kwargs):
+        super(IssueFormWithMilestone, self).__init__(post_form,**kwargs)
+        if post_form:
+            if project_title:
+                self.fields['labels'].queryset = Label.objects.filter(Q(project__title=project_title) | Q(project=None))
+            else:
+                self.fields['labels'].queryset = Label.objects.filter(project=None)
 
-        if repository_title:
-            self.fields['milestone'].queryset = Milestone.objects.filter(repository__title=repository_title )
-        else:
-            self.fields['milestone'].queryset = Milestone.objects.none()
+            if repository_title:
+                self.fields['milestone'].queryset = Milestone.objects.filter(repository__title=repository_title )
+            else:
+                self.fields['milestone'].queryset = Milestone.objects.none()
     #
     class Meta:
         model = Issue
